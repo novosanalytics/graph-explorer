@@ -9,10 +9,12 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
       padding: ${theme.spacing["4x"]};
       gap: ${theme.spacing["2x"]};
       border-bottom: solid 1px ${theme.palette.divider};
-      height: 30%;
+      max-height: 300px;
       overflow: auto;
 
       .${pfx}-title {
+        display: flex;
+        justify-content: space-between;
         font-weight: bold;
       }
 

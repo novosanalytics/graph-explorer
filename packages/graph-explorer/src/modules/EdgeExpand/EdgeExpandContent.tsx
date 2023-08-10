@@ -15,18 +15,18 @@ import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
 import NeighborsList from "../common/NeighborsList/NeighborsList";
-import defaultStyles from "./NodeExpandContent.styles";
-import NodeExpandFilters, { NodeExpandFilter } from "./NodeExpandFilters";
+import defaultStyles from "./EdgeExpandContent.styles";
+import EdgeExpandFilters, { EdgeExpandFilter } from "./EdgeExpandFilters";
 
-export type NodeExpandContentProps = {
+export type EdgeExpandContentProps = {
   classNamePrefix?: string;
   vertex: Vertex;
 };
 
-const NodeExpandContent = ({
+const EdgeExpandContent = ({
   classNamePrefix = "ft",
   vertex,
-}: NodeExpandContentProps) => {
+}: EdgeExpandContentProps) => {
   const config = useConfiguration();
   const t = useTranslations();
   const expandNode = useExpandNode();
@@ -41,7 +41,7 @@ const NodeExpandContent = ({
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
-  const [filters, setFilters] = useState<Array<NodeExpandFilter>>([]);
+  const [filters, setFilters] = useState<Array<EdgeExpandFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
   const onExpandClick = useCallback(async () => {
@@ -80,6 +80,7 @@ const NodeExpandContent = ({
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
+  const etConfig = config?.getEdgeTypeConfig(edge.data.type);
   return (
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
@@ -122,7 +123,7 @@ const NodeExpandContent = ({
             />
           )}
           {!!vertex.data.__unfetchedNeighborCount && (
-            <NodeExpandFilters
+            <EdgeExpandFilters
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
               selectedType={selectedType}
@@ -151,7 +152,7 @@ const NodeExpandContent = ({
               }
               onPress={onExpandClick}
             >
-              Expand
+              Edge Expand
             </Button>
           </ModuleContainerFooter>
         </>
@@ -160,4 +161,4 @@ const NodeExpandContent = ({
   );
 };
 
-export default NodeExpandContent;
+export default EdgeExpandContent;

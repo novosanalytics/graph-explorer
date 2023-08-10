@@ -11,17 +11,17 @@ import { useConfiguration, withClassNamePrefix } from "../../core";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
 
-export type NodeExpandFilter = {
+export type EdgeExpandFilter = {
   name: string;
   value: string;
 };
-export type NodeExpandFiltersProps = {
+export type EdgeExpandFiltersProps = {
   classNamePrefix?: string;
   neighborsOptions: Array<{ label: string; value: string }>;
   selectedType: string;
   onSelectedTypeChange(type: string): void;
-  filters: Array<NodeExpandFilter>;
-  onFiltersChange(filters: Array<NodeExpandFilter>): void;
+  filters: Array<EdgeExpandFilter>;
+  onFiltersChange(filters: Array<EdgeExpandFilter>): void;
   limit: number | null;
   onLimitChange(limit: number | null): void;
 };
@@ -35,7 +35,7 @@ const NodeExpandFilters = ({
   onFiltersChange,
   limit,
   onLimitChange,
-}: NodeExpandFiltersProps) => {
+}: EdgeExpandFiltersProps) => {
   const config = useConfiguration();
   const t = useTranslations();
   const textTransform = useTextTransform();

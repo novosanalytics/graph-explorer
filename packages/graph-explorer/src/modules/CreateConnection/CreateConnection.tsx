@@ -24,7 +24,7 @@ import defaultStyles from "./CreateConnection.styles";
 type ConnectionForm = {
   name?: string;
   url?: string;
-  type?: "gremlin" | "sparql" | "openCypher";
+  type?: "gremlin" | "sparql";
   proxyConnection?: boolean;
   graphDbUrl?: string;
   awsAuthEnabled?: boolean;
@@ -34,9 +34,8 @@ type ConnectionForm = {
 };
 
 const CONNECTIONS_OP = [
-  { label: "PG (Property Graph) - Gremlin", value: "gremlin" },
-  { label: "PG (Property Graph) - OpenCypher", value: "openCypher" },
-  { label: "RDF (Resource Description Framework) - SPARQL", value: "sparql" },
+  { label: "PG (Property Graph)", value: "gremlin" },
+  { label: "RDF (Resource Description Framework)", value: "sparql" },
 ];
 
 export type CreateConnectionProps = {
@@ -287,8 +286,8 @@ const CreateConnection = ({
           }}
           styles={{
             label: {
-              display: "block",
-            },
+              display: "block"
+            }
           }}
           label={
             <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -296,8 +295,8 @@ const CreateConnection = ({
               <Tooltip
                 text={
                   <div style={{ maxWidth: 300 }}>
-                    Requests made by the Graph Explorer can be temporarily
-                    stored in the browser cache for quick access to the data.
+                    Requests made by the Graph Explorer can be temporarily stored in
+                    the browser cache for quick access to the data.
                   </div>
                 }
               >
