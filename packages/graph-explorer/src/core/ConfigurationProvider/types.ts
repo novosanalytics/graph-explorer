@@ -192,7 +192,10 @@ export type ConfigurationContextProps = RawConfiguration & {
   totalEdges: number;
   edgeTypes: Array<string>;
   getVertexTypeConfig(vertexType: string): VertexTypeConfig | undefined;
+  getEdgeTypeConfig(edgeType: string): EdgeTypeConfig | undefined;
   getVertexTypeAttributes(vertexTypes: string[]): Array<AttributeConfig>;
+  getEdgeTypeAttributes(edgeTypes: string[]): Array<AttributeConfig>;
   getVertexTypeSearchableAttributes(vertexType: string): Array<AttributeConfig>;
+  getEdgeTypeSearchableAttributes(edgeType: string): Array<AttributeConfig>;
   getEdgeTypeConfig(edgeType: string): EdgeTypeConfig | undefined;
 };

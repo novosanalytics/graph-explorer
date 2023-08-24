@@ -4,7 +4,7 @@ import type { NeighborsRequest } from "../connector/AbstractConnector";
 import useConnector from "../core/ConnectorProvider/useConnector";
 import useEntities from "./useEntities";
 
-const useExpandNode = () => {
+const useExpandEdge = () => {
   const [, setEntities] = useEntities();
   const connector = useConnector();
   const { enqueueNotification, clearNotification } = useNotification();
@@ -73,4 +73,4 @@ const useExpandNode = () => {
   );
 };
 
-export default useExpandNode;
+export default useExpandEdge;

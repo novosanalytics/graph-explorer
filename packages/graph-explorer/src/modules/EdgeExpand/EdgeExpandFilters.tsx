@@ -26,7 +26,7 @@ export type EdgeExpandFiltersProps = {
   onLimitChange(limit: number | null): void;
 };
 
-const NodeExpandFilters = ({
+const EdgeExpandFilters = ({
   classNamePrefix = "ft",
   neighborsOptions,
   selectedType,
@@ -42,19 +42,36 @@ const NodeExpandFilters = ({
   const pfx = withClassNamePrefix(classNamePrefix);
 
   const vtConfig = config?.getVertexTypeConfig(selectedType);
+  const etConfig = config?.getEdgeTypeConfig(selectedType);
   const searchableAttributes = config?.getVertexTypeSearchableAttributes(
     selectedType
   );
-
+  const edgeSearchableAttributes = config?.getEdgeTypeSearchableAttributes(
+    selectedType
+  );
+  /*
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
       ...filters,
       {
-        name: vtConfig?.attributes?.[0].name || "",
+        name: etConfig?.attributes?.[0].name || "",
         value: "",
       },
     ]);
-  }, [filters, onFiltersChange, vtConfig?.attributes]);
+  }, [filters, onFiltersChange, etConfig?.attributes]);
+
+
+
+  */
+  const onFilterAdd = useCallback(() => {
+    onFiltersChange([
+      ...filters,
+      {
+        name: etConfig?.attributes?.[0].name || "",
+        value: "",
+      },
+    ]);
+  }, [filters, onFiltersChange, etConfig?.attributes]);
 
   const onFilterDelete = useCallback(
     (filterIndex: number) => {
@@ -80,16 +97,16 @@ const NodeExpandFilters = ({
 
   return (
     <div className={pfx("section")}>
-      <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
+      <div className={pfx("title")}>{t("edge-expand.edges-of-type")}</div>
       <Select
-        aria-label={"neighbor type"}
+        aria-label={"edge type"}
         value={selectedType}
-        onChange={v => {
-          onSelectedTypeChange(v as string);
+        onChange={e => {
+          onSelectedTypeChange(e as string);
         }}
         options={neighborsOptions}
       />
-      {!!vtConfig?.attributes?.length && (
+      {!!etConfig?.attributes?.length && (
         <div className={pfx("title")}>
           <div>Filter to narrow results</div>
           <IconButton
@@ -100,7 +117,7 @@ const NodeExpandFilters = ({
           />
         </div>
       )}
-      {!!searchableAttributes?.length && (
+      {!!edgeSearchableAttributes?.length && (
         <div className={pfx("filters")}>
           {filters.map((filter, filterIndex) => (
             <div key={filterIndex} className={pfx("single-filter")}>
@@ -110,7 +127,7 @@ const NodeExpandFilters = ({
                 onChange={value => {
                   onFilterChange(filterIndex, value as string, filter.value);
                 }}
-                options={searchableAttributes?.map(attr => ({
+                options={edgeSearchableAttributes?.map(attr => ({
                   label: attr.displayLabel || textTransform(attr.name),
                   value: attr.name,
                 }))}
@@ -175,4 +192,4 @@ const NodeExpandFilters = ({
   );
 };
 
-export default NodeExpandFilters;
+export default EdgeExpandFilters;

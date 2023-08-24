@@ -19,7 +19,7 @@ export type EdgeExpandProps = Omit<
   title?: ModuleContainerHeaderProps["title"];
 };
 
-const NodeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProps) => {
+const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProps) => {
   const t = useTranslations();
   const nodes = useRecoilValue(nodesAtom);
   const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom);
@@ -58,7 +58,7 @@ const NodeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
         />
       )}
       {nodesSelectedIds.size === 1 && selectedNode && (
-        <NodeExpandContent vertex={selectedNode} />
+        <EdgeExpandContent vertex={selectedNode} />
       )}
     </ModuleContainer>
   );

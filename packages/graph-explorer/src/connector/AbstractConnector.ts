@@ -244,6 +244,15 @@ export abstract class AbstractConnector {
   ): Promise<NeighborsCountResponse>;
 
   /**
+   * Fetch all directly connected neighbors of a given source
+   * filtered by vertex or edge types and/or vertex attributes.
+   */
+  public abstract fetchEdgeNeighbors(
+    req: NeighborsRequest,
+    options?: QueryOptions
+  ): Promise<NeighborsResponse>;
+
+  /**
    * Search vertices by matching keyword.
    * It tries to match the searched term with all the attributes in the list.
    */

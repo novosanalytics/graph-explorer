@@ -10,6 +10,7 @@ import { useWithTheme, withClassNamePrefix } from "../../core";
 import useConfiguration from "../../core/ConfigurationProvider/useConfiguration";
 import fade from "../../core/ThemeProvider/utils/fade";
 import { useExpandNode } from "../../hooks";
+import { useExpandEdge } from "../../hooks";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useTextTransform from "../../hooks/useTextTransform";
@@ -29,7 +30,8 @@ const EdgeExpandContent = ({
 }: EdgeExpandContentProps) => {
   const config = useConfiguration();
   const t = useTranslations();
-  const expandNode = useExpandNode();
+  //const expandNode = useExpandNode();
+  const expandEdge = useExpandEdge();
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
 
@@ -46,7 +48,7 @@ const EdgeExpandContent = ({
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
-    await expandNode({
+    await expandEdge({
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       filterByVertexTypes: [selectedType],
@@ -64,7 +66,7 @@ const EdgeExpandContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data]);
+  }, [expandEdge, filters, limit, selectedType, vertex.data]);
 
   const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
@@ -80,7 +82,7 @@ const EdgeExpandContent = ({
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
-  const etConfig = config?.getEdgeTypeConfig(edge.data.type);
+  //const etConfig = config?.getEdgeTypeConfig(edge.data.type);
   return (
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
@@ -108,8 +110,8 @@ const EdgeExpandContent = ({
       {vertex.data.neighborsCount === 0 && (
         <PanelEmptyState
           icon={<GraphIcon />}
-          title={t("node-expand.no-connections-title")}
-          subtitle={t("node-expand.no-connections-subtitle")}
+          title={t("edge-expand.no-connections-title")}
+          subtitle={t("edge-expand.no-connections-subtitle")}
         />
       )}
       {vertex.data.neighborsCount !== 0 && (
@@ -118,8 +120,8 @@ const EdgeExpandContent = ({
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState
               icon={<GraphIcon />}
-              title={t("node-expand.no-unfetched-title")}
-              subtitle={t("node-expand.no-unfetched-subtitle")}
+              title={t("edge-expand.no-unfetched-title")}
+              subtitle={t("edge-expand.no-unfetched-subtitle")}
             />
           )}
           {!!vertex.data.__unfetchedNeighborCount && (

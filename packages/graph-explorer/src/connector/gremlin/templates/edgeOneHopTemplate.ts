@@ -88,25 +88,19 @@ const criterionTemplate = (criterion: Criterion): string => {
 
 /**
  * @example
- * sourceId = "124"
- * vertexTypes = ["airport"]
- * edgeTypes = ["route"]
- * limit = 10
- * 
- * g.V({sourceId})
- *  .project("vertice", "edges")
- *  .by(
- *      both().hasLabel({vertexTypes}).and(has(filter name}, {filter value}))
- *      )
- *  .by(
- *      bothE("route").has({timeProp}, {criteria})
- *  )
+      g.V("125")
+      .project("vertices", "edges")
+      .by(
+        bothE({edgeType})
+        .has({filterCriteria K}, {filterCriteria V]})
+        .inV().hasLabel({hasLabelContent})
+      ).dedup().fold()
  * 
  */
 
 const edgeOneHopTemplate = ({
     vertexId,
-    filterByVertexTypes = [],
+    filterByVertexTypes= [],
     edgeTypes = [],
     filterCriteria = [],
     limit = 10,
@@ -132,36 +126,21 @@ const edgeOneHopTemplate = ({
     .map(type => `"${type}"`)
     .join(",");
 
-    //Not necessary for filterCriteriaTemplate (need to double check)
-
-    if (filterByVertexTypes.length > 0) {
-        if (filterCriteria.length > 0) {
-          template += `.by(both().hasLabel(${hasLabelContent})${filterCriteriaTemplate}.dedup()${range}.fold())`;
-        } else {
-          template += `.by(both().hasLabel(${hasLabelContent}).dedup()${range}.fold())`;
-        }
-      } else {
-        if (filterCriteria.length > 0) {
-          template += `.by(both()${filterCriteriaTemplate}.dedup()${range}.fold())`;
-        } else {
-          template += `.by(both().dedup()${range}.fold())`;
-        }
-      }
-
       if (edgeTypes.length > 0){
-        if (filterByVertexTypes.length > 0) {
-            template += `.by(bothE(${bothEContent}).has(${filterCriteria})).dedup()${range}.fold())`;
+        if (filterCriteria.length > 0) {
+            template += `.by(bothE(${bothEContent}).has(${filterCriteria}).inV().hasLabel(${hasLabelContent})).dedup()${range}.fold())`;
           } else {
             template += `.by(bothE(${bothEContent}).dedup()${range}.fold())`;
         }
       } else {
-        if (filterByVertexTypes.length > 0) {
-          template += `.by(bothE()).dedup().fold())`;
+        if (filterCriteria.length > 0) {
+          template += `.by(bothE(${bothEContent}).has(${filterCriteria})).dedup().fold())`;
         } else {
           template += `.by(bothE().dedup().fold())`;
         }
-        return template;
-    }
+      }
+      
+      return template;
 };
     
 export default edgeOneHopTemplate;
