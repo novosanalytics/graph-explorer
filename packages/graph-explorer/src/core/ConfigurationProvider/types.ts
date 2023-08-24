@@ -83,7 +83,7 @@ export type EdgeTypeConfig = {
   /**
    * List of attributes for the edge type
    */
-  attributes: Array<Omit<AttributeConfig, "searchable">>;
+  attributes: Array<AttributeConfig>;
   /**
    * Total number of edges of this type
    */
