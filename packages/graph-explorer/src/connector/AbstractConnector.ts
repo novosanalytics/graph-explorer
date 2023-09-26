@@ -254,11 +254,22 @@ export abstract class AbstractConnector {
     options?: QueryOptions
   ): Promise<NeighborsResponse>;
 
+  /**
+   * Fetch all directly connected neighbors of a given source
+   * filtered by edge attributes
+   * 
+  */
   public abstract fetchEdgeNeighbors(
     req: NeighborsRequest,
     options?: QueryOptions
   ): Promise<NeighborsResponse>;
 
+  /**
+   * Gets the names pf all local data
+   */
+  public abstract fetchLocalEdges(
+    req: string,
+  ): Promise<EdgesResponse>;
 
   /**
    * Count all connected vertices by type of the given source.
