@@ -9,8 +9,10 @@ import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import { useWithTheme, withClassNamePrefix } from "../../core";
 import useConfiguration from "../../core/ConfigurationProvider/useConfiguration";
 import fade from "../../core/ThemeProvider/utils/fade";
-import { useExpandNode } from "../../hooks";
-import { useExpandEdge } from "../../hooks";
+import { 
+  useExpandNode, 
+  useExpandEdge, 
+  useLocalEdges } from "../../hooks";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useTextTransform from "../../hooks/useTextTransform";
@@ -24,7 +26,7 @@ import EdgeExpandFilters, { EdgeExpandFilter } from "./EdgeExpandFilters";
 export type EdgeExpandContentProps = {
   classNamePrefix?: string;
   vertex: Vertex;
-  edgeList: Set<string>; 
+  edgeList: Array<string>; 
 };
 
 const EdgeExpandContent = ({
@@ -35,6 +37,7 @@ const EdgeExpandContent = ({
   const config = useConfiguration();
   const t = useTranslations();
   //const expandNode = useExpandNode();
+  const localEdges = useLocalEdges();
   const expandEdge = useExpandEdge();
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
@@ -52,9 +55,21 @@ const EdgeExpandContent = ({
   //const [directVal, setDirectVal] = useState<string | "">("");
 
 
+  const filteredEdges = Promise.resolve(localEdges({
+    vertexId: vertex.data.id
+  }));
+
+  console.log(`Filtered Edges: ${filteredEdges}`)
+  console.log(`Type: ${typeof(filteredEdges)}`)
+
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
 
+    try{
+      console.log(`Filtered Edge Result: ${filteredEdges}`)
+    } catch {
+      console.log("failed")
+    }
     await expandEdge({
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),

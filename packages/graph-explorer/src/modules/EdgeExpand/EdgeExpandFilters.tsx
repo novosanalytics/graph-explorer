@@ -20,7 +20,7 @@ export type EdgeExpandFilter = {
 export type EdgeExpandFiltersProps = {
   classNamePrefix?: string;
   neighborsOptions: Array<{ label: string; value: string }>;
-  edgeOptions:  Set<string>;
+  edgeOptions:  Array<string>;
   edgeCriteria: Array<string>;
   selectedType: string;
   //criterion: string;

@@ -127,10 +127,11 @@ export type EdgesRequest = {
 
 
 export type EdgesResponse = {
+
     /**
-   * List of edges.
+   * Get the local edges connected 
    */
-    edges: Array<Edge>;
+    edges: Array<string>;
 };
 
 export type NeighborsCountRequest = {
@@ -265,11 +266,11 @@ export abstract class AbstractConnector {
   ): Promise<NeighborsResponse>;
 
   /**
-   * Gets the names pf all local data
+   * Gets the names of all local data
    */
   public abstract fetchLocalEdges(
-    req: string,
-  ): Promise<EdgesResponse>;
+    req: EdgesRequest,
+  ): Promise<Array<string>>;
 
   /**
    * Count all connected vertices by type of the given source.

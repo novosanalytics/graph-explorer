@@ -79,9 +79,9 @@ export default class GremlinConnector extends AbstractConnector {
   }
 
   fetchLocalEdges(
-    req:string,
+    req:EdgesRequest,
     options?: QueryOptions
-  ): Promise<EdgesResponse> {
+  ): Promise<Array<string>> {
     return fetchLocalEdges(this._gremlinFetch(options), req)
   }
 

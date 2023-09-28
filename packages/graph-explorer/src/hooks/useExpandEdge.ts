@@ -19,14 +19,13 @@ const useExpandEdge = () => {
           message: "Your search has returned no results",
         });
         return;
-      }
+      };
 
       setEntities({
         nodes: result.vertices,
         edges: result.edges,
         selectNewEntities: "nodes",
       });
-
       const notificationId = enqueueNotification({
         title: "Updating Edge Neighbors",
         message: `Looking for the Edge Neighbors of ${result.vertices.length} results`,

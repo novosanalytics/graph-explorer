@@ -9,12 +9,14 @@ import { GEdgeList, GremlinFetch } from "../types";
 
 const fetchLocalEdges = async (
     gremlinFetch: GremlinFetch,
-    req: string
-): Promise<EdgesResponse> => {
-    const localTemplate = localEdgeTemplate(req);
+    req: EdgesRequest
+): Promise<Array<string>> => {
+    const localTemplate = localEdgeTemplate(req.vertexId) ?? "string ";
     console.log(localTemplate)
-    const data = await gremlinFetch<EdgesResponse>(localTemplate);
-    const localEdges = data
+    const result = await gremlinFetch<any>(localTemplate);
+    console.log(`Result: ${result}`)
+    const localEdges = result["result"]["data"]["@value"];
+    console.log(localEdges)
     return localEdges
 };
 

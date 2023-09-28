@@ -3,7 +3,7 @@
  */
 
 const localEdgeTemplate = (vertexId: string) => {
-    return `g.V(${vertexId}).project("edges").bothE()`
+    return `g.V("${vertexId}").bothE().union(label()).dedup()`
 };
 
 export default localEdgeTemplate;
