@@ -26,13 +26,13 @@ import EdgeExpandFilters, { EdgeExpandFilter } from "./EdgeExpandFilters";
 export type EdgeExpandContentProps = {
   classNamePrefix?: string;
   vertex: Vertex;
-  edgeList: Array<string>; 
+  //edgeList: Array<string>; 
 };
 
 const EdgeExpandContent = ({
   classNamePrefix = "ft",
   vertex,
-  edgeList,
+  //edgeList,
 }: EdgeExpandContentProps) => {
   const config = useConfiguration();
   const t = useTranslations();
@@ -152,7 +152,10 @@ const EdgeExpandContent = ({
             <EdgeExpandFilters
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
-              edgeOptions={edgeList}
+              /** Fix this later
+               * edgeOptions={filteredEdges}
+               * */
+              edgeOptions = {filteredEdges}
               edgeCriteria={criteriaOptions}
               selectedType={selectedType}
               onSelectedTypeChange={setSelectedType}

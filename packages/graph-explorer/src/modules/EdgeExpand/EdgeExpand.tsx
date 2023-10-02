@@ -35,6 +35,8 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
     return nodes.find(node => nodesSelectedIds.has(node.data.id));
   }, [nodes, nodesSelectedIds]);
 
+
+  // Fix this now 
   const filteredEdges = edges
 
   return (
@@ -68,7 +70,8 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
       {nodesSelectedIds.size === 1 && selectedNode && (
         <EdgeExpandContent 
         vertex={selectedNode}
-        edgeList={filteredEdges} />
+        //edgeList={filteredEdges} 
+        />
       )}
     </ModuleContainer>
   );
