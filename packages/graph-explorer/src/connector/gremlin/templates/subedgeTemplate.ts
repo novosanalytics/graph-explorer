@@ -45,6 +45,21 @@ const subgraphTemplate = ({
         netPart +=  `)`
         edges.push(netPart)
 
+/*    
+    let cliCamFilter = `and(`;
+        cliCamFilter += `has("Campaign_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        cliCamFilter += `, has("Campaign_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        cliCamFilter +=  `)`
+        edges.push(cliCamFilter)
+
+    let cliDruFilter = `and(`;
+        cliDruFilter += `has("Drug_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        cliDruFilter += `, has("Drug_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        cliDruFilter +=  `)`
+        edges.push(cliDruFilter)
+*/
+
+
     let filters: string = edges.join(",")
 
     createSubGraph += `.or(${filters})`

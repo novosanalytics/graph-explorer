@@ -21,47 +21,53 @@ const subgraphTemplate = ({
     console.log(vString)
     /**
      *  This is is going to do a filter for EVERY edge/node for Record_Active_Date-ish
+     *  ... This needs to be refactored
      * 
      * */
 
     let createSubGraph = `g.V${vString}`;
-
-    let offerFilter  = `and(`;
-    offerFilter += `has("Offer_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
-    offerFilter += `, has("Offer_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
-    offerFilter +=  `)`
-
-    let drugFilter = `and(`;
-    drugFilter += `has("Drug_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
-    drugFilter += `, has("Drug_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
-    drugFilter +=  `)`
-
-    let pcrFilter = `and(`;
-    pcrFilter += `has("Pharmacy_Contract_Rate_Record_Active_D__c", lte("${mapDateStr(date)}"))`;
-    pcrFilter += `, has("Pharmacy_Contract_Rate_Record_Expirati__c", gte("${mapDateStr(date)}"))`;
-    pcrFilter +=  `)`
 
     let bnrFilter = `and(`;
     bnrFilter += `has("Benefit_Net_Rate_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
     bnrFilter += `, has("Benefit_Net_Rate_Record_Expiration_Dat__c", gte("${mapDateStr(date)}"))`;
     bnrFilter +=  `)`
 
+    let campFilter = `and(`;
+    campFilter += `has("Campaign_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+    campFilter += `, has("Campaign_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+    campFilter +=  `)`
+
     let contFilter = `and(`;
     contFilter += `has("Contract_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
     contFilter += `, has("Contract_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
     contFilter +=  `)`
 
-    let campFilter = `and(`;
-    campFilter += `has("Campaign_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
-    campFilter += `, has("Campaign_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
-    campFilter +=  `)`
+    let couponFilter = `and(`;
+    couponFilter += `has("Coupon_Controller_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+    couponFilter += `, has("Coupon_Controller_Record_Exp_Date__c", gte("${mapDateStr(date)}"))`;
+    couponFilter +=  `)`
+
+    let drugFilter = `and(`;
+    drugFilter += `has("Drug_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+    drugFilter += `, has("Drug_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+    drugFilter +=  `)`
 
     let netwFilter = `and(`;
     netwFilter += `has("Network_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
     netwFilter += `, has("Network_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
     netwFilter +=  `)`
 
+    let offerFilter  = `and(`;
+    offerFilter += `has("Offer_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+    offerFilter += `, has("Offer_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+    offerFilter +=  `)`
+
     let pharmacy = `hasLabel("pharmacy")`
+
+    let pcrFilter = `and(`;
+    pcrFilter += `has("Pharmacy_Contract_Rate_Record_Active_D__c", lte("${mapDateStr(date)}"))`;
+    pcrFilter += `, has("Pharmacy_Contract_Rate_Record_Expirati__c", gte("${mapDateStr(date)}"))`;
+    pcrFilter +=  `)`
 
     let filters: string = [
         bnrFilter,
