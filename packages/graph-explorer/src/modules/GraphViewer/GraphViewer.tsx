@@ -336,11 +336,12 @@ const GraphViewer = ({
                 }}
               />
               <Input
+                type={"date"}
                 className={pfx("full-date-filter")}
                 label={"Date Fixed to Graph"}
                 labelPlacement={"inner"}
                 value={overDate}
-                onChange={d => changeOverdate(d as string)}
+                onChange={d =>  changeOverdate(d as string)}
                 hideError={true}
                 noMargin={true}
               />
