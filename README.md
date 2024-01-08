@@ -67,6 +67,8 @@ You can search, browse, expand, customize views of your graph data using Graph E
   - **Open Connections:** This takes the user back to Connections UI.
 - **Graph View UI:** The graph visualization canvas that you can interact with. Double-click to expand the first-order neighbors of a node.
   - **Layout drop-down & reset:** You can display graph data using standard graph layouts in the Graph View. You can use the circular arrow to reset the physics of a layout.
+  - **Overdate Graph Filter** Filter the current connections and nodes on the current graph canvas to a specific point in time.
+  - **Overdate Checkbox** Applies the Overdate filter on operations of the Graph Explorer to a specific point in time, not just the canvas.
   - **Screenshot:** Download a picture of the current window in Graph View.
   - **Zoom In/Out & Clear:** To help users quickly zoom in/out or clear the whole canvas in the Graph View.
   - **Legend (i):** This displays an informational list of icons, colors, and display names available.
@@ -74,6 +76,7 @@ You can search, browse, expand, customize views of your graph data using Graph E
   - **Details View** shows details about a selected node/edge such as properties etc.
   - **Entities Filter** is used to control the display of nodes and edges that are already expanded in the Graph View; click to hide or show nodes/edges.
   - **Expand** is used when expanding will result in 10+ neighbors and control the meaningful expansion. You will need to select a number as the limit to expand to. You can also add text filters for expansion.
+  - **Edge Expand** is used when expanding to find connections on specfic nodes similiar to the expand feature but based on attributes from of given edge connections rather than the filters of the nodes
   - **Node Styling** of node display options (e.g., color, icon, the property to use for the displayed name).
   - **Edge Styling** of edge display options (e.g., color, icon, the property to use for the displayed name).
   - **Namespaces (RDF only):** This RDF-specific configuration feature allows you to shorten the display of Resource URIs within the app based on auto-generated prefixes, commonly-used prefix libraries, or custom prefixes set by the user. Order of priority is set to Custom > Common > Auto-generated.
