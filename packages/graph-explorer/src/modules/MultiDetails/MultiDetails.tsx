@@ -53,10 +53,9 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
                 subtitle={t("multi-details.no-selection-subtitle")}
             />
         )}
-        {nodesSelectedIds.size >= 1 && selectedItems && selectedNode && (
-            <MultiDetailsContent 
-            graphItems={selectedItems}
-            vertex={selectedNode}
+        {nodesSelectedIds.size >= 1 && (
+            <MultiDetailsContent
+            
             odFlag={odFlag}
             overDate={overDate}/>
         )}

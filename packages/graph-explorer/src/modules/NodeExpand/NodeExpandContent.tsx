@@ -67,7 +67,6 @@ const NodeExpandContent = ({
   }, [expandNode, filters, limit, selectedType, vertex.data]);
 
 
-
 ///////////////////////////////////////////////////////////////////////////
   const onFullClick = useCallback(async () => {
     setIsExpanding(true);
@@ -85,8 +84,6 @@ const NodeExpandContent = ({
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
 ///////////////////////////////////////////////////////////////////////////
-
-
 
   const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
