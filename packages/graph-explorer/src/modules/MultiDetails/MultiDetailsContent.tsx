@@ -12,6 +12,8 @@ import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
+import NeighborsList from "../common/NeighborsList/NeighborsList";
+import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 
 
 export type MultiDetailsContentProps = {
@@ -90,13 +92,43 @@ const MultiDetailsContent = ({
             </div>
             {vertex.data.neighborsCount === 0 && (
             <PanelEmptyState
-            icon={<GraphIcon />}
-            title={t("multi-details.no-selection-title")}
-            subtitle={t("multi-details.no-connections-subtitle")}
+                icon={<GraphIcon />}
+                title={t("multi-details.no-selection-title")}
+                subtitle={t("multi-details.no-connections-subtitle")}
             />
             )}
             {vertex.data.neighborsCount !== 0 && (
-                <></>
+                <>
+                    <NeighborsList vertex={vertex} classNamePrefix={classNamePrefix} />
+                    {!vertex.data.__unfetchedNeighborCount && (
+                        <PanelEmptyState
+                        className={pfx("empty-panel-state")}
+                        icon={<GraphIcon />}
+                        title={t("node-expand.no-unfetched-title")}
+                        subtitle={t("node-expand.no-unfetched-subtitle")}
+                        />
+                    )}
+                    {!!vertex.data.__unfetchedNeighborCount && (
+                        /*
+                        <NodeExpandFilters
+                        classNamePrefix={classNamePrefix}
+                        neighborsOptions={neighborsOptions}
+                        selectedType={selectedType}
+                        onSelectedTypeChange={setSelectedType}
+                        filters={filters}
+                        onFiltersChange={setFilters}
+                        limit={limit}
+                        onLimitChange={setLimit}
+                        />
+                        */
+                       <MultiDetailsFilters
+
+                       />
+                    )}
+                    <ModuleContainerFooter>
+                        
+                    </ModuleContainerFooter>
+                </>
             )}
         </div>
     );
