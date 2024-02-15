@@ -15,34 +15,43 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 
 
 export type MultiDetailsContentProps = {
-    classNamePrefix?: string,
-    graphItems: Set<string>;
-    vertex: Vertex;
+    classNamePrefix?: string;
+    selectedItems: Set<String>;
+    vertex:Vertex;
     odFlag: boolean;
     overDate: string;
 };
 
 const MultiDetailsContent = ({
     classNamePrefix = "ft",
-    graphItems,
+    selectedItems,
     vertex,
     odFlag,
     overDate
 }: MultiDetailsContentProps) => {
     const config = useConfiguration();
+    // ^^ this will need to be removed, everything should flow based on leadingNode 
     const t = useTranslations();
     const styleWithTheme = useWithTheme();
     const pfx = withClassNamePrefix(classNamePrefix)
-    const neighborsOptions = useNeighborsOptions(vertex);
     const textTransform = useTextTransform();
 
     const [isExpanding, setIsExpanding] = useState(false);
+    const neighborsOptions = useNeighborsOptions(vertex);
     const [selectedType, setSelectedType] = useState<string>(
         neighborsOptions[0]?.value
-      );
-    const [filters, setFilters] = [null, null];
+    );
     const [limit, setLimit] = useState<number | null>(null);
+    
+    /**
+     * PLACE EXPAND FUNCTION HERE
+     * 
+     */
 
+
+
+    const getDisplayNames = useDisplayNames();
+    const { name } = getDisplayNames(vertex); //might want to change this later
     const displayLabels = useMemo(() => {
         return (vertex.data.types ?? [vertex.data.type])
           .map(type => {
@@ -53,10 +62,7 @@ const MultiDetailsContent = ({
           .filter(Boolean)
           .join(", ");
       }, [config, textTransform, vertex.data.type, vertex.data.types]);
-    
-      const getDisplayNames = useDisplayNames();
-      const { name } = getDisplayNames(vertex);
-      const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
+    const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
     return(
         <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -88,6 +94,9 @@ const MultiDetailsContent = ({
             title={t("multi-details.no-selection-title")}
             subtitle={t("multi-details.no-connections-subtitle")}
             />
+            )}
+            {vertex.data.neighborsCount !== 0 && (
+                <></>
             )}
         </div>
     );

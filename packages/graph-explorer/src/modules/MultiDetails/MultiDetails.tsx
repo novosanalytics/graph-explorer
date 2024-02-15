@@ -25,14 +25,17 @@ export type MultiDetailsProp = Omit<
 };
 
 
+// #Multi-Details v0.1: All common nodes shall reflect the necessary neighbors or so.
+//      NO MULTI-TYPE
+
 const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsProp) =>{
     const t = useTranslations();
     const nodes = useRecoilValue(nodesAtom);
     const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
     const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom)
 
-    const selectedNode = useMemo(() => {
-        return nodes.find(node => nodesSelectedIds.has(node.data.id));
+    const leadingNode = useMemo(() => {
+        return nodes.find(node => nodesSelectedIds);
       }, [nodes, nodesSelectedIds]);
     
     const selectedItems = new Set<string>(['test']);
@@ -53,9 +56,10 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
                 subtitle={t("multi-details.no-selection-subtitle")}
             />
         )}
-        {nodesSelectedIds.size >= 1 && (
+        {nodesSelectedIds.size >= 1 && leadingNode && (
             <MultiDetailsContent
-            
+            selectedItems={nodesSelectedIds}
+            vertex={leadingNode}
             odFlag={odFlag}
             overDate={overDate}/>
         )}

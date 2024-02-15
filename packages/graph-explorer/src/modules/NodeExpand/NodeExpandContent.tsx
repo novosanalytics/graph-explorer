@@ -82,7 +82,7 @@ const NodeExpandContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data]);
+  }, [expandNode, filters, limit, vertex.data]);
 ///////////////////////////////////////////////////////////////////////////
 
   const displayLabels = useMemo(() => {
