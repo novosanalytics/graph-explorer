@@ -82,23 +82,16 @@ const MultiDetailsContent = ({
 
   const nodeItems2 = Array.from(selectedItems.values());
   const nodeItems = useMemo(() => {
-    const items: AdvancedListItemType<any>[] = [];
+    const collectItems: AdvancedListItemType<any>[] = [];
     (Array.from(selectedItems.values()) || []).forEach(item => {
         const displayLabel = item;
-          items.push({
-            id: item,
-            title: item,
-            titleComponent: (
-                <div className={pfx("advanced-list-item-title")}>
-                <div className={pfx("node-title")}>
-                    {textTransform(displayLabel)}
-                </div>
-                </div>
-            )
-            })
+          collectItems.push({
+            id: item.toString(),
+            title: item.toString(),
+          })
     })
 
-    return items;
+    return collectItems;
   }, [selectedItems, config, pfx, textTransform]);
 
 
@@ -136,7 +129,10 @@ const MultiDetailsContent = ({
       {vertex.data.neighborsCount !== 0 && (
         <>
 
-          <div>{selectedItems}</div>
+          <AdvancedList
+            className={pfx("selected-items-advanced-list")}
+            items={nodeItems}
+          />
           <NeighborsList vertex={vertex} classNamePrefix={classNamePrefix} />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState
