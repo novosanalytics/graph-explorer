@@ -1,6 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Edge, Vertex } from "../../@types/entities";
-import { AdvancedList, ModuleContainerFooter, VertexIcon } from "../../components";
+import { 
+    AdvancedList,
+    AdvancedListItemType,
+    ModuleContainerFooter, 
+    VertexIcon } from "../../components";
 import Button from "../../components/Button";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
@@ -75,6 +79,28 @@ const MultiDetailsContent = ({
             items={}
           />
  */
+
+  const nodeItems2 = Array.from(selectedItems.values());
+  const nodeItems = useMemo(() => {
+    const items: AdvancedListItemType<any>[] = [];
+    (Array.from(selectedItems.values()) || []).forEach(item => {
+        const displayLabel = item;
+          items.push({
+            id: item,
+            title: item,
+            titleComponent: (
+                <div className={pfx("advanced-list-item-title")}>
+                <div className={pfx("node-title")}>
+                    {textTransform(displayLabel)}
+                </div>
+                </div>
+            )
+            })
+    })
+
+    return items;
+  }, [selectedItems, config, pfx, textTransform]);
+
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
