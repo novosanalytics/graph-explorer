@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Edge, Vertex } from "../../@types/entities";
-import { ModuleContainerFooter, VertexIcon } from "../../components";
+import { AdvancedList, ModuleContainerFooter, VertexIcon } from "../../components";
 import Button from "../../components/Button";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
@@ -14,6 +14,7 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import NeighborsList from "../common/NeighborsList/NeighborsList";
 import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
+import AdvancedListItem from "../../components/AdvancedList/internalComponents/AdvancedListItem";
 
 
 export type MultiDetailsContentProps = {
@@ -51,8 +52,6 @@ const MultiDetailsContent = ({
    * 
    */
 
-
-
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex); //might want to change this later
   const displayLabels = useMemo(() => {
@@ -66,6 +65,16 @@ const MultiDetailsContent = ({
       .join(", ");
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
+
+/**
+ * 
+ * 
+ *        <AdvancedList
+            classNamePrefix={classNamePrefix}
+            className={pfx("selected-items-advanced-list")}
+            items={}
+          />
+ */
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -100,6 +109,8 @@ const MultiDetailsContent = ({
       )}
       {vertex.data.neighborsCount !== 0 && (
         <>
+
+          <div>{selectedItems}</div>
           <NeighborsList vertex={vertex} classNamePrefix={classNamePrefix} />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState

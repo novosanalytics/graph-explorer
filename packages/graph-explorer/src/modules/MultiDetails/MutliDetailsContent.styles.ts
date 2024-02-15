@@ -41,6 +41,17 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
       }
     }
 
+    .${pfx}-selected-items-advanced-list {
+      width: 300px;
+      background: ${theme.palette.background.default};
+      .${pfx}-advanced-list-item {
+        background: ${theme.palette.background.secondary};
+        .${pfx}-content {
+          background: ${theme.palette.background.secondary};
+        }
+      }
+    }
+
     .${pfx}-empty-panel-state {
       height: auto;
       flex-grow: 1;
