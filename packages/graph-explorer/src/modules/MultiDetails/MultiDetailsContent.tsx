@@ -4,8 +4,10 @@ import {
     AdvancedList,
     AdvancedListItemType,
     ModuleContainerFooter, 
+    MagicExpandIcon,
     VertexIcon } from "../../components";
 import Button from "../../components/Button";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
@@ -18,6 +20,7 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import NeighborsList from "../common/NeighborsList/NeighborsList";
 import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
+import { useExpandNode } from "../../hooks";
 import AdvancedListItem from "../../components/AdvancedList/internalComponents/AdvancedListItem";
 
 
@@ -37,6 +40,7 @@ const MultiDetailsContent = ({
   overDate
 }: MultiDetailsContentProps) => {
   const config = useConfiguration();
+  const expandNode = useExpandNode();
   // ^^ this will need to be removed, everything should flow based on leadingNode 
   const t = useTranslations();
   const styleWithTheme = useWithTheme();
@@ -51,11 +55,47 @@ const MultiDetailsContent = ({
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
-  /**
-   * PLACE EXPAND FUNCTION HERE
-   * 
-   */
+/////////////////////////////////////////////////////////////////
 
+  const onExpandClick = useCallback(async () => {
+    setIsExpanding(true);
+    await expandNode({
+      vertexId: vertex.data.id,
+      vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
+      filterByVertexTypes: [selectedType],
+      filterCriteria: filters.map(filter => ({
+        name: filter.name,
+        operator: "LIKE",
+        value: filter.value,
+      })),
+      // TODO - review limit and offset when data is not sorted
+      limit: limit ?? vertex.data.neighborsCount,
+      offset:
+        limit === null
+          ? 0
+          : vertex.data.neighborsCount -
+            (vertex.data.__unfetchedNeighborCount ?? 0),
+    });
+    setIsExpanding(false);
+  }, [expandNode, filters, limit, selectedType, vertex.data]);
+
+  const onFullClick = useCallback(async () => {
+    setIsExpanding(true);
+    await expandNode({
+      vertexId: vertex.data.id,
+      vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
+      // TODO - review limit and offset when data is not sorted
+      limit: limit ?? vertex.data.neighborsCount,
+      offset:
+        limit === null
+          ? 0
+          : vertex.data.neighborsCount -
+            (vertex.data.__unfetchedNeighborCount ?? 0),
+    });
+    setIsExpanding(false);
+  }, [expandNode, filters, limit, vertex.data]);
+
+/////////////////////////////////////////////////////////////////
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex); //might want to change this later
   const displayLabels = useMemo(() => {
@@ -128,10 +168,12 @@ const MultiDetailsContent = ({
       )}
       {vertex.data.neighborsCount !== 0 && (
         <>
-
           <AdvancedList
+            classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
             items={nodeItems}
+            draggable={true}
+            defaultItemType={"graph-viewer__node"}
           />
           <NeighborsList vertex={vertex} classNamePrefix={classNamePrefix} />
           {!vertex.data.__unfetchedNeighborCount && (
@@ -155,7 +197,42 @@ const MultiDetailsContent = ({
             />
           )}
           <ModuleContainerFooter>
-
+          <Button
+              icon={
+                isExpanding ? (
+                  <LoadingSpinner style={{ width: 24, height: 24 }} />
+                ) : (
+                  <MagicExpandIcon />
+                )
+              }
+              variant={"filled"}
+              isDisabled={
+                isExpanding ||
+                !vertex.data.__unfetchedNeighborCount ||
+                !selectedType
+              }
+              onPress={onExpandClick}
+            >
+              Exact Expand
+            </Button>
+            <Button
+              icon={
+                isExpanding ? (
+                  <LoadingSpinner style={{ width: 24, height: 24 }} />
+                ) : (
+                  <ExpandGraphIcon />
+                )
+              }
+              variant={"filled"}
+              isDisabled={
+                isExpanding ||
+                !vertex.data.__unfetchedNeighborCount ||
+                !selectedType
+              }
+              onPress={onFullClick}
+            >
+              Full Expand
+            </Button>
           </ModuleContainerFooter>
         </>
       )}
