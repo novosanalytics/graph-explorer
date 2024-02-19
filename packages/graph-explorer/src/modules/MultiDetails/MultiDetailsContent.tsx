@@ -26,7 +26,7 @@ import AdvancedListItem from "../../components/AdvancedList/internalComponents/A
 
 export type MultiDetailsContentProps = {
   classNamePrefix?: string;
-  selectedItems: Set<String>;
+  selectedItems: Vertex[];
   vertex:Vertex;
   odFlag: boolean;
   overDate: string;
@@ -56,6 +56,10 @@ const MultiDetailsContent = ({
   const [limit, setLimit] = useState<number | null>(null);
   
 /////////////////////////////////////////////////////////////////
+  let selectedItemsNames = []
+  selectedItems.forEach(node => {
+    selectedItemsNames.push(node.data.id)
+  })
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
@@ -120,7 +124,8 @@ const MultiDetailsContent = ({
           />
  */
 
-  const nodeItems2 = Array.from(selectedItems.values());
+  const nodeItems2 = selectedItems;
+  console.log(`Loading: ${selectedItemsNames}`);
   const nodeItems = useMemo(() => {
     const collectItems: AdvancedListItemType<any>[] = [];
     (Array.from(selectedItems.values()) || []).forEach(item => {
@@ -171,7 +176,7 @@ const MultiDetailsContent = ({
           <AdvancedList
             classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
-            items={nodeItems}
+            items={selectedItemsNames}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
