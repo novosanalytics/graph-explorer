@@ -56,10 +56,6 @@ const MultiDetailsContent = ({
   const [limit, setLimit] = useState<number | null>(null);
   
 /////////////////////////////////////////////////////////////////
-  let selectedItemsNames = []
-  selectedItems.forEach(node => {
-    selectedItemsNames.push(node.data.id)
-  })
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
@@ -124,8 +120,7 @@ const MultiDetailsContent = ({
           />
  */
 
-  const nodeItems2 = selectedItems;
-  console.log(`Loading: ${selectedItemsNames}`);
+  const nodeItems2 = Array.from(selectedItems.values());
   const nodeItems = useMemo(() => {
     const collectItems: AdvancedListItemType<any>[] = [];
     (Array.from(selectedItems.values()) || []).forEach(item => {
@@ -139,6 +134,17 @@ const MultiDetailsContent = ({
     return collectItems;
   }, [selectedItems, config, pfx, textTransform]);
 
+
+  const nodeNames = useMemo(() => {
+    const collectNames: AdvancedListItemType<any>[] = [];
+    selectedItems.forEach(item => {
+        collectNames.push({
+            id: item.data.id,
+            title: item.data.id
+        })
+    })
+    return collectNames
+  }, [selectedItems, config, pfx, textTransform])
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -176,7 +182,7 @@ const MultiDetailsContent = ({
           <AdvancedList
             classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
-            items={selectedItemsNames}
+            items={nodeNames}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />

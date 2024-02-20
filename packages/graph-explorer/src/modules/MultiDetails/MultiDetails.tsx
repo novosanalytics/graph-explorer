@@ -58,7 +58,7 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
         )}
         {nodesSelectedIds.size >= 1 && leadingNode && (
             <MultiDetailsContent
-            selectedItems={nodes}
+            selectedItems={nodes} // change this to nodes <Vertex []>
             vertex={leadingNode}
             odFlag={odFlag}
             overDate={overDate}/>
