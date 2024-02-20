@@ -69,10 +69,11 @@ const MultiDetailsContent = ({
 */
 // TODO: merge gListNames with Nodenames somehow? (they're two different objects)
   const gListNames = useMemo(() => {
-    const collectGNames: string[] = [];
+    let collectGNames: string = "";
     selectedItems.forEach(gName => {
-        collectGNames.push(gName.data.id)
+        collectGNames.concat(`"${gName.data.id}",`)
     });
+    collectGNames = collectGNames.substring(0, collectGNames.length - 1);
     return collectGNames;
   }, [selectedItems])
 

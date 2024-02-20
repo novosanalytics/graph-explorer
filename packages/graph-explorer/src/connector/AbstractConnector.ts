@@ -79,7 +79,7 @@ export type NeighborsRequest = {
   /**
    * Multiple Source Vertices
    */
-  multiVertexId?:Array<string>
+  multiVertexId?: string;
   /**
    * Source vertex ID.
    */
