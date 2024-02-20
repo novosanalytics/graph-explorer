@@ -32,6 +32,13 @@ const NeighborsList = ({
     return neighborTotalCounts;
   }, [vertexList])
 
+
+  /*const neighborsInView =
+  vertex.data.neighborsCountByType[op.value] -
+  (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);*/
+
+
+
   /*let neighborTotalCounts = 0;
   vertexList?.forEach(node => {
     neighborTotalCounts += node.data.neighborsCount
@@ -48,9 +55,20 @@ const NeighborsList = ({
         Neighbors ({multiFlag ? totalNeighbors : vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
-        const neighborsInView =
-          vertex.data.neighborsCountByType[op.value] -
-          (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+          const neighborsInView = useMemo(() => {
+            let neighborNumber = 0;
+            if(multiFlag){
+              neighborNumber = vertex.data.neighborsCountByType[op.value] -
+              (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+            }else{
+              vertexList?.forEach(subItem =>{
+                neighborNumber += subItem.data.neighborsCountByType[op.value] -
+                (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+              })
+            }
+            console.log(`Multi: ${multiFlag} NN: ${neighborNumber}`)
+            return neighborNumber;
+          }, [op,vertex, vertexList])
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>
