@@ -66,7 +66,6 @@ const NeighborsList = ({
                 (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
               })
             }
-            console.log(`Multi: ${multiFlag} NN: ${neighborNumber}`)
             return neighborNumber;
           }, [op,vertex, vertexList])
         return (

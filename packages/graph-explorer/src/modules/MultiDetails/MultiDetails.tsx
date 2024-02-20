@@ -38,7 +38,6 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
         return nodes.find(node => nodesSelectedIds);
       }, [nodes, nodesSelectedIds]);
     
-    const selectedItems = new Set<string>(['test']);
     const odFlag = useRecoilValue(overDateFlagAtom);
     const overDate = useRecoilValue(overDateAtom);
 

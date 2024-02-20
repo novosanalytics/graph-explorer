@@ -68,15 +68,15 @@ const MultiDetailsContent = ({
   }, [selectedItems, config, pfx, textTransform])
 */
 
-  console.log("this thing has a million flying parts")
 
 // TODO: merge gListNames with Nodenames somehow? (they're two different objects)
   const gListNames = useMemo(() => {
     let collectGNames: string = "";
     selectedItems.forEach(gName => {
-        collectGNames.concat(`"${gName.data.id}",`)
+        collectGNames = collectGNames.concat(`"${gName.data.id}",`)
     });
     collectGNames = collectGNames.substring(0, collectGNames.length - 1);
+    console.log(collectGNames);
     return collectGNames;
   }, [selectedItems])
 
@@ -102,7 +102,7 @@ const MultiDetailsContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data]);
+  }, [expandNode, filters, limit, selectedType, vertex.data, gListNames]);
 
 // ################################################################################### //
 

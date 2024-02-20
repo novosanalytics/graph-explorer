@@ -179,6 +179,8 @@ const oneHopTemplate = ({
   } else {
     if (filterCriteria.length > 0) {
       template += `.by(both()${filterCriteriaTemplate}.dedup()${range}.fold())`;
+    } else if (multiVertexId) {
+      template += `.by(both()${range}.fold())`;
     } else {
       template += `.by(both().dedup()${range}.fold())`;
     }
