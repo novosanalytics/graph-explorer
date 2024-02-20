@@ -67,6 +67,9 @@ const MultiDetailsContent = ({
     return collectNames
   }, [selectedItems, config, pfx, textTransform])
 */
+
+  console.log("this thing has a million flying parts")
+
 // TODO: merge gListNames with Nodenames somehow? (they're two different objects)
   const gListNames = useMemo(() => {
     let collectGNames: string = "";
