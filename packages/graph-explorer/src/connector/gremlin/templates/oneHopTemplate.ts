@@ -148,6 +148,8 @@ const oneHopTemplate = ({
   } else {
     template = `g.V("${vertexId}")`;
   }
+
+  console.log(`THIS IS ME: ${multiVertexId?.length}`);
   
   template += `.project("vertices", "edges")`;
 
