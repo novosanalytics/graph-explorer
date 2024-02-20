@@ -126,6 +126,7 @@ const criterionTemplate = (criterion: Criterion): string => {
  *  )
  */
 const oneHopTemplate = ({
+  multiVertexId,
   vertexId,
   odFlag,
   overdate,
@@ -142,6 +143,8 @@ const oneHopTemplate = ({
   let template = "";
   if (idType === "number") {
     template = `g.V(${vertexId}L)`;
+  } else if(multiVertexId) {
+    template = `g.V("${multiVertexId}")`;
   } else {
     template = `g.V("${vertexId}")`;
   }

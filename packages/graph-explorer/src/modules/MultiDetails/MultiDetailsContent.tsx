@@ -56,10 +56,31 @@ const MultiDetailsContent = ({
   const [limit, setLimit] = useState<number | null>(null);
   
 /////////////////////////////////////////////////////////////////
+/*const nodeNames = useMemo(() => {
+    const collectNames: AdvancedListItemType<any>[] = [];
+    selectedItems.forEach(item => {
+        collectNames.push({
+            id: item.data.id,
+            title: item.data.id
+        })
+    })
+    return collectNames
+  }, [selectedItems, config, pfx, textTransform])
+*/
+// TODO: merge gListNames with Nodenames somehow? (they're two different objects)
+  const gListNames = useMemo(() => {
+    const collectGNames: string[] = [];
+    selectedItems.forEach(gName => {
+        collectGNames.push(gName.data.id)
+    });
+    return collectGNames;
+  }, [selectedItems])
+
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
+      multiVertexId: gListNames,
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       filterByVertexTypes: [selectedType],
@@ -78,6 +99,8 @@ const MultiDetailsContent = ({
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
+
+// ################################################################################### //
 
   const onFullClick = useCallback(async () => {
     setIsExpanding(true);
