@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { Vertex } from "../../../@types/entities";
 import { Chip, Tooltip, VertexIcon, VisibleIcon } from "../../../components";
@@ -21,10 +22,20 @@ const NeighborsList = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
-  let neighborTotalCounts = 0;
+  console.log(multiFlag)
+  const totalNeighbors = useMemo(() => {
+    console.log(`Nodes: ${vertexList}`)
+    let neighborTotalCounts = 0;
+    vertexList?.forEach(node => {
+      neighborTotalCounts += node?.data.neighborsCount
+    });
+    return neighborTotalCounts;
+  }, [vertexList])
+
+  /*let neighborTotalCounts = 0;
   vertexList?.forEach(node => {
     neighborTotalCounts += node.data.neighborsCount
-  });
+  });*/
 
   return (
     <div
@@ -34,7 +45,7 @@ const NeighborsList = ({
       )}
     >
       <div className={pfx("title")}>
-        Neighbors ({multiFlag ? neighborTotalCounts : vertex.data.neighborsCount})
+        Neighbors ({multiFlag ? totalNeighbors : vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
         const neighborsInView =

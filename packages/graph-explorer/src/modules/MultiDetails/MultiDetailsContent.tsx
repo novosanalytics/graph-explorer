@@ -110,31 +110,6 @@ const MultiDetailsContent = ({
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
-/**
- * 
- * 
- *        <AdvancedList
-            classNamePrefix={classNamePrefix}
-            className={pfx("selected-items-advanced-list")}
-            items={}
-          />
- */
-
-  const nodeItems2 = Array.from(selectedItems.values());
-  const nodeItems = useMemo(() => {
-    const collectItems: AdvancedListItemType<any>[] = [];
-    (Array.from(selectedItems.values()) || []).forEach(item => {
-        const displayLabel = item;
-          collectItems.push({
-            id: item.toString(),
-            title: item.toString(),
-          })
-    })
-
-    return collectItems;
-  }, [selectedItems, config, pfx, textTransform]);
-
-
   const nodeNames = useMemo(() => {
     const collectNames: AdvancedListItemType<any>[] = [];
     selectedItems.forEach(item => {
@@ -186,7 +161,12 @@ const MultiDetailsContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-          <NeighborsList vertex={vertex} classNamePrefix={classNamePrefix} />
+          <NeighborsList 
+            vertex={vertex}
+            vertexList={selectedItems}
+            classNamePrefix={classNamePrefix}
+            multiFlag={true}
+          />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState
             className={pfx("empty-panel-state")}
