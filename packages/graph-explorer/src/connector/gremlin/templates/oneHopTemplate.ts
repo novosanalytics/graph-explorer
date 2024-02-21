@@ -143,14 +143,10 @@ const oneHopTemplate = ({
   let template = "";
   if (idType === "number") {
     template = `g.V(${vertexId}L)`;
-  } else if(multiVertexId) {
-    template = `g.V(${multiVertexId})`;
   } else {
     template = `g.V("${vertexId}")`;
   }
 
-  console.log(`THIS IS ME: ${multiVertexId?.length}`);
-  
   template += `.project("vertices", "edges")`;
 
   const hasLabelContent = filterByVertexTypes
@@ -179,8 +175,6 @@ const oneHopTemplate = ({
   } else {
     if (filterCriteria.length > 0) {
       template += `.by(both()${filterCriteriaTemplate}.dedup()${range}.fold())`;
-    } else if (multiVertexId) {
-      template += `.by(both()${range}.fold())`;
     } else {
       template += `.by(both().dedup()${range}.fold())`;
     }
@@ -198,6 +192,10 @@ const oneHopTemplate = ({
     } else {
       template += `.by(bothE().dedup().fold())`;
     }
+  }
+
+  if(multiVertexId){
+    template = `g.V(${multiVertexId}).hasLabel(${hasLabelContent})`
   }
 
   return template;
