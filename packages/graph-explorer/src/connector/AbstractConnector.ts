@@ -77,6 +77,10 @@ export type Criterion = {
 
 export type NeighborsRequest = {
   /**
+   * Multiple Source Vertices
+   */
+  multiVertexId?: string;
+  /**
    * Source vertex ID.
    */
   vertexId: string;

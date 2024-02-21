@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { Vertex } from "../../../@types/entities";
 import { Chip, Tooltip, VertexIcon, VisibleIcon } from "../../../components";
@@ -8,15 +9,39 @@ import defaultStyles from "./NeighborsList.styles";
 export type NeighborsListProps = {
   classNamePrefix?: string;
   vertex: Vertex;
+  vertexList?:Vertex[];
+  multiFlag?:boolean;
 };
 
 const NeighborsList = ({
   classNamePrefix = "ft",
   vertex,
+  vertexList,
+  multiFlag
 }: NeighborsListProps) => {
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
+  const totalNeighbors = useMemo(() => {
+    console.log(`Nodes: ${vertexList}`)
+    let neighborTotalCounts = 0;
+    vertexList?.forEach(node => {
+      neighborTotalCounts += node?.data.neighborsCount
+    });
+    return neighborTotalCounts;
+  }, [vertexList])
+
+
+  /*const neighborsInView =
+  vertex.data.neighborsCountByType[op.value] -
+  (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);*/
+
+
+
+  /*let neighborTotalCounts = 0;
+  vertexList?.forEach(node => {
+    neighborTotalCounts += node.data.neighborsCount
+  });*/
 
   return (
     <div
@@ -26,12 +51,22 @@ const NeighborsList = ({
       )}
     >
       <div className={pfx("title")}>
-        Neighbors ({vertex.data.neighborsCount})
+        Neighbors ({multiFlag ? totalNeighbors : vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
-        const neighborsInView =
-          vertex.data.neighborsCountByType[op.value] -
-          (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+          const neighborsInView = useMemo(() => {
+            let neighborNumber = 0;
+            if(multiFlag){
+              neighborNumber = vertex.data.neighborsCountByType[op.value] -
+              (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+            }else{
+              vertexList?.forEach(subItem =>{
+                neighborNumber += subItem.data.neighborsCountByType[op.value] -
+                (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+              })
+            }
+            return neighborNumber;
+          }, [op,vertex, vertexList])
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>

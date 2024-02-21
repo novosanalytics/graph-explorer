@@ -126,6 +126,7 @@ const criterionTemplate = (criterion: Criterion): string => {
  *  )
  */
 const oneHopTemplate = ({
+  multiVertexId,
   vertexId,
   odFlag,
   overdate,
@@ -191,6 +192,10 @@ const oneHopTemplate = ({
     } else {
       template += `.by(bothE().dedup().fold())`;
     }
+  }
+
+  if(multiVertexId){
+    template = `g.V(${multiVertexId}).hasLabel(${hasLabelContent})`
   }
 
   return template;

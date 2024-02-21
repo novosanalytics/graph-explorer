@@ -66,10 +66,7 @@ const NodeExpandContent = ({
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
 
-
-
-///////////////////////////////////////////////////////////////////////////
-  const onMagicClick = useCallback(async () => {
+  const onFullClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
       vertexId: vertex.data.id,
@@ -83,10 +80,7 @@ const NodeExpandContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data]);
-///////////////////////////////////////////////////////////////////////////
-
-
+  }, [expandNode, filters, limit, vertex.data]);
 
   const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
@@ -189,9 +183,9 @@ const NodeExpandContent = ({
                 !vertex.data.__unfetchedNeighborCount ||
                 !selectedType
               }
-              onPress={onMagicClick}
+              onPress={onFullClick}
             >
-              Magic Expand
+              Full Expand
             </Button>
           </ModuleContainerFooter>
           

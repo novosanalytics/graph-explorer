@@ -4,7 +4,6 @@
 import { forEach } from "lodash";
 import { SubGraphRequest } from "../../AbstractConnector";
 import mapDateStr from "../mappers/mapDateStr";
-import { m } from "framer-motion";
 // nodes = Set
 const subgraphTemplate = ({
     date = "string", 
