@@ -38,6 +38,7 @@ const fetchNeighbors = async (
   const verticesResponse =
     data.result.data["@value"]?.[0]?.["@value"][1]["@value"];
   const verticesIds = verticesResponse?.map(v => toStringId(v["@value"].id));
+  console.log(`RAW DATA: ${verticesIds}`)
   const vertices: NeighborsResponse["vertices"] = verticesResponse?.map(
     vertex => mapApiVertex(vertex)
   );
@@ -51,7 +52,12 @@ const fetchNeighbors = async (
         verticesIds.includes(edge.data.source) ||
         verticesIds.includes(edge.data.target)
     );
-  console.log(`Vertices: ${vertices}`);
+  
+  let vString = '';
+  vertices.forEach(vertex => {
+    vString += `${vertex.data.id},`
+  })
+  console.log(`Vertices: ${vString}`);
   console.log(`Edges: ${edges}`);
   return {
     vertices,

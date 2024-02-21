@@ -194,8 +194,15 @@ const oneHopTemplate = ({
     }
   }
 
+
+  /**
+   * 
+   * g.V(\"a0X1Q00000WmYDGUA3\", \"a0X1Q00000WmYD1UAN\", \"a0XPm000000NqCPMA0\").project(\"vertices\").by(both().hasLabel(\"client\").range(0, 18).fold())
+   * 
+   */
+
   if(multiVertexId){
-    template = `g.V(${multiVertexId}).hasLabel(${hasLabelContent})`
+    template = `g.V(${multiVertexId}).project("vertices", "edges").by(both().hasLabel(${hasLabelContent})${range}.fold()).by(bothE().where(otherV().hasLabel(${hasLabelContent})).fold())`
   }
 
   return template;
