@@ -11,8 +11,6 @@ const useExpandNode = () => {
 
   return useCallback(
     async (req: NeighborsRequest) => {
-      console.log(`THE REQUEST: ${req.multiVertexId}`)
-      console.log(`THE TRUTH: ${req.vertexId}`)
       const result = await connector.explorer?.fetchNeighbors(req);
 
       if (!result || !result.vertices.length) {

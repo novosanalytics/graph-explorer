@@ -22,7 +22,6 @@ const NeighborsList = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
-  console.log(multiFlag)
   const totalNeighbors = useMemo(() => {
     console.log(`Nodes: ${vertexList}`)
     let neighborTotalCounts = 0;
