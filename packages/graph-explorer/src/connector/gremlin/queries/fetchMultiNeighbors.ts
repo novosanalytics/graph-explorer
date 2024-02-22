@@ -27,7 +27,7 @@ type RawOneHopRequest = {
   };
 };
 
-const fetchNeighbors = async (
+const fetchMultiNeighbors = async (
   gremlinFetch: GremlinFetch,
   req: NeighborsRequest,
   rawIds: Map<string, "string" | "number">
@@ -42,18 +42,19 @@ const fetchNeighbors = async (
   
   const rawVertices = data.result.data["@value"]
   let verticesIds: Array<any>[] = [];
-  let edges: Array<Edge> = [];
+  let edges: Edge[] = [];
   rawVertices.forEach(vResult => {
     let vDetails = vResult["@value"][1]["@value"].map(v => toStringId(v["@value"].id));
     verticesIds.push(vDetails)
-    console.log(vResult["@value"][3]["@value"]
+    let eResult = vResult["@value"][3]["@value"]
     .map(e=> {
       return mapApiEdge(e);
     }).filter(
       edge =>
         vDetails.includes(edge.data.source) ||
         vDetails.includes(edge.data.target)
-    ))
+    )
+    edges.concat(eResult)
   });
   //const rawVerticesIds = rawVertices?.map(v => toStringId(v["@value"].id));
   console.log(`RAW DATA: ${verticesIds}`);
@@ -84,4 +85,4 @@ const fetchNeighbors = async (
   };
 };
 
-export default fetchNeighbors;
+export default fetchMultiNeighbors;

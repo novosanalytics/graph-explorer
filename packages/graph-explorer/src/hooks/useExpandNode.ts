@@ -11,7 +11,11 @@ const useExpandNode = () => {
 
   return useCallback(
     async (req: NeighborsRequest) => {
-      const result = await connector.explorer?.fetchNeighbors(req);
+      const result = req.multiVertexId ?
+        await connector.explorer?.fetchMultiNeighbors(req)
+        :
+        await connector.explorer?.fetchNeighbors(req);
+      
 
       if (!result || !result.vertices.length) {
         enqueueNotification({
