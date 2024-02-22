@@ -43,12 +43,12 @@ const fetchMultiNeighbors = async (
   const rawVertices = data.result.data["@value"]
   let verticesIds: Array<any>[] = [];
   let edges: Edge[] = [];
-  const vertices: NeighborsResponse["vertices"] = [];
+  let vertices: NeighborsResponse["vertices"] = [];
   rawVertices.forEach(vResult => {
     const vItems = vResult["@value"][1]["@value"];
     const vDetails = vItems.map(v => toStringId(v["@value"].id));
     verticesIds.push(vDetails);
-    vertices.concat(vItems.map(
+    vertices = vertices.concat(vItems.map(
       vertex => mapApiVertex(vertex)
     ));
     const eDetails = vResult["@value"][3]["@value"]
@@ -61,13 +61,14 @@ const fetchMultiNeighbors = async (
     )
     console.log(`V Details: ${vDetails}`);
     console.log(`E Details: ${eDetails}`);
-    edges.concat(eDetails)
+    edges = edges.concat(eDetails)
   });
   //const rawVerticesIds = rawVertices?.map(v => toStringId(v["@value"].id));
   //const vertices: NeighborsResponse["vertices"] = verticesResponse?.map(
   //  vertex => mapApiVertex(vertex)
   //);
-
+  console.log(`Vertices: ${vertices}`);
+  console.log(`Edges: ${edges}`);
   return {
     vertices,
     edges,
