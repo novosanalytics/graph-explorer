@@ -1,3 +1,4 @@
+import { Edge } from "../../../@types/entities";
 import type {
   NeighborsRequest,
   NeighborsResponse,
@@ -37,20 +38,31 @@ const fetchNeighbors = async (
   console.log(`Node Query: ${gremlinTemplate}`)
   const verticesResponse =
     data.result.data["@value"]?.[0]?.["@value"][1]["@value"];
-  const verticesIds = verticesResponse?.map(v => toStringId(v["@value"].id));
+  //const verticesIds = verticesResponse?.map(v => toStringId(v["@value"].id));
   
   const rawVertices = data.result.data["@value"]
+  let verticesIds: Array<any>[] = [];
+  let edges: Array<Edge> = [];
   rawVertices.forEach(vResult => {
-    vResult?.["@value"][1]["@value"]
-  })
+    let vDetails = vResult["@value"][1]["@value"].map(v => toStringId(v["@value"].id));
+    verticesIds.push(vDetails)
+    console.log(vResult["@value"][3]["@value"]
+    .map(e=> {
+      return mapApiEdge(e);
+    }).filter(
+      edge =>
+        vDetails.includes(edge.data.source) ||
+        vDetails.includes(edge.data.target)
+    ))
+  });
   //const rawVerticesIds = rawVertices?.map(v => toStringId(v["@value"].id));
-
-  //console.log(`RAW DATA: ${rawVerticesIds}`)
+  console.log(`RAW DATA: ${verticesIds}`);
   const vertices: NeighborsResponse["vertices"] = verticesResponse?.map(
     vertex => mapApiVertex(vertex)
   );
 
-  const edges = data.result.data["@value"]?.[0]?.["@value"][3]["@value"]
+
+  /*const edges = data.result.data["@value"]?.[0]?.["@value"][3]["@value"]
     .map(value => {
       return mapApiEdge(value);
     })
@@ -59,7 +71,7 @@ const fetchNeighbors = async (
         verticesIds.includes(edge.data.source) ||
         verticesIds.includes(edge.data.target)
     );
-  
+  */
   let vString = '';
   vertices.forEach(vertex => {
     vString += `${vertex.data.id},`
