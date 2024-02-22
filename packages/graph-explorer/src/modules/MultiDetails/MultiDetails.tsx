@@ -33,6 +33,10 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
     const nodes = useRecoilValue(nodesAtom);
     const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
     const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom)
+    //const nodesSelected = nodes - nodesSelectedIds
+    //const nodesSelected: Array<any>[] = nodes.forEach(nItem => {
+    //    nItem
+    //});
 
     const leadingNode = useMemo(() => {
         return nodes.find(node => nodesSelectedIds);
@@ -57,7 +61,7 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
         )}
         {nodesSelectedIds.size >= 1 && leadingNode && (
             <MultiDetailsContent
-            selectedItems={nodes} // change this to nodes <Vertex []>
+            selectedItems={nodes} 
             vertex={leadingNode}
             odFlag={odFlag}
             overDate={overDate}/>

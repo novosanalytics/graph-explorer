@@ -17,6 +17,7 @@ import { AbstractConnector } from "../AbstractConnector";
 import fetchNeighbors from "./queries/fetchNeighbors";
 import fetchNeighborsCount from "./queries/fetchNeighborsCount";
 import fetchEdgeNeighbors from "./queries/fetchEdgeNeighbor";
+import fetchMultiNeighbors from "./queries/fetchMultiNeighbors";
 import fetchSchema from "./queries/fetchSchema";
 import fetchVertexTypeCounts from "./queries/fetchVertexTypeCounts";
 import keywordSearch from "./queries/keywordSearch";
@@ -61,6 +62,7 @@ export default class GremlinConnector extends AbstractConnector {
     return fetchNeighbors(this._gremlinFetch(options), req, this._rawIdTypeMap);
   }
 
+
   fetchNeighborsCount(
     req: NeighborsCountRequest,
     options?: QueryOptions
@@ -70,6 +72,13 @@ export default class GremlinConnector extends AbstractConnector {
       req,
       this._rawIdTypeMap
     );
+  }
+
+  fetchMultiNeighbors(
+    req: NeighborsRequest,
+    options: QueryOptions | undefined
+  ): Promise<NeighborsResponse> {
+    return fetchMultiNeighbors(this._gremlinFetch(options), req, this._rawIdTypeMap);
   }
 
   fetchEdgeNeighbors(

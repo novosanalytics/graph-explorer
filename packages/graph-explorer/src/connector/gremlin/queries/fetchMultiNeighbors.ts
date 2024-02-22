@@ -1,3 +1,4 @@
+import { Edge } from "../../../@types/entities";
 import type {
   NeighborsRequest,
   NeighborsResponse,
@@ -26,7 +27,7 @@ type RawOneHopRequest = {
   };
 };
 
-const fetchNeighbors = async (
+const fetchMultiNeighbors = async (
   gremlinFetch: GremlinFetch,
   req: NeighborsRequest,
   rawIds: Map<string, "string" | "number">
@@ -35,22 +36,27 @@ const fetchNeighbors = async (
   const gremlinTemplate = oneHopTemplate({ ...req, idType });
   const data = await gremlinFetch<RawOneHopRequest>(gremlinTemplate);
   console.log(`Node Query: ${gremlinTemplate}`)
-  const verticesResponse =
-    data.result.data["@value"]?.[0]?.["@value"][1]["@value"];
-  const verticesIds = verticesResponse?.map(v => toStringId(v["@value"].id));
-  const vertices: NeighborsResponse["vertices"] = verticesResponse?.map(
-    vertex => mapApiVertex(vertex)
-  );
-
-  const edges = data.result.data["@value"]?.[0]?.["@value"][3]["@value"]
-    .map(value => {
-      return mapApiEdge(value);
-    })
-    .filter(
+  const rawVertices = data.result.data["@value"]
+  let verticesIds: Array<any>[] = [];
+  let edges: Edge[] = [];
+  let vertices: NeighborsResponse["vertices"] = [];
+  rawVertices.forEach(vResult => {
+    const vItems = vResult["@value"][1]["@value"];
+    const vDetails = vItems.map(v => toStringId(v["@value"].id));
+    verticesIds.push(vDetails);
+    vertices = vertices.concat(vItems.map(
+      vertex => mapApiVertex(vertex)
+    ));
+    const eDetails = vResult["@value"][3]["@value"]
+    .map(e=> {
+      return mapApiEdge(e);
+    }).filter(
       edge =>
-        verticesIds.includes(edge.data.source) ||
-        verticesIds.includes(edge.data.target)
-    );
+        vDetails.includes(edge.data.source) ||
+        vDetails.includes(edge.data.target)
+    )
+    edges = edges.concat(eDetails)
+  });
   console.log(`Vertices: ${vertices}`);
   console.log(`Edges: ${edges}`);
   return {
@@ -59,4 +65,4 @@ const fetchNeighbors = async (
   };
 };
 
-export default fetchNeighbors;
+export default fetchMultiNeighbors;
