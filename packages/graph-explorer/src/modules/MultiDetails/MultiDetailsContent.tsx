@@ -49,12 +49,25 @@ const MultiDetailsContent = ({
 
   const [isExpanding, setIsExpanding] = useState(false);
   const neighborsOptions = useNeighborsOptions(vertex);
+  const selectedNeighborOptions = useNeighborsOptions(selectedItems[0])
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
+  const nodeTypes = useMemo(() => {
+    const collectTypes: Array<string> = [];
+    selectedItems.forEach(sItem => {
+      collectTypes.includes(sItem.data.type) 
+      ? null : collectTypes.push(sItem.data.type);
+    })
+    return collectTypes;
+  }, [selectedItems])
+
+  const [selectedMultiType, setSelectedMultiType] = useState<string>(
+    nodeTypes[0]
+  );
 /////////////////////////////////////////////////////////////////
 /*const nodeNames = useMemo(() => {
     const collectNames: AdvancedListItemType<any>[] = [];
@@ -87,7 +100,7 @@ const MultiDetailsContent = ({
       multiVertexId: gListNames,
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
-      filterByVertexTypes: [selectedType],
+      filterByVertexTypes: [selectedMultiType],
       filterCriteria: filters.map(filter => ({
         name: filter.name,
         operator: "LIKE",
@@ -102,7 +115,7 @@ const MultiDetailsContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data, gListNames]);
+  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gListNames]);
 
 // ################################################################################### //
 
@@ -137,6 +150,8 @@ const MultiDetailsContent = ({
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
+
+  // Try merging or something, let's make a detailed node type inspector
   const nodeNames = useMemo(() => {
     const collectNames: AdvancedListItemType<any>[] = [];
     selectedItems.forEach(item => {
@@ -148,7 +163,10 @@ const MultiDetailsContent = ({
     return collectNames
   }, [selectedItems, config, pfx, textTransform])
 
+
+
   return(
+
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
         {vtConfig?.iconUrl && (
@@ -167,11 +185,13 @@ const MultiDetailsContent = ({
         )}
         <div className={pfx("content")}>
           <div className={pfx("title")}>
-            {displayLabels || vertex.data.type}
+            {nodeTypes.length != 1 ? "Multiple Types" : nodeTypes[0]} 
           </div>
           <div></div>
         </div>
       </div>
+
+
       {vertex.data.neighborsCount === 0 && (
         <PanelEmptyState
           icon={<GraphIcon />}
@@ -189,7 +209,7 @@ const MultiDetailsContent = ({
             defaultItemType={"graph-viewer__node"}
           />
           <NeighborsList 
-            vertex={vertex}
+            vertex={selectedItems[0]}
             vertexList={selectedItems}
             classNamePrefix={classNamePrefix}
             multiFlag={true}
@@ -205,9 +225,9 @@ const MultiDetailsContent = ({
           {!!vertex.data.__unfetchedNeighborCount && (
             <MultiDetailsFilters
               classNamePrefix={classNamePrefix}
-              neighborsOptions={neighborsOptions}
-              selectedType={selectedType}
-              onSelectedTypeChange={setSelectedType}
+              neighborsOptions={selectedNeighborOptions}
+              selectedType={selectedMultiType}
+              onSelectedTypeChange={setSelectedMultiType}
               filters={filters}
               onFiltersChange={setFilters}
               limit={limit}
@@ -227,7 +247,7 @@ const MultiDetailsContent = ({
               isDisabled={
                 isExpanding ||
                 !vertex.data.__unfetchedNeighborCount ||
-                !selectedType
+                !selectedMultiType
               }
               onPress={onExpandClick}
             >
@@ -245,7 +265,7 @@ const MultiDetailsContent = ({
               isDisabled={
                 isExpanding ||
                 !vertex.data.__unfetchedNeighborCount ||
-                !selectedType
+                !selectedMultiType
               }
               onPress={onFullClick}
             >

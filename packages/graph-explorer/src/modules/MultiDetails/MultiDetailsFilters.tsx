@@ -142,6 +142,38 @@ const MultiDetailsFilter =({
           ))}
         </div>
       )}
+      <div className={pfx("title")}>
+        <div>Limit returned neighbors to</div>
+        <IconButton
+          icon={<AddIcon />}
+          variant={"text"}
+          size={"small"}
+          onPress={() => onLimitChange(1)}
+        />
+      </div>
+      {limit !== null && (
+        <div className={pfx("limit")}>
+          <Input
+            aria-label={"limit"}
+            className={pfx("input")}
+            type={"number"}
+            min={1}
+            step={1}
+            value={limit}
+            onChange={(v: number | null) => onLimitChange(v ?? 0)}
+            hideError={true}
+            noMargin={true}
+          />
+          <IconButton
+            icon={<DeleteIcon />}
+            variant={"text"}
+            color={"error"}
+            size={"small"}
+            tooltipText={"Remove Limit"}
+            onPress={() => onLimitChange(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };
