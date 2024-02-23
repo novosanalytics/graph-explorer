@@ -18,6 +18,7 @@ import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import NeighborsList from "../common/NeighborsList/NeighborsList";
+import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
 import { useExpandNode } from "../../hooks";
@@ -208,7 +209,7 @@ const MultiDetailsContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-          <NeighborsList 
+          <MultiNeighborsList 
             vertex={selectedItems[0]}
             vertexList={selectedItems}
             classNamePrefix={classNamePrefix}
