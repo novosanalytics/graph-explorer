@@ -22,15 +22,6 @@ const NeighborsList = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
-  const totalNeighbors = useMemo(() => {
-    console.log(`Nodes: ${vertexList}`)
-    let neighborTotalCounts = 0;
-    vertexList?.forEach(node => {
-      neighborTotalCounts += node?.data.neighborsCount
-    });
-    return neighborTotalCounts;
-  }, [vertexList])
-
 
   /*const neighborsInView =
   vertex.data.neighborsCountByType[op.value] -
@@ -51,7 +42,7 @@ const NeighborsList = ({
       )}
     >
       <div className={pfx("title")}>
-        Neighbors ({multiFlag ? totalNeighbors : vertex.data.neighborsCount})
+        Neighbors ({vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
           const neighborsInView = useMemo(() => {
