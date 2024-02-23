@@ -151,24 +151,14 @@ const MultiDetailsContent = ({
   }, [selectedItems, config, pfx, textTransform])
 
   const nodeTypes = useMemo(() => {
-    const collectTypes: Array<string>[] = [];
+    const collectTypes: Array<string> = [];
     selectedItems.forEach(sItem => {
-      
+      collectTypes.includes(sItem.data.type) ? null : collectTypes.push(sItem.data.type);
     })
+    return collectTypes;
   }, [selectedItems])
-  const multiDisplabels = useMemo(() => {
-    /*return (vertex.data.types ?? [vertex.data.type])
-    .map(type => {
-    return (
-      config?.getVertexTypeConfig(type)?.displayLabel || textTransform(type)
-    );
-    })
-    .filter(Boolean)
-    .join(", "); */
-    return ()
-  }, [config, textTransform, vertex.data.type, vertex.data.types]);
 
-
+  console.log(nodeTypes)
 
   return(
 
@@ -190,7 +180,7 @@ const MultiDetailsContent = ({
         )}
         <div className={pfx("content")}>
           <div className={pfx("title")}>
-            {displayLabels || vertex.data.type}
+            {nodeTypes.length != 1 ? "Multiple Types" : nodeTypes[0]} 
           </div>
           <div></div>
         </div>
