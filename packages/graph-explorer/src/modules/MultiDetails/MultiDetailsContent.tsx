@@ -137,6 +137,8 @@ const MultiDetailsContent = ({
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
+
+  // Try merging or something, let's make a detailed node type inspector
   const nodeNames = useMemo(() => {
     const collectNames: AdvancedListItemType<any>[] = [];
     selectedItems.forEach(item => {
@@ -148,7 +150,28 @@ const MultiDetailsContent = ({
     return collectNames
   }, [selectedItems, config, pfx, textTransform])
 
+  const nodeTypes = useMemo(() => {
+    const collectTypes: Array<string>[] = [];
+    selectedItems.forEach(sItem => {
+      
+    })
+  }, [selectedItems])
+  const multiDisplabels = useMemo(() => {
+    /*return (vertex.data.types ?? [vertex.data.type])
+    .map(type => {
+    return (
+      config?.getVertexTypeConfig(type)?.displayLabel || textTransform(type)
+    );
+    })
+    .filter(Boolean)
+    .join(", "); */
+    return ()
+  }, [config, textTransform, vertex.data.type, vertex.data.types]);
+
+
+
   return(
+
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
         {vtConfig?.iconUrl && (
@@ -172,6 +195,8 @@ const MultiDetailsContent = ({
           <div></div>
         </div>
       </div>
+
+
       {vertex.data.neighborsCount === 0 && (
         <PanelEmptyState
           icon={<GraphIcon />}
