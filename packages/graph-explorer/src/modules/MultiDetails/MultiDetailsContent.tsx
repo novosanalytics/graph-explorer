@@ -49,12 +49,25 @@ const MultiDetailsContent = ({
 
   const [isExpanding, setIsExpanding] = useState(false);
   const neighborsOptions = useNeighborsOptions(vertex);
+  const selectedNeighborOptions = useNeighborsOptions(selectedItems[0])
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
+  const nodeTypes = useMemo(() => {
+    const collectTypes: Array<string> = [];
+    selectedItems.forEach(sItem => {
+      collectTypes.includes(sItem.data.type) 
+      ? null : collectTypes.push(sItem.data.type);
+    })
+    return collectTypes;
+  }, [selectedItems])
+
+  const [selectedMultiType, setSelectedMultiType] = useState<string>(
+    nodeTypes[0]
+  );
 /////////////////////////////////////////////////////////////////
 /*const nodeNames = useMemo(() => {
     const collectNames: AdvancedListItemType<any>[] = [];
@@ -87,7 +100,7 @@ const MultiDetailsContent = ({
       multiVertexId: gListNames,
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
-      filterByVertexTypes: [selectedType],
+      filterByVertexTypes: [selectedMultiType],
       filterCriteria: filters.map(filter => ({
         name: filter.name,
         operator: "LIKE",
@@ -102,7 +115,7 @@ const MultiDetailsContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedType, vertex.data, gListNames]);
+  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gListNames]);
 
 // ################################################################################### //
 
@@ -150,15 +163,7 @@ const MultiDetailsContent = ({
     return collectNames
   }, [selectedItems, config, pfx, textTransform])
 
-  const nodeTypes = useMemo(() => {
-    const collectTypes: Array<string> = [];
-    selectedItems.forEach(sItem => {
-      collectTypes.includes(sItem.data.type) ? null : collectTypes.push(sItem.data.type);
-    })
-    return collectTypes;
-  }, [selectedItems])
 
-  console.log(nodeTypes)
 
   return(
 
@@ -220,9 +225,9 @@ const MultiDetailsContent = ({
           {!!vertex.data.__unfetchedNeighborCount && (
             <MultiDetailsFilters
               classNamePrefix={classNamePrefix}
-              neighborsOptions={neighborsOptions}
-              selectedType={selectedType}
-              onSelectedTypeChange={setSelectedType}
+              neighborsOptions={selectedNeighborOptions}
+              selectedType={selectedMultiType}
+              onSelectedTypeChange={setSelectedMultiType}
               filters={filters}
               onFiltersChange={setFilters}
               limit={limit}
@@ -242,7 +247,7 @@ const MultiDetailsContent = ({
               isDisabled={
                 isExpanding ||
                 !vertex.data.__unfetchedNeighborCount ||
-                !selectedType
+                !selectedMultiType
               }
               onPress={onExpandClick}
             >
@@ -260,7 +265,7 @@ const MultiDetailsContent = ({
               isDisabled={
                 isExpanding ||
                 !vertex.data.__unfetchedNeighborCount ||
-                !selectedType
+                !selectedMultiType
               }
               onPress={onFullClick}
             >
