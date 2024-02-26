@@ -57,17 +57,14 @@ const MultiDetailsContent = ({
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
-  const nodeTypes = useMemo(() => {
-    const collectTypes: Array<string> = [];
-    selectedItems.forEach(sItem => {
+  const [collectTypes, setCollectTypes] = useState<Array<string>>([]);
+  selectedItems.forEach(sItem => {
       collectTypes.includes(sItem.data.type) 
       ? null : collectTypes.push(sItem.data.type);
-    })
-    return collectTypes;
-  }, [selectedItems])
+  })
 
   const [selectedMultiType, setSelectedMultiType] = useState<string>(
-    nodeTypes[0]
+    collectTypes[0]
   );
 /////////////////////////////////////////////////////////////////
 /*const nodeNames = useMemo(() => {
@@ -83,22 +80,22 @@ const MultiDetailsContent = ({
 */
 
 
-// TODO: merge gListNames with Nodenames somehow? (they're two different objects)
-  const gListNames = useMemo(() => {
-    let collectGNames: string = "";
-    selectedItems.forEach(gName => {
-        collectGNames = collectGNames.concat(`"${gName.data.id}",`)
-    });
-    collectGNames = collectGNames.substring(0, collectGNames.length - 1);
-    console.log(collectGNames);
-    return collectGNames;
-  }, [selectedItems])
+  const [gNames, setGNames] = useState("");
+  selectedItems.forEach(gDetail => {
+    setGNames(gNames.concat(gDetail?.data.id))
+    }
+  );
+    //collectGNames = collectGNames.concat(`"${gName.data.id}",`)
+  //});
+  //collectGNames = collectGNames.substring(0, collectGNames.length - 1));
+ 
+  console.log(gNames);
 
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
-      multiVertexId: gListNames,
+      multiVertexId: gNames,
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       filterByVertexTypes: [selectedMultiType],
@@ -116,7 +113,7 @@ const MultiDetailsContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gListNames]);
+  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gNames]);
 
 // ################################################################################### //
 
@@ -139,7 +136,7 @@ const MultiDetailsContent = ({
 /////////////////////////////////////////////////////////////////
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex); //might want to change this later
-  const displayLabels = useMemo(() => {
+  /*const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
       .map(type => {
       return (
@@ -149,20 +146,18 @@ const MultiDetailsContent = ({
       .filter(Boolean)
       .join(", ");
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
+  */
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
 
   // Try merging or something, let's make a detailed node type inspector
-  const nodeNames = useMemo(() => {
-    const collectNames: AdvancedListItemType<any>[] = [];
-    selectedItems.forEach(item => {
-        collectNames.push({
-            id: item.data.id,
-            title: item.data.id
-        })
+  let collectNames: AdvancedListItemType<any>[] = [];
+  selectedItems.forEach(item => {
+    collectNames.push({
+        id: item.data.id,
+        title: item.data.id
     })
-    return collectNames
-  }, [selectedItems, config, pfx, textTransform])
+  })
 
 
 
@@ -186,7 +181,7 @@ const MultiDetailsContent = ({
         )}
         <div className={pfx("content")}>
           <div className={pfx("title")}>
-            {nodeTypes.length != 1 ? "Multiple Types" : nodeTypes[0]} 
+            {collectTypes.length != 1 ? "Multiple Types" : collectTypes[0]} 
           </div>
           <div></div>
         </div>
@@ -205,7 +200,7 @@ const MultiDetailsContent = ({
           <AdvancedList
             classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
-            items={nodeNames}
+            items={collectNames}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />

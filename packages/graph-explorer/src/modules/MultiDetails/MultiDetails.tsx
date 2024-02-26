@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import type { ModuleContainerHeaderProps } from "../../components";
 import { GridIcon, ModuleContainer, ModuleContainerHeader } from "../../components";
-import GraphIcon from "../../components/icons/GraphIcon";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import useTranslations from "../../hooks/useTranslations";
 import { 
@@ -34,7 +33,6 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
     const nodes = useRecoilValue(nodesAtom);
     const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
     const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom)
-    //const nodesSelected = nodes - nodesSelectedIds
     const nodesSelected: Vertex[] = [];
     nodes.forEach(nItem => {
         if (nodesSelectedIds.has(nItem.data.id)){
