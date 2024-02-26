@@ -48,6 +48,7 @@ const MultiDetailsFilter =({
     selectedType
   );
 
+
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
       ...filters,

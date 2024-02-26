@@ -17,13 +17,10 @@ import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
-import NeighborsList from "../common/NeighborsList/NeighborsList";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
 import { useExpandNode } from "../../hooks";
-import AdvancedListItem from "../../components/AdvancedList/internalComponents/AdvancedListItem";
-
 
 export type MultiDetailsContentProps = {
   classNamePrefix?: string;
@@ -51,9 +48,9 @@ const MultiDetailsContent = ({
   const [isExpanding, setIsExpanding] = useState(false);
   const neighborsOptions = useNeighborsOptions(vertex);
   const selectedNeighborOptions = useNeighborsOptions(selectedItems[0])
-  const [selectedType, setSelectedType] = useState<string>(
-    neighborsOptions[0]?.value
-  );
+  //const [selectedType, setSelectedType] = useState<string>(
+  //  neighborsOptions[0]?.value
+  //);
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
@@ -80,7 +77,11 @@ const MultiDetailsContent = ({
 */
 
 
-  const [gNames, setGNames] = useState("");
+  /*const [gNames, setGNames] = useState("");
+  
+  const nodeTypes = useMemo(() => {
+    const collectTypes: Array<string> = [];
+    selectedItems.forEach(sItem => {
   selectedItems.forEach(gDetail => {
     setGNames(gNames.concat(gDetail?.data.id))
     }
@@ -89,13 +90,23 @@ const MultiDetailsContent = ({
   //});
   //collectGNames = collectGNames.substring(0, collectGNames.length - 1));
  
-  console.log(gNames);
+  //console.log(gNames);
+  */
+  const gListNames = useMemo(() => {
+    let collectGNames: string = "";
+    selectedItems.forEach(gName => {
+        collectGNames = collectGNames.concat(`"${gName.data.id}",`)
+    });
+    collectGNames = collectGNames.substring(0, collectGNames.length - 1);
+    console.log(collectGNames);
+    return collectGNames;
+  }, [selectedItems])
 
 
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
-      multiVertexId: gNames,
+      multiVertexId: gListNames,
       vertexId: vertex.data.id,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       filterByVertexTypes: [selectedMultiType],
@@ -113,7 +124,7 @@ const MultiDetailsContent = ({
             (vertex.data.__unfetchedNeighborCount ?? 0),
     });
     setIsExpanding(false);
-  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gNames]);
+  }, [expandNode, filters, limit, selectedMultiType, vertex.data, gListNames]);
 
 // ################################################################################### //
 
@@ -203,12 +214,6 @@ const MultiDetailsContent = ({
             items={collectNames}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
-          />
-          <MultiNeighborsList 
-            vertex={selectedItems[0]}
-            vertexList={selectedItems}
-            classNamePrefix={classNamePrefix}
-            multiFlag={true}
           />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState
