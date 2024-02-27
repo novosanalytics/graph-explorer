@@ -17,13 +17,10 @@ import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
-import NeighborsList from "../common/NeighborsList/NeighborsList";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
 import { useExpandNode } from "../../hooks";
-import AdvancedListItem from "../../components/AdvancedList/internalComponents/AdvancedListItem";
-
 
 export type MultiDetailsContentProps = {
   classNamePrefix?: string;
@@ -51,23 +48,20 @@ const MultiDetailsContent = ({
   const [isExpanding, setIsExpanding] = useState(false);
   const neighborsOptions = useNeighborsOptions(vertex);
   const selectedNeighborOptions = useNeighborsOptions(selectedItems[0])
-  const [selectedType, setSelectedType] = useState<string>(
-    neighborsOptions[0]?.value
-  );
+  //const [selectedType, setSelectedType] = useState<string>(
+  //  neighborsOptions[0]?.value
+  //);
   const [filters, setFilters] = useState<Array<MultiDetailsFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
   
-  const nodeTypes = useMemo(() => {
-    const collectTypes: Array<string> = [];
-    selectedItems.forEach(sItem => {
+  const [collectTypes, setCollectTypes] = useState<Array<string>>([]);
+  selectedItems.forEach(sItem => {
       collectTypes.includes(sItem.data.type) 
       ? null : collectTypes.push(sItem.data.type);
-    })
-    return collectTypes;
-  }, [selectedItems])
+  })
 
   const [selectedMultiType, setSelectedMultiType] = useState<string>(
-    nodeTypes[0]
+    collectTypes[0]
   );
 /////////////////////////////////////////////////////////////////
 /*const nodeNames = useMemo(() => {
@@ -83,7 +77,21 @@ const MultiDetailsContent = ({
 */
 
 
-// TODO: merge gListNames with Nodenames somehow? (they're two different objects)
+  /*const [gNames, setGNames] = useState("");
+  
+  const nodeTypes = useMemo(() => {
+    const collectTypes: Array<string> = [];
+    selectedItems.forEach(sItem => {
+  selectedItems.forEach(gDetail => {
+    setGNames(gNames.concat(gDetail?.data.id))
+    }
+  );
+    //collectGNames = collectGNames.concat(`"${gName.data.id}",`)
+  //});
+  //collectGNames = collectGNames.substring(0, collectGNames.length - 1));
+ 
+  //console.log(gNames);
+  */
   const gListNames = useMemo(() => {
     let collectGNames: string = "";
     selectedItems.forEach(gName => {
@@ -139,7 +147,7 @@ const MultiDetailsContent = ({
 /////////////////////////////////////////////////////////////////
   const getDisplayNames = useDisplayNames();
   const { name } = getDisplayNames(vertex); //might want to change this later
-  const displayLabels = useMemo(() => {
+  /*const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
       .map(type => {
       return (
@@ -149,20 +157,18 @@ const MultiDetailsContent = ({
       .filter(Boolean)
       .join(", ");
     }, [config, textTransform, vertex.data.type, vertex.data.types]);
+  */
   const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
 
 
   // Try merging or something, let's make a detailed node type inspector
-  const nodeNames = useMemo(() => {
-    const collectNames: AdvancedListItemType<any>[] = [];
-    selectedItems.forEach(item => {
-        collectNames.push({
-            id: item.data.id,
-            title: item.data.id
-        })
+  let collectNames: AdvancedListItemType<any>[] = [];
+  selectedItems.forEach(item => {
+    collectNames.push({
+        id: item.data.id,
+        title: item.data.id
     })
-    return collectNames
-  }, [selectedItems, config, pfx, textTransform])
+  })
 
 
 
@@ -186,7 +192,7 @@ const MultiDetailsContent = ({
         )}
         <div className={pfx("content")}>
           <div className={pfx("title")}>
-            {nodeTypes.length != 1 ? "Multiple Types" : nodeTypes[0]} 
+            {collectTypes.length != 1 ? "Multiple Types" : collectTypes[0]} 
           </div>
           <div></div>
         </div>
@@ -205,7 +211,7 @@ const MultiDetailsContent = ({
           <AdvancedList
             classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
-            items={nodeNames}
+            items={collectNames}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
@@ -213,7 +219,6 @@ const MultiDetailsContent = ({
             vertex={selectedItems[0]}
             vertexList={selectedItems}
             classNamePrefix={classNamePrefix}
-            multiFlag={true}
           />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState

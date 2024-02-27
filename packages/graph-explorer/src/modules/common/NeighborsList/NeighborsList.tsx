@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { Vertex } from "../../../@types/entities";
 import { Chip, Tooltip, VertexIcon, VisibleIcon } from "../../../components";
@@ -23,6 +22,7 @@ const NeighborsList = ({
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
 
+
   /*const neighborsInView =
   vertex.data.neighborsCountByType[op.value] -
   (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);*/
@@ -45,19 +45,9 @@ const NeighborsList = ({
         Neighbors ({vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
-          const neighborsInView = useMemo(() => {
-            let neighborNumber = 0;
-            if(multiFlag){
-              neighborNumber = vertex.data.neighborsCountByType[op.value] -
-              (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-            }else{
-              vertexList?.forEach(subItem =>{
-                neighborNumber += subItem.data.neighborsCountByType[op.value] -
-                (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-              })
-            }
-            return neighborNumber;
-          }, [op,vertex, vertexList])
+        const neighborsInView =
+        vertex.data.neighborsCountByType[op.value] -
+        (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>

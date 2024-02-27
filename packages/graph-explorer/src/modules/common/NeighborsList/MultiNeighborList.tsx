@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { Vertex } from "../../../@types/entities";
 import { Chip, Tooltip, VertexIcon, VisibleIcon } from "../../../components";
@@ -10,14 +9,12 @@ export type NeighborsListProps = {
   classNamePrefix?: string;
   vertex: Vertex;
   vertexList?:Vertex[];
-  multiFlag?:boolean;
 };
 
 const MultiNeighborsList = ({
   classNamePrefix = "ft",
   vertex,
   vertexList,
-  multiFlag
 }: NeighborsListProps) => {
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
@@ -50,19 +47,11 @@ const MultiNeighborsList = ({
         Neighbors ({neighborTotalCounts})
       </div>
       {neighborsOptions.map(op => {
-          const neighborsInView = useMemo(() => {
-            let neighborNumber = 0;
-            if(multiFlag){
-              neighborNumber = vertex.data.neighborsCountByType[op.value] -
-              (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-            }else{
-              vertexList?.forEach(subItem =>{
-                neighborNumber += subItem.data.neighborsCountByType[op.value] -
-                (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-              })
-            }
-            return neighborNumber;
-          }, [op,vertex, vertexList])
+        let neighborsInView = 0;
+        vertexList?.forEach(subItem =>{
+        neighborsInView += subItem.data.neighborsCountByType[op.value] -
+        (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+        })
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>
