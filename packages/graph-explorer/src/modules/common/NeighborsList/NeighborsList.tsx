@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { cx } from "@emotion/css";
 import { Vertex } from "../../../@types/entities";
 import { Chip, Tooltip, VertexIcon, VisibleIcon } from "../../../components";
@@ -22,14 +21,6 @@ const NeighborsList = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
-  const totalNeighbors = useMemo(() => {
-    console.log(`Nodes: ${vertexList}`)
-    let neighborTotalCounts = 0;
-    vertexList?.forEach(node => {
-      neighborTotalCounts += node?.data.neighborsCount
-    });
-    return neighborTotalCounts;
-  }, [vertexList])
 
 
   /*const neighborsInView =
@@ -51,22 +42,12 @@ const NeighborsList = ({
       )}
     >
       <div className={pfx("title")}>
-        Neighbors ({multiFlag ? totalNeighbors : vertex.data.neighborsCount})
+        Neighbors ({vertex.data.neighborsCount})
       </div>
       {neighborsOptions.map(op => {
-          const neighborsInView = useMemo(() => {
-            let neighborNumber = 0;
-            if(multiFlag){
-              neighborNumber = vertex.data.neighborsCountByType[op.value] -
-              (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-            }else{
-              vertexList?.forEach(subItem =>{
-                neighborNumber += subItem.data.neighborsCountByType[op.value] -
-                (subItem.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
-              })
-            }
-            return neighborNumber;
-          }, [op,vertex, vertexList])
+        const neighborsInView =
+        vertex.data.neighborsCountByType[op.value] -
+        (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>

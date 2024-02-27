@@ -215,6 +215,11 @@ const MultiDetailsContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
+          <MultiNeighborsList 
+            vertex={selectedItems[0]}
+            vertexList={selectedItems}
+            classNamePrefix={classNamePrefix}
+          />
           {!vertex.data.__unfetchedNeighborCount && (
             <PanelEmptyState
             className={pfx("empty-panel-state")}
