@@ -10,6 +10,7 @@ import {
 import { useConfiguration, withClassNamePrefix } from "../../core";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
+import Switch from "../../components/Switch";
 
 export type NodeExpandFilter = {
   name: string;
@@ -45,6 +46,7 @@ const NodeExpandFilters = ({
   const searchableAttributes = config?.getVertexTypeSearchableAttributes(
     selectedType
   );
+  var searchConfig = true
 
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
@@ -81,6 +83,14 @@ const NodeExpandFilters = ({
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
+      <Switch
+        className={pfx("item-switch")}
+        labelPosition={"right"}
+        isSelected={true || false}
+        onChange={() => searchConfig = !searchConfig }
+        >
+        {searchConfig ? "Exact" : "Partial"}
+      </Switch>
       <Select
         aria-label={"neighbor type"}
         value={selectedType}
