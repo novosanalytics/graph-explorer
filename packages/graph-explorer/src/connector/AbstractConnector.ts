@@ -116,8 +116,11 @@ export type NeighborsRequest = {
   /**
    * Date to be applied everywhere
    */
-  overdate?: string
-
+  overdate?: string;
+  /**
+   * type of search (partial or exact)
+   */
+  searchType: boolean;
 };
 
 export type NeighborsResponse = {

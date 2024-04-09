@@ -32,7 +32,7 @@ const criterionStringTemplate = ({
   name,
   operator,
   value,
-}: Omit<Criterion, "dataType">): string => {
+}: Omit<Criterion, "dataType">, searchType: boolean): string => {
   switch (operator.toLowerCase()) {
     case "eq":
     case "==":
@@ -74,7 +74,7 @@ const criterionDateTemplate = ({
   }
 };
 
-const criterionTemplate = (criterion: Criterion): string => {
+const criterionTemplate = (criterion: Criterion, neighborsRequest:NeighborsRequest): string => {
   switch (criterion.dataType) {
     case "Number":
       return criterionNumberTemplate(criterion);
@@ -82,7 +82,7 @@ const criterionTemplate = (criterion: Criterion): string => {
       return criterionDateTemplate(criterion);
     case "String":
     default:
-      return criterionStringTemplate(criterion);
+      return criterionStringTemplate(criterion, neighborsRequest.searchType);
   }
 };
 
@@ -136,6 +136,7 @@ const oneHopTemplate = ({
   limit = 10,
   offset = 0,
   idType = "string",
+  searchType,
 }: Omit<NeighborsRequest, "vertexType"> & {
   idType?: "string" | "number";
 }): string => {

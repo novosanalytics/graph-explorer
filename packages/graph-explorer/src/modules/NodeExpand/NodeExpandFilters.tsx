@@ -17,14 +17,16 @@ export type NodeExpandFilter = {
   value: string;
 };
 export type NodeExpandFiltersProps = {
-  classNamePrefix?: string;
-  neighborsOptions: Array<{ label: string; value: string }>;
-  selectedType: string;
-  onSelectedTypeChange(type: string): void;
-  filters: Array<NodeExpandFilter>;
-  onFiltersChange(filters: Array<NodeExpandFilter>): void;
-  limit: number | null;
-  onLimitChange(limit: number | null): void;
+    classNamePrefix?: string;
+    neighborsOptions: Array<{ label: string; value: string }>;
+    selectedType: string;
+    onSelectedTypeChange(type: string): void;
+    searchType: boolean;
+    onSearchChange(type: boolean): void;
+    filters: Array<NodeExpandFilter>;
+    onFiltersChange(filters: Array<NodeExpandFilter>): void;
+    limit: number | null;
+    onLimitChange(limit: number | null): void;
 };
 
 const NodeExpandFilters = ({
@@ -32,6 +34,8 @@ const NodeExpandFilters = ({
   neighborsOptions,
   selectedType,
   onSelectedTypeChange,
+  searchType,
+  onSearchChange,
   filters,
   onFiltersChange,
   limit,
@@ -46,7 +50,6 @@ const NodeExpandFilters = ({
   const searchableAttributes = config?.getVertexTypeSearchableAttributes(
     selectedType
   );
-  var searchConfig = true
 
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
@@ -87,9 +90,9 @@ const NodeExpandFilters = ({
         className={pfx("item-switch")}
         labelPosition={"right"}
         isSelected={true || false}
-        onChange={() => searchConfig = !searchConfig }
+        onChange={() => onSearchChange(!searchType)}//onChange={(v: number | null) => onLimitChange(v ?? 0)} 
         >
-        {searchConfig ? "Exact" : "Partial"}
+        {searchType ? "Exact Term Search" : "Partial Term Search"}
       </Switch>
       <Select
         aria-label={"neighbor type"}

@@ -41,6 +41,7 @@ const NodeExpandContent = ({
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
+  const [searchType, setSearchType] = useState<boolean>(true);
   const [filters, setFilters] = useState<Array<NodeExpandFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
@@ -62,6 +63,7 @@ const NodeExpandContent = ({
           ? 0
           : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
+      searchType: searchType,
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
@@ -78,6 +80,7 @@ const NodeExpandContent = ({
           ? 0
           : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
+        searchType: false,
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, vertex.data]);
@@ -142,6 +145,8 @@ const NodeExpandContent = ({
             <NodeExpandFilters
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
+              searchType={searchType}
+              onSearchChange={setSearchType}
               selectedType={selectedType}
               onSelectedTypeChange={setSelectedType}
               filters={filters}
