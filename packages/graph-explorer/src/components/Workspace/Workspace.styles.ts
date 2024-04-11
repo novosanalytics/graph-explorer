@@ -72,7 +72,7 @@ const baseStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
         }
 
         .${pfx}-sidebar-section {
-          width: 500px;
+          width: 700px;
           display: flex;
           box-shadow: ${theme.shadow.left};
           background: ${theme.palette.background.default};

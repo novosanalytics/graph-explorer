@@ -143,7 +143,7 @@ const NodeExpandFilters = ({
                 aria-label={"Comparison"}
                 value={filter.compare}
                 onChange={value => {
-                    onFilterChange(filterIndex, filter.name, value as string);
+                    onFilterChange(filterIndex, filter.name, filter.value, value as string);
                 }}
                 options={comparatives?.map(comopt => ({
                     label: comopt,
