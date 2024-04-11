@@ -15,6 +15,7 @@ import Switch from "../../components/Switch";
 export type NodeExpandFilter = {
   name: string;
   value: string;
+  compare?: string;
 };
 export type NodeExpandFiltersProps = {
     classNamePrefix?: string;
@@ -51,6 +52,13 @@ const NodeExpandFilters = ({
     selectedType
   );
 
+  const comparatives = [
+    "Like/=",
+    ">",">=",
+    "<=","<",
+    "!="
+  ]
+
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
       ...filters,
@@ -70,10 +78,11 @@ const NodeExpandFilters = ({
   );
 
   const onFilterChange = useCallback(
-    (filterIndex: number, name?: string, value?: string) => {
+    (filterIndex: number, name?: string, value?: string, compare?: string) => {
       const currFilters = clone(filters);
       currFilters[filterIndex].name = name || currFilters[filterIndex].name;
       currFilters[filterIndex].value = value ?? currFilters[filterIndex].value;
+      currFilters[filterIndex].compare = compare ?? currFilters[filterIndex].compare;
       onFiltersChange(currFilters);
     },
     [filters, onFiltersChange]
@@ -130,6 +139,19 @@ const NodeExpandFilters = ({
                 hideError={true}
                 noMargin={true}
               />
+              <Select
+                aria-label={"Comparison"}
+                value={filter.compare}
+                onChange={value => {
+                    onFilterChange(filterIndex, filter.name, value as string);
+                }}
+                options={comparatives?.map(comopt => ({
+                    label: comopt,
+                    value: comopt,
+                }))}
+                hideError={true}
+                noMargin={true}
+                />
               <Input
                 aria-label={"Filter"}
                 className={pfx("input")}
