@@ -32,7 +32,8 @@ const criterionStringTemplate = ({
   name,
   operator,
   value,
-}: Omit<Criterion, "dataType">, searchType: boolean): string => {
+  searchType,
+}: Omit<Criterion, "dataType">): string => {
   switch (operator.toLowerCase()) {
     case "eq":
     case "==":
@@ -42,7 +43,11 @@ const criterionStringTemplate = ({
     case "!=":
       return `has("${name}",neq("${value}"))`;
     case "like":
-      return `has("${name}", containing("${value}"))`;
+        if(searchType){
+            return `has("${name}", containing("${value}"))`;   
+        } else {
+            return `has("${name}", TextP.regex((?i)"${value}"))`
+        }
   }
 };
 
@@ -74,7 +79,7 @@ const criterionDateTemplate = ({
   }
 };
 
-const criterionTemplate = (criterion: Criterion, neighborsRequest:NeighborsRequest): string => {
+const criterionTemplate = (criterion:Criterion): string => {
   switch (criterion.dataType) {
     case "Number":
       return criterionNumberTemplate(criterion);
@@ -82,7 +87,7 @@ const criterionTemplate = (criterion: Criterion, neighborsRequest:NeighborsReque
       return criterionDateTemplate(criterion);
     case "String":
     default:
-      return criterionStringTemplate(criterion, neighborsRequest.searchType);
+      return criterionStringTemplate(criterion);
   }
 };
 
@@ -136,7 +141,6 @@ const oneHopTemplate = ({
   limit = 10,
   offset = 0,
   idType = "string",
-  searchType,
 }: Omit<NeighborsRequest, "vertexType"> & {
   idType?: "string" | "number";
 }): string => {
@@ -156,7 +160,7 @@ const oneHopTemplate = ({
     .join(",");
   const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
 
-  let filterCriteriaTemplate = ".and(";
+    let filterCriteriaTemplate = ".and(";
   filterCriteriaTemplate += filterCriteria?.map(criterionTemplate).join(",");
   if (odFlag) {
     filterByVertexTypes.forEach(element => {

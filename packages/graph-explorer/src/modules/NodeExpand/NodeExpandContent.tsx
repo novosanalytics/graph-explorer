@@ -55,6 +55,7 @@ const NodeExpandContent = ({
         name: filter.name,
         operator: "LIKE",
         value: filter.value,
+        searchType: searchType,
       })),
       // TODO - review limit and offset when data is not sorted
       limit: limit ?? vertex.data.neighborsCount,
@@ -63,7 +64,6 @@ const NodeExpandContent = ({
           ? 0
           : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
-      searchType: searchType,
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
@@ -80,7 +80,6 @@ const NodeExpandContent = ({
           ? 0
           : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
-        searchType: false,
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, vertex.data]);

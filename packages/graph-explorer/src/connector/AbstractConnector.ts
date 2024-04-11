@@ -73,6 +73,10 @@ export type Criterion = {
    * By default, String.
    */
   dataType?: "String" | "Number" | "Date";
+  /**
+   * Search Type
+   */
+  searchType?: boolean;
 };
 
 export type NeighborsRequest = {
@@ -117,10 +121,6 @@ export type NeighborsRequest = {
    * Date to be applied everywhere
    */
   overdate?: string;
-  /**
-   * type of search (partial or exact)
-   */
-  searchType: boolean;
 };
 
 export type NeighborsResponse = {
