@@ -53,7 +53,7 @@ const NodeExpandFilters = ({
   );
 
   const comparatives = [
-    "LIKE/=",
+    "==","like",
     ">",">=",
     "<=","<",
     "!="
@@ -65,7 +65,7 @@ const NodeExpandFilters = ({
       {
         name: vtConfig?.attributes?.[0].name || "",
         value: "",
-        compare: "LIKE/="
+        compare: "=="
       },
     ]);
   }, [filters, onFiltersChange, vtConfig?.attributes]);
