@@ -15,7 +15,7 @@ import Switch from "../../components/Switch";
 export type NodeExpandFilter = {
   name: string;
   value: string;
-  compare?: string;
+  compare: string;
 };
 export type NodeExpandFiltersProps = {
     classNamePrefix?: string;
@@ -53,7 +53,7 @@ const NodeExpandFilters = ({
   );
 
   const comparatives = [
-    "Like/=",
+    "LIKE/=",
     ">",">=",
     "<=","<",
     "!="
@@ -65,6 +65,7 @@ const NodeExpandFilters = ({
       {
         name: vtConfig?.attributes?.[0].name || "",
         value: "",
+        compare: "LIKE/="
       },
     ]);
   }, [filters, onFiltersChange, vtConfig?.attributes]);
@@ -157,7 +158,7 @@ const NodeExpandFilters = ({
                 className={pfx("input")}
                 value={filter.value}
                 onChange={value => {
-                  onFilterChange(filterIndex, filter.name, value as string);
+                  onFilterChange(filterIndex, filter.name, value as string, filter.compare);
                 }}
                 hideError={true}
                 noMargin={true}

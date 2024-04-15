@@ -53,7 +53,7 @@ const NodeExpandContent = ({
       filterByVertexTypes: [selectedType],
       filterCriteria: filters.map(filter => ({
         name: filter.name,
-        operator: "LIKE",
+        operator: filter.compare,
         value: filter.value,
         searchType: searchType,
       })),
