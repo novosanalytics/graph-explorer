@@ -41,6 +41,7 @@ const NodeExpandContent = ({
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
+  const [searchType, setSearchType] = useState<boolean>(true);
   const [filters, setFilters] = useState<Array<NodeExpandFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
@@ -52,8 +53,9 @@ const NodeExpandContent = ({
       filterByVertexTypes: [selectedType],
       filterCriteria: filters.map(filter => ({
         name: filter.name,
-        operator: "LIKE",
+        operator: filter.compare,
         value: filter.value,
+        searchType: searchType,
       })),
       // TODO - review limit and offset when data is not sorted
       limit: limit ?? vertex.data.neighborsCount,
@@ -142,6 +144,8 @@ const NodeExpandContent = ({
             <NodeExpandFilters
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
+              searchType={searchType}
+              onSearchChange={setSearchType}
               selectedType={selectedType}
               onSelectedTypeChange={setSelectedType}
               filters={filters}

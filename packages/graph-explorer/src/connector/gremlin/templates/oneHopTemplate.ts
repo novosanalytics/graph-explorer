@@ -32,6 +32,7 @@ const criterionStringTemplate = ({
   name,
   operator,
   value,
+  searchType,
 }: Omit<Criterion, "dataType">): string => {
   switch (operator.toLowerCase()) {
     case "eq":
@@ -42,7 +43,11 @@ const criterionStringTemplate = ({
     case "!=":
       return `has("${name}",neq("${value}"))`;
     case "like":
-      return `has("${name}", containing("${value}"))`;
+        if(searchType){
+            return `has("${name}", containing("${value}"))`;   
+        } else {
+            return `has("${name}", TextP.regex((?i)"${value}"))`
+        }
   }
 };
 
@@ -74,7 +79,7 @@ const criterionDateTemplate = ({
   }
 };
 
-const criterionTemplate = (criterion: Criterion): string => {
+const criterionTemplate = (criterion:Criterion): string => {
   switch (criterion.dataType) {
     case "Number":
       return criterionNumberTemplate(criterion);
@@ -155,7 +160,7 @@ const oneHopTemplate = ({
     .join(",");
   const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
 
-  let filterCriteriaTemplate = ".and(";
+    let filterCriteriaTemplate = ".and(";
   filterCriteriaTemplate += filterCriteria?.map(criterionTemplate).join(",");
   if (odFlag) {
     filterByVertexTypes.forEach(element => {
