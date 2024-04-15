@@ -89,6 +89,8 @@ const NodeExpandFilters = ({
     [filters, onFiltersChange]
   );
 
+  //const onSwitchChange = () => setIsEnabled(previousState => !previousState);
+
   useEffect(() => {
     onFiltersChange([]);
   }, [onFiltersChange, selectedType]);
@@ -100,7 +102,8 @@ const NodeExpandFilters = ({
         className={pfx("item-switch")}
         labelPosition={"right"}
         isSelected={true || false}
-        onChange={() => onSearchChange(!searchType)}//onChange={(v: number | null) => onLimitChange(v ?? 0)} 
+        onValueChange={() => onSearchChange(!searchType)}
+        //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
         >
         {searchType ? "Exact Term Search" : "Partial Term Search"}
       </Switch>
