@@ -72,7 +72,7 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
       flex-direction: column;
       gap: ${theme.spacing["2x"]};
       padding: ${theme.spacing["4x"]};
-
+      flex-grow: 1;
       overflow-y: auto;
       min-height: 250px;
 
@@ -112,7 +112,7 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
         align-items: center;
         gap: ${theme.spacing["2x"]};
         .${pfx}-input {
-            width: 100% !important;
+            flex-grow: 1;
         }
       }
     }
