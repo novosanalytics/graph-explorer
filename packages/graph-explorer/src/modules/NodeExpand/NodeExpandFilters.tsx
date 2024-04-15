@@ -10,6 +10,7 @@ import {
 import { useConfiguration, withClassNamePrefix } from "../../core";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
+import Switch from "../../components/Switch";
 
 export type NodeExpandFilter = {
   name: string;
@@ -34,6 +35,8 @@ const NodeExpandFilters = ({
   neighborsOptions,
   selectedType,
   onSelectedTypeChange,
+  searchType,
+  onSearchChange,
   filters,
   onFiltersChange,
   limit,
@@ -48,6 +51,13 @@ const NodeExpandFilters = ({
   const searchableAttributes = config?.getVertexTypeSearchableAttributes(
     selectedType
   );
+
+  const comparatives = [
+    "==","like",
+    ">",">=",
+    "<=","<",
+    "!="
+  ]
 
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
@@ -69,10 +79,11 @@ const NodeExpandFilters = ({
   );
 
   const onFilterChange = useCallback(
-    (filterIndex: number, name?: string, value?: string) => {
+    (filterIndex: number, name?: string, value?: string, operator?: string) => {
       const currFilters = clone(filters);
       currFilters[filterIndex].name = name || currFilters[filterIndex].name;
       currFilters[filterIndex].value = value ?? currFilters[filterIndex].value;
+      currFilters[filterIndex].operator = operator ?? currFilters[filterIndex].operator;
       onFiltersChange(currFilters);
     },
     [filters, onFiltersChange]
@@ -85,6 +96,15 @@ const NodeExpandFilters = ({
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
+        <Switch
+        className={pfx("item-switch")}
+        labelPosition={"right"}
+        isSelected={true || false}
+        onChange={() => onSearchChange(!searchType)}
+        //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
+        >
+        {searchType ? "Exact Term Search" : "Partial Term Search"}
+        </Switch>
       <Select
         aria-label={"neighbor type"}
         value={selectedType}
@@ -121,12 +141,25 @@ const NodeExpandFilters = ({
                 hideError={true}
                 noMargin={true}
               />
+              <Select
+                aria-label={"Comparison"}
+                value={filter.operator}
+                onChange={value => {
+                    onFilterChange(filterIndex, filter.name, filter.value, value as string);
+                }}
+                options={comparatives?.map(comopt => ({
+                    label: comopt,
+                    value: comopt,
+                }))}
+                hideError={true}
+                noMargin={true}
+                />
               <Input
                 aria-label={"Filter"}
                 className={pfx("input")}
                 value={filter.value}
                 onChange={value => {
-                  onFilterChange(filterIndex, filter.name, value as string);
+                  onFilterChange(filterIndex, filter.name, value as string, filter.operator);
                 }}
                 hideError={true}
                 noMargin={true}
