@@ -99,7 +99,7 @@ const NodeExpandFilters = ({
         <Switch
         className={pfx("item-switch")}
         labelPosition={"right"}
-        isSelected={true || false}
+        isSelected={searchType === true || false }
         onChange={() => onSearchChange(!searchType)}
         //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
         >
