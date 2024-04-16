@@ -47,8 +47,10 @@ const criterionStringTemplate = ({
       case "like":
         return `has("${name}", "${value}")`;
       case "less than":
+      case "<":
         return `has("${name}", lt("${value}"))`;
       case "greater than":
+      case ">":
         return `has("${name}", gt("${value}"))`;
     }
   };

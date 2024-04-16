@@ -104,6 +104,9 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
             min-width: 50% !important;
             width: 100% !important;
           }
+          .${pfx}-input::placeholder{
+            color: #000000;
+          }
         }
       }
 
