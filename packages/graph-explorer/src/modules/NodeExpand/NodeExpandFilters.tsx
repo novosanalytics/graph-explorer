@@ -93,13 +93,34 @@ const NodeExpandFilters = ({
     onFiltersChange([]);
   }, [onFiltersChange, selectedType]);
 
+
+  let placeholder = "";
+  const onPlaceholderChange = useCallback(
+    (name:string) => {
+        const currFilters = clone(filters);
+        if(name.includes("Minimum") || name.includes("Maximum")){
+            placeholder = "Float: 1.0, 0.01, 15.6"
+        } else if (name.includes("Date")){
+            placeholder = "Date: YYYY-MM-DD"
+        } else if (name.includes("Code")) {
+            placeholder = "Code: '8', '3:10;', '70Q'"
+        } else if (name.includes("Active" || "Approved")) {
+            placeholder = "Active Code: 1 or 0"
+        } else {
+            placeholder = "Text"
+        }
+        return placeholder;
+    },
+    [placeholder]
+  )
+
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
         <Switch
         className={pfx("item-switch")}
         labelPosition={"right"}
-        isSelected={true || false}
+        isSelected={searchType === true || false }
         onChange={() => onSearchChange(!searchType)}
         //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
         >
@@ -163,6 +184,10 @@ const NodeExpandFilters = ({
                 }}
                 hideError={true}
                 noMargin={true}
+                placeholder={
+                    //"Date: YYYY-MM-DD"
+                    onPlaceholderChange(filter.name)
+                }
               />
               <IconButton
                 icon={<DeleteIcon />}
