@@ -104,8 +104,10 @@ const NodeExpandFilters = ({
             placeholder = "Date: YYYY-MM-DD"
         } else if (name.includes("Code")) {
             placeholder = "Code: '8', '3:10;', '70Q'"
+        } else if (name.includes("Active" || "Approved")) {
+            placeholder = "Active Code: 1 or 0"
         } else {
-            placeholder = "Nothing Special"
+            placeholder = "Text"
         }
         return placeholder;
     },

@@ -42,6 +42,18 @@ const criterionStringTemplate = ({
     case "neq":
     case "!=":
       return `has("${name}",neq("${value}"))`;
+    case "gt":
+    case ">":
+      return `has("${name}",gt(${value}))`;
+    case "gte":
+    case ">=":
+      return `has("${name}",gte(${value}))`;
+    case "lt":
+    case "<":
+      return `has("${name}",lt(${value}))`;
+    case "lte":
+    case "<=":
+      return `has("${name}",lte(${value}))`;
     case "like":
         if(searchType){
             return `has("${name}", containing("${value}"))`;   
