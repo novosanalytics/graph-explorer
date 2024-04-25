@@ -63,17 +63,14 @@ const subgraphTemplate = ({
     netwFilter +=  `)`
 
     let cocoFilter = `and(`;
-    cocoFilter += `has("Coupon_Controller_Record_Active_Date__C", lte("${mapDateStr(date)}"))`;
-    cocoFilter += `, has("Coupon_Controller_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+    cocoFilter += `has("Coupon_Controller_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+    cocoFilter += `, has("Coupon_Controller_Record_Exp_Date__c", gte("${mapDateStr(date)}"))`;
     cocoFilter +=  `)`
-
-    let phcrFilter  = `and(`;
-    phcrFilter += `has("Pharmacy_Contract_Rate_Record_Active_D__c", lte("${mapDateStr(date)}"))`;
-    phcrFilter += `, has("Pharmacy_Contract_Rate_Record_Expirati__c", gte("${mapDateStr(date)}"))`;
-    phcrFilter +=  `)`
 
 
     let pharmacy = `hasLabel("pharmacy")`
+
+    let client = `hasLabel("client")`
 
     let filters: string = [
         bnrFilter,
@@ -84,8 +81,8 @@ const subgraphTemplate = ({
         offerFilter,
         netwFilter, 
         pcrFilter,
-        phcrFilter,
-        pharmacy
+        pharmacy,
+        client
     ].join(",")
 
     createSubGraph += `.or(${filters})`
