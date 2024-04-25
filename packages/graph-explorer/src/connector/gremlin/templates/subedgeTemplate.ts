@@ -45,6 +45,37 @@ const subgraphTemplate = ({
         netPart +=  `)`
         edges.push(netPart)
 
+    let cliDruPart = `and(`;
+        cliDruPart += `has("Drug_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        cliDruPart += `, has("Drug_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        cliDruPart +=  `)`
+        edges.push(cliDruPart) 
+
+    let cliCamPart = `and(`;
+        cliCamPart += `has("Campaign_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        cliCamPart += `, has("Campaign_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        cliCamPart +=  `)`
+        edges.push(cliCamPart) 
+
+    let cliNetPart = `and(`;
+        cliNetPart += `has("Benefit_Net_Rate_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        cliNetPart += `, has("Benefit_Net_Rate_Record_Expiration_Dat__c", gte("${mapDateStr(date)}"))`;
+        cliNetPart +=  `)`
+        edges.push(cliNetPart)
+        
+    let offCCPart = `and(`;
+        offCCPart += `has("Offer_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        offCCPart += `, has("Offer_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        offCCPart +=  `)`
+        edges.push(offCCPart)
+
+    let worRatPart = `and(`;
+        worRatPart += `has("Network_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
+        worRatPart += `, has("Network_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+        worRatPart +=  `)`
+        edges.push(worRatPart) 
+    
+        
     let filters: string = edges.join(",")
 
     createSubGraph += `.or(${filters})`

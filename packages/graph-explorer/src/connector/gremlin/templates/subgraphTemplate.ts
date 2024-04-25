@@ -25,6 +25,8 @@ const subgraphTemplate = ({
 
     let createSubGraph = `g.V${vString}`;
 
+    // This needs some refactoring --> Find string of {field}_Record_Active AND {field}_Record_Expir
+
     let offerFilter  = `and(`;
     offerFilter += `has("Offer_Record_Active_Date__c", lte("${mapDateStr(date)}"))`;
     offerFilter += `, has("Offer_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
@@ -60,16 +62,29 @@ const subgraphTemplate = ({
     netwFilter += `, has("Network_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
     netwFilter +=  `)`
 
+    let cocoFilter = `and(`;
+    cocoFilter += `has("Coupon_Controller_Record_Active_Date__C", lte("${mapDateStr(date)}"))`;
+    cocoFilter += `, has("Coupon_Controller_Record_Expiration_Date__c", gte("${mapDateStr(date)}"))`;
+    cocoFilter +=  `)`
+
+    let phcrFilter  = `and(`;
+    phcrFilter += `has("Pharmacy_Contract_Rate_Record_Active_D__c", lte("${mapDateStr(date)}"))`;
+    phcrFilter += `, has("Pharmacy_Contract_Rate_Record_Expirati__c", gte("${mapDateStr(date)}"))`;
+    phcrFilter +=  `)`
+
+
     let pharmacy = `hasLabel("pharmacy")`
 
     let filters: string = [
         bnrFilter,
         campFilter,
+        cocoFilter,
         contFilter,
         drugFilter,
         offerFilter,
         netwFilter, 
         pcrFilter,
+        phcrFilter,
         pharmacy
     ].join(",")
 
