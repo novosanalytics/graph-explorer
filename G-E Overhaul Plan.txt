@@ -16,6 +16,12 @@ G-E Overhaul Plan:
 	ii. Set PNMP ENV directly
 	iii. express >= 4.19.2
 	iv. vite >= 4.5.3
+	v. "@typescript-eslint/eslint-plugin": "^7.1.0",
+	vi. "@typescript-eslint/parser": "^7.1.0",
+	vii.  "eslint": "^8.57.0"
+	viii.  "eslint-plugin-react": "^7.33.2",
+	ix. "prettier": "3.2.5",
+	x. "husky": "^9.0.11",
 
 2. Minor Fixes
 	i. SOURCE: packages/graph-explorer/src/index.css ::
@@ -23,5 +29,35 @@ G-E Overhaul Plan:
 			21. transform: rotate(-360deg);
 			25. transform: rotate(0deg);
 	
+		]]
+
+	ii.SOURCE: packages/graph-explorer/src/hooks/useUpdateSchema.ts
+		[[ 
+			21. const vertices = (currentSchema?.vertices || []).map(vertex => {
+			24. total: vertex.total,
+			33. total: edge.total,
+			39. totalVertices: currentSchema?.totalVertices || 0,
+			41. totalEdges: currentSchema?.totalEdges || 0,
 
 3. Major Fixes I: Object Management
+	i. Remove AbstractConnector
+	ii. Introduce useGEFetchTypes
+	iii. Introduce useGremlin.ts 
+	iv. Introduce fetchVertexTypeCounts function
+	v. Remove formattedVertexTypes and formattedEdgeType 
+	vii. Remove filterByVertexTypes and filterCriteriaTeplat
+	viii. Add type to DataExplorer
+	
+
+4. Major Fixes II: Auxillary Fixes
+	i. added Schema object
+	ii. addeed new functions totalFiltered	count
+	iii. added vertexTypeSelector and edgeTypeSelector
+	iv. Creates a config with the schema and makes it active, then renders the `useFiltersConfig` hook.
+	v. Added TestSchema and better Testing
+	vi. Request timeout increased
+	vii. changed onExactMatchChange
+	viii. Search improvements
+	ix. Icon button improvements
+	x. PNPM Updates
+	xi. Added RenderNode
