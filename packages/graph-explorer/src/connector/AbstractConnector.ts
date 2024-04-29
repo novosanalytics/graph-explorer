@@ -222,6 +222,11 @@ export type SubGraphRequest = {
    */
   canE : Array<Edge>
 
+  /** 
+   *  List of fields to 
+   */
+  filters?: Array<string>
+
   /**
    * Input Date
    */

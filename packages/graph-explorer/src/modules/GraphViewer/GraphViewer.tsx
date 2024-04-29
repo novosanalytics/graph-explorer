@@ -272,7 +272,6 @@ const GraphViewer = ({
       console.log("canvas:")
       console.log(currentCanvas[0])
 
-      // Returns t
       console.log("OverDate Result:" + overDate);
       console.log("Ref Result:"+ testDate.current)
       await createSubGraph({

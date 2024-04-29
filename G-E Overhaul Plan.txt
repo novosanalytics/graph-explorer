@@ -1,0 +1,27 @@
+G-E Overhaul Plan:
+
+1. Research the AWS Graph-Exploer updates for better object management
+2. Replace the objects into new object mangement
+3. Update the dependencies
+4. Create the tutorial
+5. To Be Continued ... 
+
+
+
+=======================================================================
+|| STEP 1: Research AWS Graph Explorer Updates for Object Management ||
+=======================================================================
+1. Dependency Updates
+	i. pnpm 8.15.6
+	ii. Set PNMP ENV directly
+	iii. express >= 4.19.2
+	iv. vite >= 4.5.3
+
+2. Minor Fixes
+	i. SOURCE: packages/graph-explorer/src/index.css ::
+		[[ 
+			21. transform: rotate(-360deg);
+			25. transform: rotate(0deg);
+	
+
+3. Major Fixes I: Object Management
