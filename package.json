@@ -53,6 +53,10 @@
       "@babel/traverse@<7.23.2": ">=7.23.2",
       "crypto-js@<4.2.0": ">=4.2.0",
       "@adobe/css-tools@<4.3.2": ">=4.3.2"
-        }
     }
+  },
+  "dependencies": {
+    "@react-aria/textfield": "^3.14.3",
+    "@react-types/shared": "^3.22.1"
+  }
 }
