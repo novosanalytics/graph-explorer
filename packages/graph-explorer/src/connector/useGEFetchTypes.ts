@@ -69,9 +69,17 @@ export type Criterion = {
      * By default, String.
      */
     dataType?: "String" | "Number" | "Date";
-};
+    /**
+     * Search Type
+     */
+    searchType?: boolean;
+  };
 
 export type NeighborsRequest = {
+    /**
+     * Multiple Source Vertices
+     */
+    multiVertexId?: string;
     /**
      * Source vertex ID.
      */
@@ -101,9 +109,17 @@ export type NeighborsRequest = {
      * Skip the given number of results.
      */
     offset?: number;
-};
+    /**
+     * Include the date as a required filter
+     */
+    odFlag?: boolean;
+    /**
+     * Date to be applied everywhere
+     */
+    overdate?: string;
+  };
 
-export type NeighborsResponse = {
+  export type NeighborsResponse = {
     /**
      * List of vertices.
      */
@@ -113,6 +129,21 @@ export type NeighborsResponse = {
      */
     edges: Array<Edge>;
 };
+
+export type EdgesRequest = {
+    /**
+     * Source vertex ID
+     */
+    vertexId: string;
+  };
+  
+  
+export type EdgesResponse = {
+      /**
+     * List of edges.
+     */
+      edges: Array<Edge>;
+  };
 
 export type NeighborsCountRequest = {
     /**
@@ -167,6 +198,34 @@ export type KeywordSearchRequest = {
      * Only return exact attribute value matches.
      */
     exactMatch?: boolean;
+};
+
+export type SubGraphRequest = {
+    /**
+     * List of vertices on the canvas
+     */
+    canV : Array<Vertex>
+  
+    /**
+     * List of edges on the canvas 
+     */
+    canE : Array<Edge>
+  
+    /**
+     * Input Date
+     */
+    date: string;
+};
+  
+  export type SubGraphResponse = {
+    /**
+     * List of vertices.
+     */
+    vertices: Array<Vertex>;
+    /**
+     * List of edges.
+     */
+    edges: Array<Edge>;
 };
 
 export type KeywordSearchResponse = {

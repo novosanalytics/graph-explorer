@@ -1,5 +1,5 @@
 import { capitalize, toUpper } from "lodash";
-import type { Criterion, NeighborsRequest } from "../../AbstractConnector";
+import type { Criterion, NeighborsRequest } from "../../useGEFetchTypes";
 
 const now = new Date();
 

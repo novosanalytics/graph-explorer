@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useNotification } from "../components/NotificationProvider";
-import type { SubGraphRequest } from "../connector/AbstractConnector";
+import type { SubGraphRequest } from "../connector/useGEFetchTypes";
 import useConnector from "../core/ConnectorProvider/useConnector";
 import useEntities from "./useEntities";
 

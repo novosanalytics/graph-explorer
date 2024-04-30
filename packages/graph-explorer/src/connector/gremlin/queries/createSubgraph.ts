@@ -1,7 +1,7 @@
 import { 
     SubGraphRequest,
     SubGraphResponse
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
 import toStringId from "../mappers/toStringId";
 import subgraphTemplate from "../templates/subgraphTemplate";
 import subedgeTemplate from "../templates/subedgeTemplate";

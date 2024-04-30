@@ -2,7 +2,7 @@ import { Edge } from "../../../@types/entities";
 import type {
   NeighborsRequest,
   NeighborsResponse,
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
 import mapApiEdge from "../mappers/mapApiEdge";
 import mapApiVertex from "../mappers/mapApiVertex";
 import toStringId from "../mappers/toStringId";
