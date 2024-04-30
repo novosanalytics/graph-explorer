@@ -122,7 +122,6 @@ const NodeExpandFilters = ({
         labelPosition={"right"}
         isSelected={searchType === true || false }
         onChange={() => onSearchChange(!searchType)}
-        //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
         >
         {searchType ? "Exact Term Search" : "Partial Term Search"}
         </Switch>
