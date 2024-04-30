@@ -4,8 +4,8 @@
 import { forEach } from "lodash";
 import { SubGraphRequest } from "../../useGEFetchTypes";
 import mapDateStr from "../mappers/mapDateStr";
-import { m } from "framer-motion";
-// nodes = Set
+
+
 const subgraphTemplate = ({
     date = "string", 
     canV,

@@ -5,4 +5,5 @@ const vertexTypeCountTemplate = (label: string) => {
   return `g.V().hasLabel("${label}").count()`;
 };
 
+
 export default vertexTypeCountTemplate;

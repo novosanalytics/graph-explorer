@@ -2,11 +2,13 @@ import { useCallback, useMemo } from "react";
 import { ConnectionConfig, useConfiguration } from "../../core";
 import fetchNeighbors from "./queries/fetchNeighbors";
 import fetchNeighborsCount from "./queries/fetchNeighborsCount";
+import fetchMultiNeighbors from "./queries/fetchMultiNeighbors";
 import fetchSchema from "./queries/fetchSchema";
 import fetchVertexTypeCounts from "./queries/fetchVertexTypeCounts";
 import keywordSearch from "./queries/keywordSearch";
 import useGEFetch from "../useGEFetch";
 import { GraphSummary } from "./types";
+
 
 const useGremlin = () => {
   const connection = useConfiguration()?.connection as ConnectionConfig | undefined;
@@ -61,6 +63,14 @@ const useGremlin = () => {
     return fetchNeighborsCount(_gremlinFetch(options), req, _rawIdTypeMap);
   }, [_gremlinFetch, _rawIdTypeMap]);
 
+  const fetchEdgeNeighborsFunc = useCallback((req, options) => {
+    return fetchNeighbors(_gremlinFetch(options), req, _rawIdTypeMap);
+  }, [_gremlinFetch, _rawIdTypeMap]);
+
+  const fetchMultiNeighborsFunc = useCallback((req, options) => {
+    return fetchMultiNeighbors(_gremlinFetch(options), req, _rawIdTypeMap);
+  }, [_gremlinFetch, _rawIdTypeMap])
+
   const keywordSearchFunc = useCallback((req, options) => {
     return keywordSearch(_gremlinFetch(options), req, _rawIdTypeMap);
   }, [_gremlinFetch, _rawIdTypeMap]);
@@ -70,6 +80,8 @@ const useGremlin = () => {
     fetchVertexCountsByType,
     fetchNeighbors: fetchNeighborsFunc,
     fetchNeighborsCount: fetchNeighborsCountFunc,
+    fetchEdgeNeighbors: fetchEdgeNeighborsFunc,
+    fetchMultiNeighbors: fetchMultiNeighborsFunc,
     keywordSearch: keywordSearchFunc,
   };
 };

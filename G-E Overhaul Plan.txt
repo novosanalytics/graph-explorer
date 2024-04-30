@@ -61,3 +61,42 @@ G-E Overhaul Plan:
 	ix. Icon button improvements
 	x. PNPM Updates
 	xi. Added RenderNode
+
+
+
+
+
+
+Update To Do:
+-----------------------------------------------------
+
+1. Change the Abstract Connector objects into GEFetchTypes
+2. Integrate Schema Object (if necessary)
+3. Integrate fetchVertexTypeCounts and fetchEdgeTypeCounts
+4. PNPM updates 
+5. Dynamic querying within subgraph filtering for nodes and edges (???)
+
+
+
+
+
+
+Notes
+--------------------------------------------------------
+memoization -- saving a result prior instead of needing to call the function again
+	- useful to save compute by creating a cached result for a function 
+
+Overdate -- memoization to any specific data columns that have Record_Active and Record_Expiri in them?
+	Ideal flow:
+		- Take all objects on the canvas
+		- Get the distinct object type of each edege and node (memoization could be useful here)
+		- Add to query based on the specific 
+
+
+React Hooks are better than Classes anyways
+- instead of handling many classes, we can just encapsulatet the logic and state within the funcion
+
+- easier for reusability because instead of relying on constructors and not needing to rely on declarations  
+
+
+
