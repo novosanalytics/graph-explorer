@@ -5,6 +5,7 @@ import fetchNeighborsCount from "./queries/fetchNeighborsCount";
 import fetchMultiNeighbors from "./queries/fetchMultiNeighbors";
 import fetchSchema from "./queries/fetchSchema";
 import fetchVertexTypeCounts from "./queries/fetchVertexTypeCounts";
+import fetchEdgeTypeCounts from "./queries/fetchEdgeTypeCounts";
 import keywordSearch from "./queries/keywordSearch";
 import useGEFetch from "../useGEFetch";
 import { GraphSummary } from "./types";
@@ -55,6 +56,10 @@ const useGremlin = () => {
     return fetchVertexTypeCounts(_gremlinFetch(options), req);
   }, [_gremlinFetch]);
 
+  const fetchEdgeCountsByType = useCallback((req, options) => {
+    return fetchEdgeTypeCounts(_gremlinFetch(options), req);
+  }, [_gremlinFetch]);
+
   const fetchNeighborsFunc = useCallback((req, options) => {
     return fetchNeighbors(_gremlinFetch(options), req, _rawIdTypeMap);
   }, [_gremlinFetch, _rawIdTypeMap]);
@@ -78,6 +83,7 @@ const useGremlin = () => {
   return {
     fetchSchema: fetchSchemaFunc,
     fetchVertexCountsByType,
+    fetchEdgeCountsByType,
     fetchNeighbors: fetchNeighborsFunc,
     fetchNeighborsCount: fetchNeighborsCountFunc,
     fetchEdgeNeighbors: fetchEdgeNeighborsFunc,

@@ -2,7 +2,7 @@ import type {
   CountsByTypeRequest,
   CountsByTypeResponse,
 } from "../../useGEFetchTypes";
-import vertexTypeCountTemplate from "../templates/vertexTypeCountTemplate";
+import edgeTypeCountTemplate from "../templates/edgeTypeCountTemplate"; 
 import { GInt64, GremlinFetch } from "../types";
 
 type RawCountsByTypeResponse = {
@@ -19,15 +19,15 @@ type RawCountsByTypeResponse = {
   };
 };
 
-const fetchVertexTypeCounts = async (
+const fetchEdgeTypeCounts = async (
   gremlinFetch: GremlinFetch,
   req: CountsByTypeRequest
 ): Promise<CountsByTypeResponse> => {
-  const template = vertexTypeCountTemplate(req.label);
+  const template = edgeTypeCountTemplate(req.label);
   const response = await gremlinFetch<RawCountsByTypeResponse>(template);
   return {
     total: response.result.data["@value"][0]["@value"],
   };
 };
 
-export default fetchVertexTypeCounts;
+export default fetchEdgeTypeCounts;
