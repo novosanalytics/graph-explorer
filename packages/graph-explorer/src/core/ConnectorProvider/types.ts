@@ -5,6 +5,8 @@ type Explorer = {
   fetchSchema: (options?: any) => Promise<SchemaResponse>;
   fetchVertexCountsByType: (req: any, options?: any) => Promise<CountsByTypeResponse>
   fetchNeighbors: (req: any, options?: any) => Promise<NeighborsResponse> | Promise<unknown>
+  fetchEdgeNeighbors: (req: any, options?: any) => Promise<NeighborsResponse> | Promise<unknown>
+  fetchMultiNeighbors: (req: any, options?: any) => Promise<NeighborsResponse> | Promise<unknown>
   fetchNeighborsCount: (req: any, options?: any) => Promise<NeighborsCountResponse>
   keywordSearch: (req: any, options?: any) => Promise<KeywordSearchResponse>
 };
