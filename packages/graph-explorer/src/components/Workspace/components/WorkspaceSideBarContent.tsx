@@ -14,7 +14,7 @@ const WorkspaceSideBarContent = ({
   className,
   children,
   isOpen,
-  defaultWidth = 500,
+  defaultWidth = 350,
 }: PropsWithChildren<WorkspaceSideBarContentProps>) => {
   const pfx = withClassNamePrefix(classNamePrefix);
   return (

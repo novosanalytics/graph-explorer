@@ -73,11 +73,6 @@ export type EdgeTypeConfig = {
    */
   displayLabel?: string;
   /**
-  * Optional icon to be rendered inside the graph viewer and
-  * other modules.
-  */
-  iconUrl?: string;
-  /**
    * Vertex attribute to be used as label
    */
   displayNameAttribute?: string;
@@ -137,25 +132,33 @@ export type ConnectionConfig = {
    */
   awsAuthEnabled?: boolean;
   /**
+   * If it is Neptune, it could need authentication.
+   */
+  serviceType?: "neptune-db" | "neptune-graph";
+  /**
    * AWS Region where the Neptune cluster is deployed.
    * It is needed to sign requests.
    */
   awsRegion?: string;
   /**
-   * Enable or disable connector cache.
-   * By default, it's enabled.
-   */
-  enableCache?: boolean;
-  /**
-   * Number of milliseconds before expiring a cached request.
-   * By default, 10 minutes.
-   */
-  cacheTimeMs?: number;
-  /**
    * Number of milliseconds before aborting a request.
    * By default, 60 seconds.
    */
   fetchTimeoutMs?: number;
+};
+
+export type Schema = {
+  totalVertices: number;
+  vertices: Array<VertexTypeConfig>;
+  totalEdges: number;
+  edges: Array<EdgeTypeConfig>;
+  lastUpdate?: Date;
+  triedToSync?: boolean;
+  lastSyncFail?: boolean;
+  /**
+   * List of RDF prefixes (only for SPARQL)
+   */
+  prefixes?: Array<PrefixTypeConfig>;
 };
 
 export type RawConfiguration = {
@@ -177,19 +180,7 @@ export type RawConfiguration = {
   /**
    * Database schema: types, names, labels, icons, ...
    */
-  schema?: {
-    totalVertices: number;
-    vertices: Array<VertexTypeConfig>;
-    totalEdges: number;
-    edges: Array<EdgeTypeConfig>;
-    lastUpdate?: Date;
-    triedToSync?: boolean;
-    lastSyncFail?: boolean;
-    /**
-     * List of RDF prefixes (only for SPARQL)
-     */
-    prefixes?: Array<PrefixTypeConfig>;
-  };
+  schema?: Schema;
   /**
    * Mark as created from a file
    */
@@ -197,16 +188,16 @@ export type RawConfiguration = {
 };
 
 export type ConfigurationContextProps = RawConfiguration & {
-  totalVertices: number;
-  vertexTypes: Array<string>;
-  totalEdges: number;
-  edgeTypes: Array<string>;
-
-  getVertexTypeConfig(vertexType: string): VertexTypeConfig | undefined;
-  getVertexTypeAttributes(vertexTypes: string[]): Array<AttributeConfig>;
-  getVertexTypeSearchableAttributes(vertexType: string): Array<AttributeConfig>;
-
-  getEdgeTypeConfig(edgeType: string): EdgeTypeConfig | undefined;
-  getEdgeTypeAttributes(edgeTypes: string[]): Array<AttributeConfig>;
-  getEdgeTypeSearchableAttributes(edgeType: string): Array<AttributeConfig>;
-};
+    totalVertices: number;
+    vertexTypes: Array<string>;
+    totalEdges: number;
+    edgeTypes: Array<string>;
+  
+    getVertexTypeConfig(vertexType: string): VertexTypeConfig | undefined;
+    getVertexTypeAttributes(vertexTypes: string[]): Array<AttributeConfig>;
+    getVertexTypeSearchableAttributes(vertexType: string): Array<AttributeConfig>;
+  
+    getEdgeTypeConfig(edgeType: string): EdgeTypeConfig | undefined;
+    getEdgeTypeAttributes(edgeTypes: string[]): Array<AttributeConfig>;
+    getEdgeTypeSearchableAttributes(edgeType: string): Array<AttributeConfig>;
+  };

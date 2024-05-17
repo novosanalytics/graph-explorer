@@ -1,22 +1,19 @@
 import { useCallback } from "react";
 import { useNotification } from "../components/NotificationProvider";
 import type { NeighborsRequest } from "../connector/useGEFetchTypes";
-import useConnector from "../core/ConnectorProvider/useConnector";
+import { explorerSelector } from "../core/connector";
 import useEntities from "./useEntities";
 import { Vertex } from "../@types/entities";
+import { useRecoilValue } from "recoil";
 
 const useExpandNode = () => {
   const [, setEntities] = useEntities();
-  const connector = useConnector();
+  const explorer = useRecoilValue(explorerSelector);
   const { enqueueNotification, clearNotification } = useNotification();
 
   return useCallback(
     async (req: NeighborsRequest) => {
-      const result = req.multiVertexId ?
-        await connector.explorer?.fetchMultiNeighbors(req)
-        :
-        await connector.explorer?.fetchNeighbors(req);
-      
+      const result = await explorer?.fetchNeighbors(req);
 
       if (!result || !result.vertices.length) {
         enqueueNotification({
@@ -40,8 +37,9 @@ const useExpandNode = () => {
 
       const verticesWithUpdatedCounts = await Promise.all<Vertex>(
         result.vertices.map(async vertex => {
-          const neighborsCount = await connector.explorer?.fetchNeighborsCount({
+          const neighborsCount = await explorer?.fetchNeighborsCount({
             vertexId: vertex.data.id,
+            idType: vertex.data.idType,
           });
 
           return {
@@ -73,7 +71,7 @@ const useExpandNode = () => {
         edges: result.edges,
       }));
     },
-    [connector.explorer, setEntities, enqueueNotification, clearNotification]
+    [explorer, setEntities, enqueueNotification, clearNotification]
   );
 };
 

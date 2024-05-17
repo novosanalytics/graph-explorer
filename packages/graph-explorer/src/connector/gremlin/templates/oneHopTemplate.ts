@@ -1,5 +1,7 @@
 import type { Criterion, NeighborsRequest } from "../../useGEFetchTypes";
 
+const searchType = true;
+
 const criterionNumberTemplate = ({
   name,
   operator,
@@ -29,39 +31,39 @@ const criterionNumberTemplate = ({
 };
 
 const criterionStringTemplate = ({
-  name,
-  operator,
-  value,
-  searchType,
-}: Omit<Criterion, "dataType">): string => {
-  switch (operator.toLowerCase()) {
-    case "eq":
-    case "==":
-    default:
-      return `has("${name}","${value}")`;
-    case "neq":
-    case "!=":
-      return `has("${name}",neq("${value}"))`;
-    case "gt":
-    case ">":
-      return `has("${name}",gt(${value}))`;
-    case "gte":
-    case ">=":
-      return `has("${name}",gte(${value}))`;
-    case "lt":
-    case "<":
-      return `has("${name}",lt(${value}))`;
-    case "lte":
-    case "<=":
-      return `has("${name}",lte(${value}))`;
-    case "like":
-        if(searchType){
-            return `has("${name}", containing("${value}"))`;   
-        } else {
-            return `has("${name}", TextP.regex((?i)"${value}"))`
-        }
-  }
-};
+    name,
+    operator,
+    value,
+    //searchType,
+  }: Omit<Criterion, "dataType">): string => {
+    switch (operator.toLowerCase()) {
+      case "eq":
+      case "==":
+      default:
+        return `has("${name}","${value}")`;
+      case "neq":
+      case "!=":
+        return `has("${name}",neq("${value}"))`;
+      case "gt":
+      case ">":
+        return `has("${name}",gt(${value}))`;
+      case "gte":
+      case ">=":
+        return `has("${name}",gte(${value}))`;
+      case "lt":
+      case "<":
+        return `has("${name}",lt(${value}))`;
+      case "lte":
+      case "<=":
+        return `has("${name}",lte(${value}))`;
+      case "like":
+          if(searchType){
+              return `has("${name}", containing("${value}"))`;   
+          } else {
+              return `has("${name}", TextP.regex((?i)"${value}"))`
+          }
+    }
+  };
 
 const criterionDateTemplate = ({
   name,
@@ -91,7 +93,7 @@ const criterionDateTemplate = ({
   }
 };
 
-const criterionTemplate = (criterion:Criterion): string => {
+const criterionTemplate = (criterion: Criterion): string => {
   switch (criterion.dataType) {
     case "Number":
       return criterionNumberTemplate(criterion);
@@ -143,19 +145,14 @@ const criterionTemplate = (criterion:Criterion): string => {
  *  )
  */
 const oneHopTemplate = ({
-  multiVertexId,
   vertexId,
-  odFlag,
-  overdate,
+  idType,
   filterByVertexTypes = [],
   edgeTypes = [],
   filterCriteria = [],
   limit = 10,
   offset = 0,
-  idType = "string",
-}: Omit<NeighborsRequest, "vertexType"> & {
-  idType?: "string" | "number";
-}): string => {
+}: Omit<NeighborsRequest, "vertexType">): string => {
   const range = `.range(${offset}, ${offset + limit})`;
   let template = "";
   if (idType === "number") {
@@ -172,15 +169,8 @@ const oneHopTemplate = ({
     .join(",");
   const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
 
-    let filterCriteriaTemplate = ".and(";
+  let filterCriteriaTemplate = ".and(";
   filterCriteriaTemplate += filterCriteria?.map(criterionTemplate).join(",");
-  if (odFlag) {
-    filterByVertexTypes.forEach(element => {
-      filterCriteriaTemplate += `, has("${element}_Record_Active_Date__c", lte("${overdate}"))`;
-      filterCriteriaTemplate += `, has("${element}_Record_Expiration_Date__c", gte("${overdate}"))`;
-      filterCriteriaTemplate += ")";
-    });
-  }
   filterCriteriaTemplate += ")";
 
   if (filterByVertexTypes.length > 0) {
@@ -209,17 +199,6 @@ const oneHopTemplate = ({
     } else {
       template += `.by(bothE().dedup().fold())`;
     }
-  }
-
-
-  /**
-   * 
-   * g.V(\"a0X1Q00000WmYDGUA3\", \"a0X1Q00000WmYD1UAN\", \"a0XPm000000NqCPMA0\").project(\"vertices\").by(both().hasLabel(\"client\").range(0, 18).fold())
-   * 
-   */
-
-  if(multiVertexId){
-    template = `g.V(${multiVertexId}).project("vertices", "edges").by(both().hasLabel(${hasLabelContent})${range}.fold()).by(bothE().where(otherV().hasLabel(${hasLabelContent})).fold())`
   }
 
   return template;

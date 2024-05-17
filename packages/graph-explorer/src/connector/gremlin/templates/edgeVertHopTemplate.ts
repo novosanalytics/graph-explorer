@@ -109,8 +109,8 @@ const criterionTemplate = (criterion: Criterion): string => {
 
 const edgeVertHopTemplate = ({
     vertexId,
-    odFlag,
-    overdate,
+    //odFlag,
+    //overdate,
     filterByVertexTypes = [],
     edgeTypes = [],
     filterCriteria = [],
@@ -128,10 +128,10 @@ const edgeVertHopTemplate = ({
       template = `g.V("${vertexId}")`;
     }
 
-    console.log(`vertexId:`, vertexId)
-    console.log(`filterByVertexTypes:`, filterByVertexTypes)
-    console.log(`edgeTypes:`, edgeTypes)
-    console.log(`filters:`, filterCriteria)
+    //console.log(`vertexId:`, vertexId)
+    //console.log(`filterByVertexTypes:`, filterByVertexTypes)
+    //console.log(`edgeTypes:`, edgeTypes)
+    //console.log(`filters:`, filterCriteria)
 
     template += `.project("vertices", "edges")`;
 
@@ -139,12 +139,12 @@ const edgeVertHopTemplate = ({
 
     //let activeDate = filterCriteria[0]['value'];
     let activeDate = ""
-    //activeDate += filterCriteria[0]['value']
-    if (filterCriteria.length > 0){
+    activeDate +=  "2024-05-17" //filterCriteria[0]['value'] ||
+    /*if (filterCriteria.length > 0){
       activeDate += filterCriteria[0]['value'];
     } else {
       activeDate += overdate;
-    }
+    }*/
     console.log(filterCriteria)
     let filterCriteriaTemplate = ".and(";
     let edgePrefix =  /^[0-9]*$/.test(edgeTypes[0][1]) ? toUpper(edgeTypes[0].slice(0,2)): capitalize(edgeTypes[0]);

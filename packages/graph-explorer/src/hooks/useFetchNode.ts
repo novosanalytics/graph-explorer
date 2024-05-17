@@ -1,20 +1,19 @@
 import { useCallback } from "react";
 import { Vertex } from "../@types/entities";
-import useConnector from "../core/ConnectorProvider/useConnector";
+import { explorerSelector } from "../core/connector";
 import useEntities from "./useEntities";
+import { NeighborsCountRequest } from "../connector/useGEFetchTypes";
+import { useRecoilValue } from "recoil";
 
 const useFetchNode = () => {
   const [, setEntities] = useEntities();
-  const connector = useConnector();
+  const explorer = useRecoilValue(explorerSelector);
 
   const fetchNeighborsCount = useCallback(
-    (vertexId: string, neighbors_limit: number) => {
-      return connector.explorer?.fetchNeighborsCount({
-        vertexId: vertexId,
-        limit: neighbors_limit,
-      });
+    (req: NeighborsCountRequest) => {
+      return explorer?.fetchNeighborsCount(req);
     },
-    [connector.explorer]
+    [explorer]
   );
 
   return useCallback(
@@ -24,7 +23,11 @@ const useFetchNode = () => {
 
       const results = await Promise.all(
         nodes.map(async node => {
-          const neighborsCount = await fetchNeighborsCount(node.data.id, neighbors_limit);
+          const neighborsCount = await fetchNeighborsCount({
+            vertexId: node.data.id,
+            idType: node.data.idType,
+            limit: neighbors_limit,
+          });
           if (!neighborsCount) {
             return;
           }

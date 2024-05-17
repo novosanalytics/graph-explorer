@@ -26,7 +26,7 @@ const fetchEdgeTypeCounts = async (
   const template = edgeTypeCountTemplate(req.label);
   const response = await gremlinFetch<RawCountsByTypeResponse>(template);
   return {
-    total: response.result.data["@value"][0]["@value"],
+    total: response.result.data["@value"][1]["@value"],
   };
 };
 

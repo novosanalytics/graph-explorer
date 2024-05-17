@@ -15,13 +15,13 @@ import Switch from "../../components/Switch";
 export type NodeExpandFilter = {
   name: string;
   value: string;
-  operator: string;
+  operator?: string;
 };
 export type NodeExpandFiltersProps = {
   classNamePrefix?: string;
   neighborsOptions: Array<{ label: string; value: string }>;
-  searchType: boolean;
-  onSearchChange(type: boolean): void;
+  //searchType?: boolean;
+  //onSearchChange(type: boolean): void;
   selectedType: string;
   onSelectedTypeChange(type: string): void;
   filters: Array<NodeExpandFilter>;
@@ -35,8 +35,6 @@ const NodeExpandFilters = ({
   neighborsOptions,
   selectedType,
   onSelectedTypeChange,
-  searchType,
-  onSearchChange,
   filters,
   onFiltersChange,
   limit,
@@ -48,16 +46,8 @@ const NodeExpandFilters = ({
   const pfx = withClassNamePrefix(classNamePrefix);
 
   const vtConfig = config?.getVertexTypeConfig(selectedType);
-  const searchableAttributes = config?.getVertexTypeSearchableAttributes(
-    selectedType
-  );
-
-  const comparatives = [
-    "==","like",
-    ">",">=",
-    "<=","<",
-    "!="
-  ]
+  const searchableAttributes =
+    config?.getVertexTypeSearchableAttributes(selectedType);
 
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
@@ -65,7 +55,6 @@ const NodeExpandFilters = ({
       {
         name: vtConfig?.attributes?.[0].name || "",
         value: "",
-        operator: "=="
       },
     ]);
   }, [filters, onFiltersChange, vtConfig?.attributes]);
@@ -79,11 +68,10 @@ const NodeExpandFilters = ({
   );
 
   const onFilterChange = useCallback(
-    (filterIndex: number, name?: string, value?: string, operator?: string) => {
+    (filterIndex: number, name?: string, value?: string) => {
       const currFilters = clone(filters);
       currFilters[filterIndex].name = name || currFilters[filterIndex].name;
       currFilters[filterIndex].value = value ?? currFilters[filterIndex].value;
-      currFilters[filterIndex].operator = operator ?? currFilters[filterIndex].operator;
       onFiltersChange(currFilters);
     },
     [filters, onFiltersChange]
@@ -93,38 +81,9 @@ const NodeExpandFilters = ({
     onFiltersChange([]);
   }, [onFiltersChange, selectedType]);
 
-
-  let placeholder = "";
-  const onPlaceholderChange = useCallback(
-    (name:string) => {
-        const currFilters = clone(filters);
-        if(name.includes("Minimum") || name.includes("Maximum")){
-            placeholder = "Float: 1.0, 0.01, 15.6"
-        } else if (name.includes("Date")){
-            placeholder = "Date: YYYY-MM-DD"
-        } else if (name.includes("Code")) {
-            placeholder = "Code: '8', '3:10;', '70Q'"
-        } else if (name.includes("Active" || "Approved")) {
-            placeholder = "Active Code: 1 or 0"
-        } else {
-            placeholder = "Text"
-        }
-        return placeholder;
-    },
-    [placeholder]
-  )
-
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
-        <Switch
-        className={pfx("item-switch")}
-        labelPosition={"right"}
-        isSelected={searchType === true || false }
-        onChange={() => onSearchChange(!searchType)}
-        >
-        {searchType ? "Exact Term Search" : "Partial Term Search"}
-        </Switch>
       <Select
         aria-label={"neighbor type"}
         value={selectedType}
@@ -161,32 +120,15 @@ const NodeExpandFilters = ({
                 hideError={true}
                 noMargin={true}
               />
-              <Select
-                aria-label={"Comparison"}
-                value={filter.operator}
-                onChange={value => {
-                    onFilterChange(filterIndex, filter.name, filter.value, value as string);
-                }}
-                options={comparatives?.map(comopt => ({
-                    label: comopt,
-                    value: comopt,
-                }))}
-                hideError={true}
-                noMargin={true}
-                />
               <Input
                 aria-label={"Filter"}
                 className={pfx("input")}
                 value={filter.value}
                 onChange={value => {
-                  onFilterChange(filterIndex, filter.name, value as string, filter.operator);
+                  onFilterChange(filterIndex, filter.name, value as string);
                 }}
                 hideError={true}
                 noMargin={true}
-                placeholder={
-                    //"Date: YYYY-MM-DD"
-                    onPlaceholderChange(filter.name)
-                }
               />
               <IconButton
                 icon={<DeleteIcon />}

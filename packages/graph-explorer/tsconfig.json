@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true, //non-dev: TRUE
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
@@ -16,7 +16,6 @@
     "useUnknownInCatchVariables": false,
     "jsx": "react-jsx",
     "noEmit": true,
-    "emitDeclarationOnly": true,
     "downlevelIteration": true,
     "importHelpers": true,
     "paths": {},
@@ -26,6 +25,6 @@
   "jest": {
     "transform": {
       "^.+\\.ts?$": "ts-jest"
-    },
+    }
   }
 }

@@ -13,7 +13,8 @@ import {
   edgesSelectedIdsAtom,
   edgesTypesFilteredAtom,
 } from "../../core/StateProvider/edges";
-import { overDateAtom, overDateFlagAtom } from "../../core/StateProvider/overdate";
+//import { overDateAtom, overDateFlagAtom } from "../../core/StateProvider/overdate";
+import useConfiguration from "../../core/ConfigurationProvider/useConfiguration";
 import useTranslations from "../../hooks/useTranslations";
 import EdgeExpandContent from "./EdgeExpandContent";
 
@@ -27,8 +28,8 @@ export type EdgeExpandProps = Omit<
 const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProps) => {
   const t = useTranslations();
   const nodes = useRecoilValue(nodesAtom);
-  //const edges = useRecoilValue(edgesAtom);
-  const edges = useRecoilValue(edgesTypesFilteredAtom)
+  //const other_edges = useRecoilValue(edgesAtom);
+  //const edges = useRecoilValue(edgesTypesFilteredAtom)
   const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom);
   const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom);
 
@@ -36,9 +37,18 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
     return nodes.find(node => nodesSelectedIds.has(node.data.id));
   }, [nodes, nodesSelectedIds]);
 
-  const filteredEdges = edges
-  const odFlag = useRecoilValue(overDateFlagAtom);
-  const overDate = useRecoilValue(overDateAtom);
+  //const filteredEdges = edges
+  //const odFlag = useRecoilValue(overDateFlagAtom);
+  //const overDate = useRecoilValue(overDateAtom);
+  const edgeConfigItems: Array<string> = [];
+  const config = useConfiguration();
+  (config?.edgeTypes || []).forEach(et => {
+    const etConfig = config?.getVertexTypeConfig(et);
+    const displayLabel = etConfig?.displayLabel || et;
+
+    edgeConfigItems.push(displayLabel)
+  })
+
 
   return (
     <ModuleContainer>
@@ -71,9 +81,10 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
       {nodesSelectedIds.size === 1 && selectedNode && (
         <EdgeExpandContent 
         vertex={selectedNode}
-        edgeList={filteredEdges}
-        odFlag={odFlag}
-        overDate={overDate}/>
+        edgeList={edgeConfigItems}
+        //odFlag={odFlag}
+        //overDate={overDate}
+        />
       )}
     </ModuleContainer>
   );

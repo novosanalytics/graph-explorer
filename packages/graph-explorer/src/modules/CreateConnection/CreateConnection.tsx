@@ -29,9 +29,8 @@ type ConnectionForm = {
   proxyConnection?: boolean;
   graphDbUrl?: string;
   awsAuthEnabled?: boolean;
+  serviceType?: "neptune-db" | "neptune-graph";
   awsRegion?: string;
-  enableCache?: boolean;
-  cacheTimeMs?: number;
   fetchTimeMs?: number;
 };
 
@@ -39,15 +38,15 @@ export const CONNECTIONS_OP: {
   label: string;
   value: NonNullable<ConnectionConfig["queryEngine"]>;
 }[] = [
-  { label: "PG (Property Graph) - Gremlin", value: "gremlin" },
-  { label: "PG (Property Graph) - OpenCypher", value: "openCypher" },
-  { label: "RDF (Resource Description Framework) - SPARQL", value: "sparql" },
+  { label: "Gremlin - PG (Property Graph)", value: "gremlin" },
+  { label: "OpenCypher - PG (Property Graph)", value: "openCypher" },
+  { label: "SPARQL - RDF (Resource Description Framework)", value: "sparql" },
 ];
 
 export type CreateConnectionProps = {
   configId?: string;
   initialData?: ConnectionForm;
-  disabledFields?: Array<"name" | "type" | "url">;
+  disabledFields?: Array<"name" | "type" | "url" | "serviceType">;
   onClose(): void;
 };
 
@@ -62,76 +61,76 @@ const CreateConnection = ({
   const { enqueueNotification } = useNotification();
 
   const onSave = useRecoilCallback(
-    ({ set }) => async (data: Required<ConnectionForm>) => {
-      if (!configId) {
-        const newConfigId = v4();
-        const newConfig: RawConfiguration = {
-          id: newConfigId,
-          displayLabel: data.name,
-          connection: {
-            url: data.url,
-            queryEngine: data.type,
-            proxyConnection: data.proxyConnection,
-            graphDbUrl: data.graphDbUrl,
-            awsAuthEnabled: data.awsAuthEnabled,
-            awsRegion: data.awsRegion,
-            enableCache: data.enableCache,
-            cacheTimeMs: data.cacheTimeMs * 60 * 1000,
-            fetchTimeoutMs: data.fetchTimeMs,
-          },
-        };
+    ({ set }) =>
+      async (data: Required<ConnectionForm>) => {
+        if (!configId) {
+          const newConfigId = v4();
+          const newConfig: RawConfiguration = {
+            id: newConfigId,
+            displayLabel: data.name,
+            connection: {
+              url: data.url,
+              queryEngine: data.type,
+              proxyConnection: data.proxyConnection,
+              graphDbUrl: data.graphDbUrl,
+              awsAuthEnabled: data.awsAuthEnabled,
+              serviceType: data.serviceType,
+              awsRegion: data.awsRegion,
+              fetchTimeoutMs: data.fetchTimeMs,
+            },
+          };
+          set(configurationAtom, prevConfigMap => {
+            const updatedConfig = new Map(prevConfigMap);
+            updatedConfig.set(newConfigId, newConfig);
+            return updatedConfig;
+          });
+          set(activeConfigurationAtom, newConfigId);
+          return;
+        }
+
         set(configurationAtom, prevConfigMap => {
           const updatedConfig = new Map(prevConfigMap);
-          updatedConfig.set(newConfigId, newConfig);
+          const currentConfig = updatedConfig.get(configId);
+
+          updatedConfig.set(configId, {
+            ...(currentConfig || {}),
+            id: configId,
+            displayLabel: data.name,
+            connection: {
+              url: data.url,
+              queryEngine: data.type,
+              proxyConnection: data.proxyConnection,
+              graphDbUrl: data.graphDbUrl,
+              awsAuthEnabled: data.awsAuthEnabled,
+              serviceType: data.serviceType,
+              awsRegion: data.awsRegion,
+              fetchTimeoutMs: data.fetchTimeMs,
+            },
+          });
           return updatedConfig;
         });
-        set(activeConfigurationAtom, newConfigId);
-        return;
-      }
 
-      set(configurationAtom, prevConfigMap => {
-        const updatedConfig = new Map(prevConfigMap);
-        const currentConfig = updatedConfig.get(configId);
+        const urlChange = initialData?.url !== data.url;
+        const typeChange = initialData?.type !== data.type;
 
-        updatedConfig.set(configId, {
-          ...(currentConfig || {}),
-          id: configId,
-          displayLabel: data.name,
-          connection: {
-            url: data.url,
-            queryEngine: data.type,
-            proxyConnection: data.proxyConnection,
-            graphDbUrl: data.graphDbUrl,
-            awsAuthEnabled: data.awsAuthEnabled,
-            awsRegion: data.awsRegion,
-            cacheTimeMs: data.cacheTimeMs * 60 * 1000,
-            fetchTimeoutMs: data.fetchTimeMs,
-          },
-        });
-        return updatedConfig;
-      });
+        if (urlChange || typeChange) {
+          set(schemaAtom, prevSchemaMap => {
+            const updatedSchema = new Map(prevSchemaMap);
+            const currentSchema = updatedSchema.get(configId);
+            updatedSchema.set(configId, {
+              vertices: currentSchema?.vertices || [],
+              edges: currentSchema?.edges || [],
+              prefixes: currentSchema?.prefixes || [],
+              // If the URL or Engine change, show as not synchronized
+              lastUpdate: undefined,
+              lastSyncFail: undefined,
+              triedToSync: undefined,
+            });
 
-      const urlChange = initialData?.url !== data.url;
-      const typeChange = initialData?.type !== data.type;
-
-      if (urlChange || typeChange) {
-        set(schemaAtom, prevSchemaMap => {
-          const updatedSchema = new Map(prevSchemaMap);
-          const currentSchema = updatedSchema.get(configId);
-          updatedSchema.set(configId, {
-            vertices: currentSchema?.vertices || [],
-            edges: currentSchema?.edges || [],
-            prefixes: currentSchema?.prefixes || [],
-            // If the URL or Engine change, show as not synchronized
-            lastUpdate: undefined,
-            lastSyncFail: undefined,
-            triedToSync: undefined,
+            return updatedSchema;
           });
-
-          return updatedSchema;
-        });
-      }
-    },
+        }
+      },
     [enqueueNotification, configId]
   );
 
@@ -144,19 +143,26 @@ const CreateConnection = ({
     proxyConnection: initialData?.proxyConnection || false,
     graphDbUrl: initialData?.graphDbUrl || "",
     awsAuthEnabled: initialData?.awsAuthEnabled || false,
+    serviceType: initialData?.serviceType || "neptune-db",
     awsRegion: initialData?.awsRegion || "",
-    enableCache: true,
-    cacheTimeMs: (initialData?.cacheTimeMs ?? 10 * 60 * 1000) / 60000,
     fetchTimeMs: initialData?.fetchTimeMs,
   });
 
   const [hasError, setError] = useState(false);
   const onFormChange = useCallback(
     (attribute: string) => (value: number | string | string[] | boolean) => {
-      setForm(prev => ({
-        ...prev,
-        [attribute]: value,
-      }));
+      if (attribute === "serviceType" && value === "neptune-graph") {
+        setForm(prev => ({
+          ...prev,
+          [attribute]: value,
+          ["type"]: "openCypher",
+        }));
+      } else {
+        setForm(prev => ({
+          ...prev,
+          [attribute]: value,
+        }));
+      }
     },
     []
   );
@@ -173,7 +179,7 @@ const CreateConnection = ({
       return;
     }
 
-    if (form.awsAuthEnabled && !form.awsRegion) {
+    if (form.awsAuthEnabled && (!form.awsRegion || !form.serviceType)) {
       setError(true);
       return;
     }
@@ -199,7 +205,10 @@ const CreateConnection = ({
           options={CONNECTIONS_OP}
           value={form.type}
           onChange={onFormChange("type")}
-          isDisabled={disabledFields?.includes("type")}
+          isDisabled={
+            disabledFields?.includes("type") ||
+            form.serviceType === "neptune-graph"
+          }
         />
         <div className={pfx("input-url")}>
           <Input
@@ -271,61 +280,33 @@ const CreateConnection = ({
           </div>
         )}
         {form.proxyConnection && form.awsAuthEnabled && (
-          <div className={pfx("input-url")}>
-            <Input
-              data-autofocus={true}
-              label={"AWS Region"}
-              value={form.awsRegion}
-              onChange={onFormChange("awsRegion")}
-              errorMessage={"Region is required"}
-              placeholder={"us-east-1"}
-              validationState={
-                hasError && !form.awsRegion ? "invalid" : "valid"
-              }
-            />
-          </div>
-        )}
-      </div>
-      <div className={pfx("configuration-form")}>
-        <Checkbox
-          value={"enableCache"}
-          checked={form.enableCache}
-          onChange={e => {
-            onFormChange("enableCache")(e.target.checked);
-          }}
-          styles={{
-            label: {
-              display: "block",
-            },
-          }}
-          label={
-            <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-              Enable Cache
-              <Tooltip
-                text={
-                  <div style={{ maxWidth: 300 }}>
-                    Requests made by the Graph Explorer can be temporarily
-                    stored in the browser cache for quick access to the data.
-                  </div>
+          <>
+            <div className={pfx("input-url")}>
+              <Input
+                data-autofocus={true}
+                label={"AWS Region"}
+                value={form.awsRegion}
+                onChange={onFormChange("awsRegion")}
+                errorMessage={"Region is required"}
+                placeholder={"us-east-1"}
+                validationState={
+                  hasError && !form.awsRegion ? "invalid" : "valid"
                 }
-              >
-                <div>
-                  <InfoIcon style={{ width: 18, height: 18 }} />
-                </div>
-              </Tooltip>
+              />
             </div>
-          }
-        />
-        {form.enableCache && (
-          <div className={pfx("input-url")}>
-            <Input
-              label="Cache Time (minutes)"
-              type={"number"}
-              value={form.cacheTimeMs}
-              onChange={onFormChange("cacheTimeMs")}
-              min={0}
-            />
-          </div>
+            <div className={pfx("input-url")}>
+              <Select
+                label={"Service Type"}
+                options={[
+                  { label: "Neptune DB", value: "neptune-db" },
+                  { label: "Neptune Graph", value: "neptune-graph" },
+                ]}
+                value={form.serviceType}
+                onChange={onFormChange("serviceType")}
+                isDisabled={disabledFields?.includes("serviceType")}
+              />
+            </div>
+          </>
         )}
       </div>
       <div className={pfx("configuration-form")}>

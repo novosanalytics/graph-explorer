@@ -24,9 +24,9 @@ import EdgeExpandFilters, { EdgeExpandFilter } from "./EdgeExpandFilters";
 export type EdgeExpandContentProps = {
   classNamePrefix?: string;
   vertex: Vertex;
-  edgeList: Set<string>;
-  odFlag: boolean;
-  overDate: string; 
+  edgeList: Array<string>;
+  odFlag?: boolean;
+  overDate?: string; 
 };
 
 const EdgeExpandContent = ({
@@ -61,10 +61,11 @@ const EdgeExpandContent = ({
 
     await expandEdge({
       vertexId: vertex.data.id,
+      idType: vertex.data.idType,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       edgeTypes: [selectedType],
-      odFlag: odFlag,
-      overdate: overDate,
+      //odFlag: odFlag,
+      //overdate: overDate,
       filterByVertexTypes: [selectedType],
 
       filterCriteria: filters.map(filter => ({

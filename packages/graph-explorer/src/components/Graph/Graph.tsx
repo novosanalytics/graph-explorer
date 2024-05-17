@@ -71,7 +71,7 @@ export type GraphRef = { cytoscape?: CytoscapeType; runLayout(): void };
 
 export interface GraphProps<
   TNode extends object = any,
-  TEdge extends object = any
+  TEdge extends object = any,
 > extends Config,
     Selection,
     Omit<UseAddClickEvents<TNode, TEdge>, "cy"> {
@@ -237,7 +237,10 @@ export const Graph = (
   // capture wrapper via callbackRef so it triggers a re-render (and thus our cy mounting effect)
   // https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
   const [wrapper, setWrapper] = useState();
-  const wrapperRefCb = useCallback(domElement => setWrapper(domElement), []);
+  const wrapperRefCb = useCallback(
+    (domElement: any) => setWrapper(domElement),
+    []
+  );
   // init cytoscape instance and attach some events listeners
   const cy = useInitCytoscape({
     wrapper,

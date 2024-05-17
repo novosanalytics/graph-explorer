@@ -35,7 +35,7 @@ const fetchMultiNeighbors = async (
   const idType = rawIds.get(req.vertexId) ?? "string";
   const gremlinTemplate = oneHopTemplate({ ...req, idType });
   const data = await gremlinFetch<RawOneHopRequest>(gremlinTemplate);
-  console.log(`Node Query: ${gremlinTemplate}`)
+  console.log(`Multi-Expand Query: ${gremlinTemplate}`)
   const rawVertices = data.result.data["@value"]
   let verticesIds: Array<any>[] = [];
   let edges: Edge[] = [];
@@ -57,8 +57,6 @@ const fetchMultiNeighbors = async (
     )
     edges = edges.concat(eDetails)
   });
-  console.log(`Vertices: ${vertices}`);
-  console.log(`Edges: ${edges}`);
   return {
     vertices,
     edges,

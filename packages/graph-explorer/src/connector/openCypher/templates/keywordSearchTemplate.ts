@@ -1,5 +1,6 @@
 import uniq from "lodash/uniq";
 import type { KeywordSearchRequest } from "../../useGEFetchTypes";
+import { escapeString } from "../../../utils";
 
 /**
  * @example
@@ -37,21 +38,25 @@ const keywordSearchTemplate = ({
   }
 
   if (Boolean(searchTerm) && (searchByAttributes.length !== 0 || searchById)) {
+    const escapedSearchTerm = escapeString(searchTerm);
+
     const orContent = uniq(
-      (searchById && searchByAttributes.includes("__all")) ? ["id", ...searchByAttributes] : searchByAttributes
+      searchById && searchByAttributes.includes("__all")
+        ? ["__id", ...searchByAttributes]
+        : searchByAttributes
     )
       .filter(attr => attr !== "__all")
       .map((attr: any) => {
-        if (attr === "id") {
+        if (attr === "__id") {
           if (exactMatch === true) {
-            return `v.\`~id\` = "${searchTerm}" `;
+            return `id(v) = "${escapedSearchTerm}" `;
           }
-          return `v.\`~id\` CONTAINS "${searchTerm}" `;
+          return `toString(id(v)) CONTAINS "${escapedSearchTerm}" `;
         }
         if (exactMatch === true) {
-          return `v.${attr} = "${searchTerm}" `;
+          return `v.${attr} = "${escapedSearchTerm}" `;
         }
-        return `v.${attr} CONTAINS "${searchTerm}" `;
+        return `v.${attr} CONTAINS "${escapedSearchTerm}" `;
       })
       .join(` OR `);
 

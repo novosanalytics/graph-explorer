@@ -1,6 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import type { Vertex } from "../../@types/entities";
-import { MagicExpandIcon, ModuleContainerFooter, VertexIcon } from "../../components";
+import { 
+    MagicExpandIcon,
+    ModuleContainerFooter, 
+    VertexIcon 
+} from "../../components";
 import Button from "../../components/Button";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
 import GraphIcon from "../../components/icons/GraphIcon";
@@ -41,7 +45,6 @@ const NodeExpandContent = ({
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
-  const [searchType, setSearchType] = useState<boolean>(true);
   const [filters, setFilters] = useState<Array<NodeExpandFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
@@ -49,13 +52,13 @@ const NodeExpandContent = ({
     setIsExpanding(true);
     await expandNode({
       vertexId: vertex.data.id,
+      idType: vertex.data.idType,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       filterByVertexTypes: [selectedType],
       filterCriteria: filters.map(filter => ({
         name: filter.name,
-        operator: filter.operator,
+        operator: "LIKE",
         value: filter.value,
-        searchType: searchType,
       })),
       // TODO - review limit and offset when data is not sorted
       limit: limit ?? vertex.data.neighborsCount,
@@ -67,22 +70,6 @@ const NodeExpandContent = ({
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
-
-  const onFullClick = useCallback(async () => {
-    setIsExpanding(true);
-    await expandNode({
-      vertexId: vertex.data.id,
-      vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
-      // TODO - review limit and offset when data is not sorted
-      limit: limit ?? vertex.data.neighborsCount,
-      offset:
-        limit === null
-          ? 0
-          : vertex.data.neighborsCount -
-            (vertex.data.__unfetchedNeighborCount ?? 0),
-    });
-    setIsExpanding(false);
-  }, [expandNode, filters, limit, vertex.data]);
 
   const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
@@ -144,8 +131,6 @@ const NodeExpandContent = ({
             <NodeExpandFilters
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
-              searchType={searchType}
-              onSearchChange={setSearchType}
               selectedType={selectedType}
               onSelectedTypeChange={setSelectedType}
               filters={filters}
@@ -155,7 +140,7 @@ const NodeExpandContent = ({
             />
           )}
           <ModuleContainerFooter>
-            <Button
+          <Button
               icon={
                 isExpanding ? (
                   <LoadingSpinner style={{ width: 24, height: 24 }} />
@@ -187,12 +172,11 @@ const NodeExpandContent = ({
                 !vertex.data.__unfetchedNeighborCount ||
                 !selectedType
               }
-              onPress={onFullClick}
+              onPress={onExpandClick}
             >
-              Full Expand
+              Expand
             </Button>
           </ModuleContainerFooter>
-          
         </>
       )}
     </div>

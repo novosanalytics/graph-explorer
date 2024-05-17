@@ -11,7 +11,6 @@ import {
 import { GraphRef } from "../../../components/Graph/Graph";
 import {
   CenterGraphIcon,
-  DateLock,
   DetailsIcon,
   ExpandGraphIcon,
   FitToFrameIcon,
@@ -55,12 +54,10 @@ const ContextMenu = ({
   const pfx = withClassNamePrefix(classNamePrefix);
   const t = useTranslations();
   const [entities, setEntities] = useEntities();
-  const [nodesSelectedIds, setNodesSelectedIds] = useRecoilState(
-    nodesSelectedIdsAtom
-  );
-  const [edgesSelectedIds, setEdgesSelectedIds] = useRecoilState(
-    edgesSelectedIdsAtom
-  );
+  const [nodesSelectedIds, setNodesSelectedIds] =
+    useRecoilState(nodesSelectedIdsAtom);
+  const [edgesSelectedIds, setEdgesSelectedIds] =
+    useRecoilState(edgesSelectedIdsAtom);
   const setUserLayout = useSetRecoilState(userLayoutAtom);
 
   const {
@@ -76,28 +73,26 @@ const ContextMenu = ({
     nodesSelectedIds.size >= 1 || edgesSelectedIds.size >= 1;
 
   const openSidebarPanel = useCallback(
-    (
-      panelName: string,
-      props?: { nodeType?: string; edgeType?: string }
-    ) => () => {
-      setUserLayout(prev => ({
-        ...prev,
-        activeSidebarItem: panelName,
-      }));
-      if (affectedNodesIds?.length) {
-        setEdgesSelectedIds(prev => (prev.size === 0 ? prev : new Set([])));
-        setNodesSelectedIds(new Set(affectedNodesIds ?? []));
-      }
-      if (affectedEdgesIds?.length) {
-        setEdgesSelectedIds(new Set(affectedEdgesIds ?? []));
-        setNodesSelectedIds(prev => (prev.size === 0 ? prev : new Set([])));
-      }
+    (panelName: string, props?: { nodeType?: string; edgeType?: string }) =>
+      () => {
+        setUserLayout(prev => ({
+          ...prev,
+          activeSidebarItem: panelName,
+        }));
+        if (affectedNodesIds?.length) {
+          setEdgesSelectedIds(prev => (prev.size === 0 ? prev : new Set([])));
+          setNodesSelectedIds(new Set(affectedNodesIds ?? []));
+        }
+        if (affectedEdgesIds?.length) {
+          setEdgesSelectedIds(new Set(affectedEdgesIds ?? []));
+          setNodesSelectedIds(prev => (prev.size === 0 ? prev : new Set([])));
+        }
 
-      props?.nodeType && onNodeCustomize(props.nodeType);
-      props?.edgeType && onEdgeCustomize(props.edgeType);
+        props?.nodeType && onNodeCustomize(props.nodeType);
+        props?.edgeType && onEdgeCustomize(props.edgeType);
 
-      onClose?.();
-    },
+        onClose?.();
+      },
     [
       affectedEdgesIds,
       affectedNodesIds,
@@ -222,25 +217,7 @@ const ContextMenu = ({
             onClick={openSidebarPanel("expand")}
             startAdornment={<ExpandGraphIcon />}
           >
-            Expand Graph
-          </ListItem>
-          <ListItem
-            classNamePrefix={"ft"}
-            className={pfx("list-item")}
-            clickable={true}
-            onClick={openSidebarPanel("edge-expand")}
-            startAdornment={<ExpandGraphIcon />}
-          >
-            Expand Edges
-          </ListItem>
-          <ListItem
-            classNamePrefix={"ft"}
-            className={pfx("list-item")}
-            clickable={true}
-            onClick={openSidebarPanel("multi-details")}
-            startAdornment={<DateLock />}
-          >
-            Multi-Selection
+            Expand Panel
           </ListItem>
           <ListItem
             classNamePrefix={"ft"}

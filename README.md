@@ -49,6 +49,7 @@ You can create and manage connections to graph databases using this feature. Con
   - **Using proxy server:** Check this box if using a proxy endpoint.
   - **Graph connection URL:** Provide the endpoint for the graph database
   - **AWS IAM Auth Enabled:** Check this box if connecting to Amazon Neptune using IAM Auth and SigV4 signed requests
+  - **Service Type:** Choose the service type
   - **AWS Region:** Specify the AWS region where the Neptune cluster is hosted (e.g., us-east-1)
   - **Fetch Timeout:** Specify the timeout for the fetch request
 
@@ -122,6 +123,7 @@ To provide a default connection such that initial loads of the graph explorer al
     - `GRAPH_CONNECTION_URL` - `None` - See [Add a New Connection](#connections-ui)
   - Required if `USING_PROXY_SERVER=True` and `IAM=True`
     - `AWS_REGION` - `None` - See [Add a New Connection](#connections-ui)
+    - `SERVICE_TYPE` - `neptune-db`, Set this as `neptune-db` for Neptune database or `neptune-graph` for Neptune Analytics.
 
 #### JSON Configuration Approach
 
@@ -133,8 +135,9 @@ First, create a `config.json` file containing values for the connection attribut
      "GRAPH_CONNECTION_URL": "https://cluster-cqmizgqgrsbf.us-west-2.neptune.amazonaws.com:8182",
      "USING_PROXY_SERVER": true, (Can be string or boolean)
      "IAM": true, (Can be string or boolean)
+     "SERVICE_TYPE": "neptune-db",
      "AWS_REGION": "us-west-2",
-     "GRAPH_TYPE": "gremlin" (Possible Values: "gremlin", "sparql", "opencypher"),
+     "GRAPH_TYPE": "gremlin" (Possible Values: "gremlin", "sparql", "openCypher"),
      "GRAPH_EXP_HTTPS_CONNECTION": true (Can be string or boolean),
      "PROXY_SERVER_HTTPS_CONNECTION": true, (Can be string or boolean),
      "GRAPH_EXP_FETCH_REQUEST_TIMEOUT": 240000 (Can be number)
@@ -160,6 +163,7 @@ docker run -p 80:80 -p 443:443 \
  --env IAM=false \
  --env GRAPH_CONNECTION_URL=https://cluster-cqmizgqgrsbf.us-west-2.neptune.amazonaws.com:8182 \
  --env AWS_REGION=us-west-2 \
+ --env SERVICE_TYPE=neptune-db \
  --env PROXY_SERVER_HTTPS_CONNECTION=true \
  --env GRAPH_EXP_FETCH_REQUEST_TIMEOUT=240000 \
  graph-explorer
@@ -185,12 +189,6 @@ If either of the Graph Explorer or the proxy-server are served over an HTTPS con
 4. You should now refresh the browser and see that you can proceed to open the application. For Chrome, the application will remain “Not Secure” due to the fact that this is a self-signed certificate. If you have trouble accessing Graph Explorer after completing the previous step and reloading the browser, consider running a docker restart command and refreshing the browser again.
 
 Note: To get rid of the “Not Secure” warning, see [Using self-signed certificates on Chrome](./additionaldocs/development.md#using-self-signed-certificates-on-chrome).
-
-### Connection Cache
-
-Setting up a new connection (or editing an existing connection) allows you to enable a cache for the connector requests. The cache store is configured to use the browser IndexedDB that allows you to make use of data stored between sessions. The time that the data stored in the cache is also configurable, by default it has a lifetime of 10 minutes.
-
-The purpose of the cache is to avoid making multiple requests to the database with the same criteria. Therefore, a request with particular parameters will be cached at most the time set just with the response obtained. After that time, if the exact same request is made again, the response will be updated and stored again.
 
 ## Authentication
 

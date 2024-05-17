@@ -72,9 +72,8 @@ const subgraphResult = async (
       edges = []
     } else {
       let [eData] = await Promise.all([gremlinFetch<RawSubEdgeRequest>(eSG)])
-      const edgesResponse = 
+      const edgesResponse =  
         eData.result.data["@value"];
-      console.log("CONFIRMATION");
       console.log(edgesResponse);
       edges = edgesResponse?.map(
         edge => mapApiEdge(edge)

@@ -1,8 +1,9 @@
 import { css } from "@emotion/css";
 import type { ThemeStyleFn } from "../../core";
 
-const baseStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
-  css`
+const baseStyles =
+  (pfx: string): ThemeStyleFn =>
+  ({ theme }) => css`
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -72,7 +73,6 @@ const baseStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
         }
 
         .${pfx}-sidebar-section {
-          width: 500px;
           display: flex;
           box-shadow: ${theme.shadow.left};
           background: ${theme.palette.background.default};
@@ -88,9 +88,8 @@ const baseStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
           }
 
           .${pfx}-sidebar-content {
-            width: fit-content;
             height: 100%;
-            overflow-x: auto;
+            overflow-x: hidden;
             transition: width 200ms ease-in-out;
           }
         }
@@ -98,8 +97,9 @@ const baseStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
     }
   `;
 
-const titleSectionStyles = (pfx: string): ThemeStyleFn => ({ theme }) =>
-  css`
+const titleSectionStyles =
+  (pfx: string): ThemeStyleFn =>
+  ({ theme }) => css`
     display: flex;
     flex-direction: column;
 
@@ -168,10 +168,9 @@ const subBarStyles: ThemeStyleFn = ({ theme }) => css`
   border-top: solid 1px ${theme.palette.divider};
 `;
 
-const titleContainerStyles = (withBackButton?: boolean): ThemeStyleFn => ({
-  theme,
-}) =>
-  css`
+const titleContainerStyles =
+  (withBackButton?: boolean): ThemeStyleFn =>
+  ({ theme }) => css`
     display: flex;
     height: 100%;
     align-items: center;

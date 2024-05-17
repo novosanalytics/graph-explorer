@@ -92,12 +92,11 @@ const criterionTemplate = (criterion: Criterion): string => {
  * vertexTypes = ["airport"]
  * edgeTypes = ["route"]
  * limit = 10
- * offset = 0
  *
  * MATCH (v)-[edge:route]->(v:airport)
  * WHERE ID(v) = "124"
- * WITH collect(DISTINCT tgt) AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)}) AS eObjects 
- * RETURN vObjects, eObjects 
+ * WITH collect(DISTINCT tgt) AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)}) AS eObjects
+ * RETURN vObjects, eObjects
  * SKIP 0
  * LIMIT 10
  */
@@ -107,9 +106,10 @@ const oneHopTemplateEdges = ({
   edgeTypes = [],
   filterCriteria = [],
   limit = 10,
-  offset = 0,
   edgeIds = [],
-}: Omit<NeighborsRequest, "vertexType"> & { edgeIds: string[] | undefined; }): string => {
+}: Omit<NeighborsRequest, "vertexType"> & {
+  edgeIds: string[] | undefined;
+}): string => {
   let template = `MATCH (v)`;
 
   const formattedVertexTypes = filterByVertexTypes
@@ -117,7 +117,7 @@ const oneHopTemplateEdges = ({
     .map(type => `v:${type}`)
     .join(" OR ");
   const formattedEdgeTypes = edgeTypes.map(type => `${type}`).join("|");
-  const formattedEdgeIds = edgeIds.map(id => `\"${id}\"`).join(",");
+  const formattedEdgeIds = edgeIds.map(id => `"${id}"`).join(",");
 
   if (edgeTypes.length > 0) {
     template += `-[e:${formattedEdgeTypes}]-`;
@@ -126,14 +126,16 @@ const oneHopTemplateEdges = ({
   }
 
   if (filterByVertexTypes.length == 1) {
-    template += `(tgt:${filterByVertexTypes[0]}) WHERE ID(v) = \"${vertexId}\" AND ID(e) IN [${formattedEdgeIds}] `;
+    template += `(tgt:${filterByVertexTypes[0]}) WHERE ID(v) = "${vertexId}" AND ID(e) IN [${formattedEdgeIds}] `;
   } else if (filterByVertexTypes.length > 1) {
-    template += `(tgt) WHERE ID(v) = \"${vertexId}\" AND ${formattedVertexTypes} AND ID(e) IN [${formattedEdgeIds}] `;
+    template += `(tgt) WHERE ID(v) = "${vertexId}" AND ${formattedVertexTypes} AND ID(e) IN [${formattedEdgeIds}] `;
   } else {
-    template += `(tgt) WHERE ID(v) = \"${vertexId}\" AND ID(e) IN [${formattedEdgeIds}] `;
+    template += `(tgt) WHERE ID(v) = "${vertexId}" AND ID(e) IN [${formattedEdgeIds}] `;
   }
 
-  const filterCriteriaTemplate = filterCriteria?.map(criterionTemplate).join(" AND ");
+  const filterCriteriaTemplate = filterCriteria
+    ?.map(criterionTemplate)
+    .join(" AND ");
   if (filterCriteriaTemplate) {
     template += `AND ${filterCriteriaTemplate} `;
   }

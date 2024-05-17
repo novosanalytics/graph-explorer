@@ -19,7 +19,6 @@ import {
   FilterIcon,
   GraphIcon,
   MagicExpandIcon,
-  MultiExpandIcon,
 } from "../../components/icons";
 import GridIcon from "../../components/icons/GridIcon";
 import Workspace from "../../components/Workspace";
@@ -30,6 +29,7 @@ import {
 } from "../../core";
 import { edgesSelectedIdsAtom } from "../../core/StateProvider/edges";
 import { nodesSelectedIdsAtom } from "../../core/StateProvider/nodes";
+import { totalFilteredCount } from "../../core/StateProvider/filterCount";
 import { userLayoutAtom } from "../../core/StateProvider/userPreferences";
 import { usePrevious } from "../../hooks";
 import useTranslations from "../../hooks/useTranslations";
@@ -45,7 +45,6 @@ import EdgeExpand from "../../modules/EdgeExpand";
 import NodesStyling from "../../modules/NodesStyling/NodesStyling";
 import TopBarWithLogo from "../common/TopBarWithLogo";
 import defaultStyles from "./GraphExplorer.styles";
-import MultiDetails from "../../modules/MultiDetails";
 
 export type GraphViewProps = {
   classNamePrefix?: string;
@@ -74,6 +73,7 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
   const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom);
   const nodeOrEdgeSelected =
     nodesSelectedIds.size + edgesSelectedIds.size === 1;
+  const filteredEntitiesCount = useRecoilValue(totalFilteredCount);
 
   const closeSidebar = useCallback(() => {
     setUserLayout(prev => ({
@@ -300,6 +300,9 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           tooltipText={"Filters"}
           icon={<FilterIcon />}
           onPress={toggleSidebar("filters")}
+          badge={filteredEntitiesCount}
+          badgeVariant="undetermined"
+          badgePlacement="top-right"
           active={userLayout.activeSidebarItem === "filters"}
         />
         <Workspace.SideBar.Button
@@ -313,12 +316,6 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           icon={<MagicExpandIcon />}
           onPress={toggleSidebar("edge-expand")}
           active={userLayout.activeSidebarItem === "edge-expand"}
-        />
-        <Workspace.SideBar.Button
-          tooltipText={"Multiple Selection"}
-          icon={<MultiExpandIcon />}
-          onPress={toggleSidebar("multi-details")}
-          active={userLayout.activeSidebarItem === "multi-details"}
         />
         <Workspace.SideBar.Button
           tooltipText={t("nodes-styling.title")}
@@ -357,9 +354,6 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           {userLayout.activeSidebarItem === "edge-expand" && (
             <EdgeExpand onClose={closeSidebar} />
           )}
-          {userLayout.activeSidebarItem === "multi-details" && (
-            <MultiDetails onClose={closeSidebar} />
-          )}
           {userLayout.activeSidebarItem === "filters" && (
             <EntitiesFilter onClose={closeSidebar} />
           )}
@@ -387,7 +381,3 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
 };
 
 export default GraphExplorer;
-
-/* {userLayout.activeSidebarItem === "multi-details" && (
-  <MultiDetails onClose={closeSidebar}/>
-  )} */

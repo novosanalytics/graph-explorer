@@ -8,31 +8,15 @@ import defaultStyles from "./NeighborsList.styles";
 export type NeighborsListProps = {
   classNamePrefix?: string;
   vertex: Vertex;
-  vertexList?:Vertex[];
-  multiFlag?:boolean;
 };
 
 const NeighborsList = ({
   classNamePrefix = "ft",
   vertex,
-  vertexList,
-  multiFlag
 }: NeighborsListProps) => {
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
   const neighborsOptions = useNeighborsOptions(vertex);
-
-
-  /*const neighborsInView =
-  vertex.data.neighborsCountByType[op.value] -
-  (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);*/
-
-
-
-  /*let neighborTotalCounts = 0;
-  vertexList?.forEach(node => {
-    neighborTotalCounts += node.data.neighborsCount
-  });*/
 
   return (
     <div
@@ -46,8 +30,8 @@ const NeighborsList = ({
       </div>
       {neighborsOptions.map(op => {
         const neighborsInView =
-        vertex.data.neighborsCountByType[op.value] -
-        (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
+          vertex.data.neighborsCountByType[op.value] -
+          (vertex.data.__unfetchedNeighborCounts?.[op.value] ?? 0);
         return (
           <div key={op.value} className={pfx("node-item")}>
             <div className={pfx("vertex-type")}>

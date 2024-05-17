@@ -2,8 +2,9 @@ import { css } from "@emotion/css";
 import type { ThemeStyleFn } from "../../core";
 import fade from "../../core/ThemeProvider/utils/fade";
 
-const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
-  css`
+const defaultStyles =
+  (pfx?: string): ThemeStyleFn =>
+  ({ theme }) => css`
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -101,11 +102,8 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
           align-items: center;
           gap: ${theme.spacing["2x"]};
           .${pfx}-input {
-            min-width: 50% !important;
-            width: 100% !important;
-          }
-          .${pfx}-input::placeholder{
-            color: #000000;
+            flex-grow: 1;
+            width: 100%;
           }
         }
       }
@@ -115,7 +113,7 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
         align-items: center;
         gap: ${theme.spacing["2x"]};
         .${pfx}-input {
-            flex-grow: 1;
+          width: 100%;
         }
       }
     }
