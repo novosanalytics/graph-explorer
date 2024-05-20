@@ -234,7 +234,7 @@ export const inputContainerStyles =
 
       .${classNamePrefix}-input-container {
         flex: 1;
-        display: flex;
+        display: inline-flex;
         position: relative;
       }
 

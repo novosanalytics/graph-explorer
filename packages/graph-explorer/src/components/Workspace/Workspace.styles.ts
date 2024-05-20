@@ -73,6 +73,7 @@ const baseStyles =
         }
 
         .${pfx}-sidebar-section {
+          width: 500px;
           display: flex;
           box-shadow: ${theme.shadow.left};
           background: ${theme.palette.background.default};
@@ -89,7 +90,7 @@ const baseStyles =
 
           .${pfx}-sidebar-content {
             height: 100%;
-            overflow-x: hidden;
+            overflow-x: auto;
             transition: width 200ms ease-in-out;
           }
         }

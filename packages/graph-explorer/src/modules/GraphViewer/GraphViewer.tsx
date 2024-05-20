@@ -275,7 +275,7 @@ const GraphViewer = ({
           return onZoomIn();
         case "zoom_out":
           return onZoomOut();
-        case "clear_canvas":
+        case "clear_canvas":    
           return onClearCanvas();
         case "download_screenshot":
           return onSaveScreenshot();
