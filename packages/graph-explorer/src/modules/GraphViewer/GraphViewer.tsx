@@ -12,6 +12,8 @@ import {
   ResetIcon,
   ZoomInIcon,
   ZoomOutIcon,
+  Input,
+  Checkbox,
 } from "../../components";
 import Card from "../../components/Card";
 import Graph from "../../components/Graph";
@@ -52,7 +54,7 @@ import useGraphStyles from "./useGraphStyles";
 import useNodeBadges from "./useNodeBadges";
 import useNodeDrop from "./useNodeDrop";
 import mapDateStr from "../../connector/gremlin/mappers/mapDateStr";
-//import { useSubgraph } from "../../hooks";
+import { useSubgraph } from "../../hooks";
 
 export type GraphViewerProps = Omit<
   ModuleContainerHeaderProps,
@@ -147,6 +149,7 @@ const GraphViewer = ({
   const pfx = withClassNamePrefix("ft");
 
   const graphRef = useRef<GraphRef | null>(null);
+  const createSubGraph = useSubgraph();
   const [entities] = useEntities();
   const { dropAreaRef, isOver, canDrop } = useNodeDrop();
 
@@ -258,7 +261,6 @@ const GraphViewer = ({
 
     // Returns t
     console.log("OverDate Result:" + overDate);
-    console.log("Ref Result:"+ testDate.current)
     await createSubGraph({
       date: inputDate,
       canV: currentCanvas[0],
