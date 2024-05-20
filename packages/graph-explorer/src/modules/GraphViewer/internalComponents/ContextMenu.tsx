@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   Card,
   EdgeIcon,
+  DateLock,
   GraphIcon,
   ListItem,
   StylingIcon,
@@ -217,7 +218,25 @@ const ContextMenu = ({
             onClick={openSidebarPanel("expand")}
             startAdornment={<ExpandGraphIcon />}
           >
-            Expand Panel
+            Expand Graph
+          </ListItem>
+          <ListItem
+            classNamePrefix={"ft"}
+            className={pfx("list-item")}
+            clickable={true}
+            onClick={openSidebarPanel("edge-expand")}
+            startAdornment={<ExpandGraphIcon />}
+          >
+            Expand Edges
+          </ListItem>
+          <ListItem
+            classNamePrefix={"ft"}
+            className={pfx("list-item")}
+            clickable={true}
+            onClick={openSidebarPanel("multi-details")}
+            startAdornment={<DateLock />}
+          >
+            Multi-Selection
           </ListItem>
           <ListItem
             classNamePrefix={"ft"}

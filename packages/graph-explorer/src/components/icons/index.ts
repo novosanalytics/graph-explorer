@@ -26,6 +26,7 @@ export { default as DatabaseIcon } from "./DatabaseIcon";
 export { default as DeleteIcon } from "./DeleteIcon";
 export { default as DetailsIcon } from "./DetailsIcon";
 export { default as DragIcon } from "./DragIcon";
+export { default as DateLock } from "./DateLock";
 export { default as EdgeIcon } from "./EdgeIcon";
 export { default as EditIcon } from "./EditIcon";
 export { default as EmptyWidgetIcon } from "./EmptyWidgetIcon";

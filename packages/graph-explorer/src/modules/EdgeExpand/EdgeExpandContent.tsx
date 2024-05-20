@@ -64,8 +64,8 @@ const EdgeExpandContent = ({
       idType: vertex.data.idType,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       edgeTypes: [selectedType],
-      //odFlag: odFlag,
-      //overdate: overDate,
+      odFlag: odFlag,
+      overdate: overDate,
       filterByVertexTypes: [selectedType],
 
       filterCriteria: filters.map(filter => ({

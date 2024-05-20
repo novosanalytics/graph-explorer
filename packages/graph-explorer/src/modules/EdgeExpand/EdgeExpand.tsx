@@ -13,7 +13,7 @@ import {
   edgesSelectedIdsAtom,
   edgesTypesFilteredAtom,
 } from "../../core/StateProvider/edges";
-//import { overDateAtom, overDateFlagAtom } from "../../core/StateProvider/overdate";
+import { overDateAtom, overDateFlagAtom } from "../../core/StateProvider/overdate";
 import useConfiguration from "../../core/ConfigurationProvider/useConfiguration";
 import useTranslations from "../../hooks/useTranslations";
 import EdgeExpandContent from "./EdgeExpandContent";
@@ -38,8 +38,8 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
   }, [nodes, nodesSelectedIds]);
 
   //const filteredEdges = edges
-  //const odFlag = useRecoilValue(overDateFlagAtom);
-  //const overDate = useRecoilValue(overDateAtom);
+  const odFlag = useRecoilValue(overDateFlagAtom);
+  const overDate = useRecoilValue(overDateAtom);
   const edgeConfigItems: Array<string> = [];
   const config = useConfiguration();
   (config?.edgeTypes || []).forEach(et => {
@@ -82,8 +82,8 @@ const EdgeExpand = ({ title = "Expand by Edge", ...headerProps }: EdgeExpandProp
         <EdgeExpandContent 
         vertex={selectedNode}
         edgeList={edgeConfigItems}
-        //odFlag={odFlag}
-        //overDate={overDate}
+        odFlag={odFlag}
+        overDate={overDate}
         />
       )}
     </ModuleContainer>

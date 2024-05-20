@@ -105,8 +105,8 @@ const criterionTemplate = (criterion: Criterion): string => {
 
 const edgeEdgeHopTemplate = ({
     vertexId,
-    //odFlag,
-    //overdate,
+    odFlag,
+    overdate,
     filterByVertexTypes = [],
     edgeTypes = [],
     filterCriteria = [],
@@ -127,16 +127,13 @@ const edgeEdgeHopTemplate = ({
     template += `.project("vertices", "edges")`;
 
     const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
-    //let overdate = filterCriteria[0]['value'];
-    //let activeDate = filterCriteria[0]['value'];
     let activeDate = ""
-    activeDate +=  "2024-05-17"
     //activeDate += filterCriteria[0]['value']
-    /*if (filterCriteria.length > 0){
+    if (filterCriteria.length > 0){
       activeDate += filterCriteria[0]['value'];
     } else {
       activeDate += overdate;
-    }*/
+    }
     console.log(filterCriteria)
     let filterCriteriaTemplate = ".and(";
     let edgePrefix = toUpper(edgeTypes[0].slice(0,2));

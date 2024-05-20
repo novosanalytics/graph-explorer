@@ -109,8 +109,8 @@ const criterionTemplate = (criterion: Criterion): string => {
 
 const edgeVertHopTemplate = ({
     vertexId,
-    //odFlag,
-    //overdate,
+    odFlag,
+    overdate,
     filterByVertexTypes = [],
     edgeTypes = [],
     filterCriteria = [],
@@ -127,24 +127,17 @@ const edgeVertHopTemplate = ({
     } else {
       template = `g.V("${vertexId}")`;
     }
-
-    //console.log(`vertexId:`, vertexId)
-    //console.log(`filterByVertexTypes:`, filterByVertexTypes)
-    //console.log(`edgeTypes:`, edgeTypes)
-    //console.log(`filters:`, filterCriteria)
-
     template += `.project("vertices", "edges")`;
 
     const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
 
     //let activeDate = filterCriteria[0]['value'];
     let activeDate = ""
-    activeDate +=  "2024-05-17" //filterCriteria[0]['value'] ||
-    /*if (filterCriteria.length > 0){
+    if (filterCriteria.length > 0){
       activeDate += filterCriteria[0]['value'];
     } else {
       activeDate += overdate;
-    }*/
+    }
     console.log(filterCriteria)
     let filterCriteriaTemplate = ".and(";
     let edgePrefix =  /^[0-9]*$/.test(edgeTypes[0][1]) ? toUpper(edgeTypes[0].slice(0,2)): capitalize(edgeTypes[0]);
@@ -158,30 +151,12 @@ const edgeVertHopTemplate = ({
       filterCriteriaTemplate += ")";
     }
 
-    /*let filterCriteriaTemplate = ".and(";
-    filterCriteriaTemplate += filterCriteria?.map(criterionTemplate).join(",");
-    filterCriteriaTemplate += ")";*/
 
     const hasLabelContent = filterByVertexTypes
     .flatMap(type => type.split("::"))
     .map(type => `"${type}"`)
     .join(",");
     template += `.by(bothE(${bothEContent})${filterCriteriaTemplate}.dedup().bothV().range(0,500).fold())`;
-    /*
-      if (edgeTypes.length > 0){
-        if (filterCriteria.length > 0) {
-            template += `.by(bothE(${bothEContent}).and(has("${edgeTypes[0]}_Record_Active_Date__c", gt("4000-12-31")), has("${edgeTypes[0]}_Record_Expiration_Date__c", lt("4000-12-31"))).dedup().outV()${range}.fold())`;
-          } else {
-            template += `.by(bothE(${bothEContent}).dedup().outV()s${range}.fold())`;
-        }
-      } else {
-        if (filterCriteria.length > 0) {
-          template += `.by(bothE(${bothEContent}).and(has("${edgeTypes[0]}_Record_Active_Date__c", gt("4000-12-31")), has("${edgeTypes[0]}_Record_Expiration_Date__c", lt("4000-12-31"))).dedup().fold())`;
-        } else {
-          template += `.by(bothE().dedup().fold())`;
-        }
-      }
-    */
       return template;
 };
     

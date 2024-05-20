@@ -147,6 +147,8 @@ const criterionTemplate = (criterion: Criterion): string => {
 const oneHopTemplate = ({
   vertexId,
   idType,
+  odFlag,
+  overdate,
   filterByVertexTypes = [],
   edgeTypes = [],
   filterCriteria = [],
@@ -171,6 +173,13 @@ const oneHopTemplate = ({
 
   let filterCriteriaTemplate = ".and(";
   filterCriteriaTemplate += filterCriteria?.map(criterionTemplate).join(",");
+  if (odFlag) {
+    filterByVertexTypes.forEach(element => {
+      filterCriteriaTemplate += `, has("${element}_Record_Active_Date__c", lte("${overdate}"))`;
+      filterCriteriaTemplate += `, has("${element}_Record_Expiration_Date__c", gte("${overdate}"))`;
+      filterCriteriaTemplate += ")";
+    });
+  }
   filterCriteriaTemplate += ")";
 
   if (filterByVertexTypes.length > 0) {
@@ -200,6 +209,9 @@ const oneHopTemplate = ({
       template += `.by(bothE().dedup().fold())`;
     }
   }
+  /*if(multiVertexId){
+    template = `g.V(${multiVertexId}).project("vertices", "edges").by(both().hasLabel(${hasLabelContent})${range}.fold()).by(bothE().where(otherV().hasLabel(${hasLabelContent})).fold())`
+  }*/
 
   return template;
 };

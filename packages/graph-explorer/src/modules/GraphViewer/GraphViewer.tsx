@@ -8,6 +8,7 @@ import {
   ModuleContainer,
   ModuleContainerHeader,
   RemoveFromCanvasIcon,
+  DateLock,
   ResetIcon,
   ZoomInIcon,
   ZoomOutIcon,
@@ -35,6 +36,7 @@ import {
   nodesOutOfFocusIdsAtom,
   nodesSelectedIdsAtom,
 } from "../../core/StateProvider/nodes";
+import { overDateFlagAtom, overDateAtom } from "../../core/StateProvider/overdate";
 import { userLayoutAtom } from "../../core/StateProvider/userPreferences";
 import useWithTheme from "../../core/ThemeProvider/useWithTheme";
 import fade from "../../core/ThemeProvider/utils/fade";
@@ -49,6 +51,8 @@ import useGraphGlobalActions from "./useGraphGlobalActions";
 import useGraphStyles from "./useGraphStyles";
 import useNodeBadges from "./useNodeBadges";
 import useNodeDrop from "./useNodeDrop";
+import mapDateStr from "../../connector/gremlin/mappers/mapDateStr";
+//import { useSubgraph } from "../../hooks";
 
 export type GraphViewerProps = Omit<
   ModuleContainerHeaderProps,
@@ -138,6 +142,7 @@ const GraphViewer = ({
   onEdgeCustomize,
   ...headerProps
 }: GraphViewerProps) => {
+  const [overDateFlag, setOverDateFlag ] = useRecoilState(overDateFlagAtom);
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix("ft");
 
@@ -155,6 +160,8 @@ const GraphViewer = ({
   const nodesOutIds = useRecoilValue(nodesOutOfFocusIdsAtom);
   const edgesOutIds = useRecoilValue(edgesOutOfFocusIdsAtom);
   const setUserLayout = useSetRecoilState(userLayoutAtom);
+  const now = new Date();
+  const [overDate, setOverDate] = useState(now.toLocaleTimeString());
 
   const onSelectedNodesIdsChange = useCallback(
     (selectedIds: string[] | Set<string>) => {
@@ -169,6 +176,11 @@ const GraphViewer = ({
     },
     [setEdgesSelectedIds]
   );
+
+  const onODFlagChange = useCallback(
+    () => {
+    setOverDateFlag(overDateFlag => !overDateFlag);
+  }, [setOverDateFlag]);
 
   const config = useConfiguration();
   const [legendOpen, setLegendOpen] = useState(false);
@@ -238,6 +250,22 @@ const GraphViewer = ({
     });
   }, [setEntities]);
 
+  const onFilterByDate = useCallback(async (inputDate: string) =>{
+      
+    let currentCanvas: [Array<Vertex>, Array<Edge>] = [entities.nodes ?? [], entities.edges ?? []]
+    console.log("canvas:")
+    console.log(currentCanvas[0])
+
+    // Returns t
+    console.log("OverDate Result:" + overDate);
+    console.log("Ref Result:"+ testDate.current)
+    await createSubGraph({
+      date: inputDate,
+      canV: currentCanvas[0],
+      canE: currentCanvas[1],
+    })
+  },[createSubGraph]);
+
   const onHeaderActionClick = useCallback(
     (action: any) => {
       switch (action) {
@@ -291,6 +319,30 @@ const GraphViewer = ({
                   graphRef.current?.runLayout();
                 }}
               />
+              <Input
+                type={"date"}
+                className={pfx("full-date-filter")}
+                label={"Date Fixed to Graph"}
+                labelPlacement={"inner"}
+                value={overDate}
+                onChange={(d) => setOverDate(d)}
+                hideError={true}
+                noMargin={true}
+              />
+              <IconButton
+                tooltipText={"Set Graph Filter"}
+                tooltipPlacement={"bottom-center"}
+                icon={<DateLock/>}
+                variant={"text"}
+                onPress={() => onFilterByDate(overDate)}
+              />
+              <Checkbox
+                aria-label={`Set OverDate Flag?`}
+                isSelected={overDateFlag}
+                onChange={onODFlagChange}
+              >
+                <div className={pfx("set-odf-checkbox")}>Set OverDate?</div>
+              </Checkbox>
             </div>
           }
           variant={"default"}
