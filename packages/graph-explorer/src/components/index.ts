@@ -62,7 +62,7 @@ export * from "./UseLayer";
 
 export { default as VertexIcon } from "./VertexIcon";
 
-export { default as BridgeIcon } from "./BridgeIcon";
-
 export { default as Workspace } from "./Workspace";
 export * from "./Workspace";
+
+export { default as BridgeIcon } from "./BridgeIcon"

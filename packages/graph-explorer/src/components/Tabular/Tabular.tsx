@@ -54,7 +54,7 @@ export interface TabularProps<T extends object> extends TabularOptions<T> {
   globalSearch?: string;
 }
 
-export const Tabular = <T extends object>(
+export const Tabular = <T extends Record<string, unknown>>(
   {
     children,
     classNamePrefix = "ft",
@@ -129,7 +129,7 @@ export const Tabular = <T extends object>(
   );
 };
 
-const TabularContent = <T extends object>({
+const TabularContent = <T extends Record<string, unknown>>({
   children,
   classNamePrefix = "ft",
   className,
@@ -145,11 +145,8 @@ const TabularContent = <T extends object>({
   TabularProps<T> & { tableInstance: TableInstance<T> }
 >) => {
   const pfx = withClassNamePrefix(classNamePrefix);
-  const {
-    tableRef,
-    headerControlsRef,
-    headerControlsPosition,
-  } = useTabularControl();
+  const { tableRef, headerControlsRef, headerControlsPosition } =
+    useTabularControl();
   const [stickyHeaderTop, setStickyHeaderTop] = useState(0);
   const styleWithTheme = useWithTheme();
 
@@ -280,7 +277,7 @@ const TabularContent = <T extends object>({
   );
 };
 
-export default forwardRef(Tabular) as <T extends object>(
+export default forwardRef(Tabular) as <T extends Record<string, unknown>>(
   props: PropsWithChildren<TabularProps<T>> & {
     ref?: ForwardedRef<TabularInstance<T>>;
   }

@@ -2,7 +2,7 @@
  * Creates a subgraph and allows for interaction with the subgraph in other templates
  */
 import { forEach } from "lodash";
-import { SubGraphRequest } from "../../AbstractConnector";
+import { SubGraphRequest } from "../../useGEFetchTypes";
 import mapDateStr from "../mappers/mapDateStr";
 // nodes = Set
 const subgraphTemplate = ({

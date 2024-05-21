@@ -35,7 +35,7 @@ type UseEntitiesProps = {
 const useEntities = ({ disableFilters }: { disableFilters?: boolean } = {}): [
   ProcessedEntities,
   SetterOrUpdater<Entities>,
-  UseEntitiesProps
+  UseEntitiesProps,
 ] => {
   const config = useConfiguration();
   const filteredNodesIds = useRecoilValue(nodesFilteredIdsAtom);
@@ -49,68 +49,69 @@ const useEntities = ({ disableFilters }: { disableFilters?: boolean } = {}): [
   // We need to make a hook because these types are defined in the config that
   // works using a hook.
   const setEntities: SetterOrUpdater<Entities> = useRecoilCallback(
-    ({ snapshot }) => async valOrUpdater => {
-      const entities = await snapshot.getPromise(entitiesSelector);
-      const nextEntities =
-        typeof valOrUpdater === "function"
-          ? valOrUpdater(entities)
-          : valOrUpdater;
+    ({ snapshot }) =>
+      async valOrUpdater => {
+        const entities = await snapshot.getPromise(entitiesSelector);
+        const nextEntities =
+          typeof valOrUpdater === "function"
+            ? valOrUpdater(entities)
+            : valOrUpdater;
 
-      // Filter nodes that are defined and not hidden
-      const filteredNodes = nextEntities.nodes.filter(node => {
-        return !config?.schema?.vertices.find(
-          vertex => vertex.type === node.data.type
-        )?.hidden;
-      });
+        // Filter nodes that are defined and not hidden
+        const filteredNodes = nextEntities.nodes.filter(node => {
+          return !config?.schema?.vertices.find(
+            vertex => vertex.type === node.data.type
+          )?.hidden;
+        });
 
-      // Update counts filtering by defined and not hidden
-      const nodesWithoutHiddenCounts = filteredNodes.map(node => {
-        const [totalNeighborCount, totalNeighborCounts] = Object.entries(
-          node.data.neighborsCountByType
-        ).reduce(
-          (totalNeighborsCounts, [type, count]) => {
-            if (
-              !config?.schema?.vertices.find(
-                vertex => vertex.type === node.data.type
-              )?.hidden
-            ) {
-              totalNeighborsCounts[1][type] = count;
-            } else {
-              totalNeighborsCounts[0] -= count;
-            }
+        // Update counts filtering by defined and not hidden
+        const nodesWithoutHiddenCounts = filteredNodes.map(node => {
+          const [totalNeighborCount, totalNeighborCounts] = Object.entries(
+            node.data.neighborsCountByType
+          ).reduce(
+            (totalNeighborsCounts, [type, count]) => {
+              if (
+                !config?.schema?.vertices.find(
+                  vertex => vertex.type === node.data.type
+                )?.hidden
+              ) {
+                totalNeighborsCounts[1][type] = count;
+              } else {
+                totalNeighborsCounts[0] -= count;
+              }
 
-            return totalNeighborsCounts;
-          },
-          [node.data.neighborsCount, {}] as [
-            number,
-            typeof node.data.neighborsCountByType
-          ]
-        );
+              return totalNeighborsCounts;
+            },
+            [node.data.neighborsCount, {}] as [
+              number,
+              typeof node.data.neighborsCountByType,
+            ]
+          );
 
-        return {
-          ...node,
-          data: {
-            ...node.data,
-            neighborsCount: totalNeighborCount,
-            neighborsCountByType: totalNeighborCounts,
-          },
-        };
-      });
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              neighborsCount: totalNeighborCount,
+              neighborsCountByType: totalNeighborCounts,
+            },
+          };
+        });
 
-      // Filter edges that are defined and not hidden
-      const filteredEdges = nextEntities.edges.filter(edge => {
-        return !config?.schema?.edges.find(e => e.type === edge.data.type)
-          ?.hidden;
-      });
+        // Filter edges that are defined and not hidden
+        const filteredEdges = nextEntities.edges.filter(edge => {
+          return !config?.schema?.edges.find(e => e.type === edge.data.type)
+            ?.hidden;
+        });
 
-      recoilSetEntities({
-        nodes: nodesWithoutHiddenCounts,
-        edges: filteredEdges,
-        preserveSelection: nextEntities.preserveSelection,
-        selectNewEntities: nextEntities.selectNewEntities,
-        forceSet: nextEntities.forceSet,
-      });
-    },
+        recoilSetEntities({
+          nodes: nodesWithoutHiddenCounts,
+          edges: filteredEdges,
+          preserveSelection: nextEntities.preserveSelection,
+          selectNewEntities: nextEntities.selectNewEntities,
+          forceSet: nextEntities.forceSet,
+        });
+      },
     [config?.schema, recoilSetEntities]
   );
 
@@ -122,12 +123,12 @@ const useEntities = ({ disableFilters }: { disableFilters?: boolean } = {}): [
     let filteredEdges = edges;
     if (!disableFilters) {
       filteredNodes = nodes.filter(node => {
-        return vertexTypes.has(node.data.type);
+        return vertexTypes.has(node.data.type) === false;
       });
 
       filteredEdges = edges.filter(edge => {
         return (
-          connectionTypes.has(edge.data.type) &&
+          connectionTypes.has(edge.data.type) === false &&
           filteredNodes.some(node => node.data.id === edge.data.source) &&
           filteredNodes.some(node => node.data.id === edge.data.target)
         );

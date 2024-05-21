@@ -1,5 +1,5 @@
 import { Vertex } from "../../../@types/entities";
-import { NeighborsCountResponse } from "../../AbstractConnector";
+import type { NeighborsCountResponse } from "../../useGEFetchTypes";
 import { RawResult } from "../types";
 
 const mapRawResultToVertex = (
@@ -9,6 +9,7 @@ const mapRawResultToVertex = (
   return {
     data: {
       id: rawResult.uri,
+      idType: "string",
       type: rawResult.class,
       neighborsCount: neighborsCount?.totalCount || 0,
       neighborsCountByType: neighborsCount?.counts || {},

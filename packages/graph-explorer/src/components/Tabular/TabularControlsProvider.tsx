@@ -10,7 +10,7 @@ import {
 
 import type { TabularInstance } from "./helpers/tableInstanceToTabularInstance";
 
-type TabularContextValue<T extends object> = {
+type TabularContextValue<T extends Record<string, unknown>> = {
   tableRef: RefObject<HTMLDivElement>;
   instance: TabularInstance<T>;
   headerControlsRef: RefObject<HTMLDivElement>;
@@ -19,7 +19,7 @@ type TabularContextValue<T extends object> = {
   disablePagination?: boolean;
 };
 
-const createTabularContext = <T extends object = any>(
+const createTabularContext = <T extends Record<string, unknown> = any>(
   defaultValue: TabularContextValue<T>
 ) => {
   return createContext<TabularContextValue<T>>(defaultValue);
@@ -28,15 +28,14 @@ const createTabularContext = <T extends object = any>(
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const TabularContext = createTabularContext(undefined!);
 
-const TabularControlsProvider = <T extends object>({
+const TabularControlsProvider = <T extends Record<string, unknown>>({
   tabularInstance,
   children,
 }: PropsWithChildren<{ tabularInstance: TabularInstance<T> }>) => {
   const tableRef = useRef<HTMLDivElement>(null);
   const headerControlsRef = useRef<HTMLDivElement>(null);
-  const [headerControlsPosition, setHeaderControlsPosition] = useState<
-    CSSProperties["position"]
-  >();
+  const [headerControlsPosition, setHeaderControlsPosition] =
+    useState<CSSProperties["position"]>();
 
   return (
     <TabularContext.Provider

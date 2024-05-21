@@ -1,7 +1,7 @@
 import type {
   NeighborsCountRequest,
   NeighborsCountResponse,
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
 import neighborsCountTemplate from "../templates/neighborsCountTemplate";
 import type { GInt64 } from "../types";
 import { GremlinFetch } from "../types";
@@ -25,11 +25,9 @@ type RawNeighborsCountResponse = {
 
 const fetchNeighborsCount = async (
   gremlinFetch: GremlinFetch,
-  req: NeighborsCountRequest,
-  rawIds: Map<string, "string" | "number">
+  req: NeighborsCountRequest
 ): Promise<NeighborsCountResponse> => {
-  const idType = rawIds.get(req.vertexId) ?? "string";
-  const gremlinTemplate = neighborsCountTemplate({ ...req, idType });
+  const gremlinTemplate = neighborsCountTemplate(req);
   const data = await gremlinFetch<RawNeighborsCountResponse>(gremlinTemplate);
 
   const pairs = data.result.data["@value"]?.[0]?.["@value"] || [];

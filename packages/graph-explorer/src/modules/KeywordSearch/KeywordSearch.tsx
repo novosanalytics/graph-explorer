@@ -1,7 +1,7 @@
-import {css, cx} from "@emotion/css";
-import {useClickOutside, useHotkeys} from "@mantine/hooks";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Vertex} from "../../@types/entities";
+import { css, cx } from "@emotion/css";
+import { useClickOutside, useHotkeys } from "@mantine/hooks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Vertex } from "../../@types/entities";
 
 import {
   AddCircleIcon,
@@ -19,12 +19,18 @@ import {
   Select,
   VertexIcon,
   Checkbox,
+  Button,
 } from "../../components";
-import {CarouselRef} from "../../components/Carousel/Carousel";
+import { CarouselRef } from "../../components/Carousel/Carousel";
 import HumanReadableNumberFormatter from "../../components/HumanReadableNumberFormatter";
 import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
-import {fade, useConfiguration, useWithTheme, withClassNamePrefix,} from "../../core";
-import {useEntities, useFetchNode, useSet} from "../../hooks";
+import {
+  fade,
+  useConfiguration,
+  useWithTheme,
+  withClassNamePrefix,
+} from "../../core";
+import { useEntities, useFetchNode, useSet } from "../../hooks";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
@@ -71,6 +77,7 @@ const KeywordSearch = ({
     onExactMatchChange,
     neighborsLimit,
     onNeighborsLimitChange,
+    cancelAll,
   } = useKeywordSearch({
     isOpen: isFocused,
   });
@@ -336,6 +343,18 @@ const KeywordSearch = ({
                     )}
                     {currentTotal != null && " records "}
                     for matching results
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: "24px",
+                        gap: "24px",
+                      }}
+                    >
+                      <Button onPress={() => cancelAll()}>Cancel</Button>
+                    </div>
                   </div>
                 }
                 icon={<LoadingSpinner />}
@@ -369,7 +388,7 @@ const KeywordSearch = ({
                     slidesToShow={1}
                     className={pfx("carousel")}
                     pagination={{
-                      el: `.swiper-pagination`
+                      el: `.swiper-pagination`,
                     }}
                   >
                     {Array.from(selection.state).map(nodeId => {
@@ -408,27 +427,24 @@ const KeywordSearch = ({
             <Checkbox
               isSelected={neighborsLimit}
               onChange={onNeighborsLimitChange}
+              className={pfx("refuse-shrink")}
             >
-              <div className={pfx("neighbors-limit-checkbox")}>Limit Neighbors?</div>
+              Limit Neighbors?
             </Checkbox>
-            <div>
-              <IconButton
-                className={pfx("actions-button")}
-                icon={<RemoveIcon />}
-                onPress={() => selection.clear()}
-              >
-                <div className={pfx("icon-button-name")}>Clear Selection</div>
-              </IconButton>
-              <IconButton
-                className={pfx("actions-button")}
-                icon={<AddCircleIcon />}
-                onPress={handleAddEntities}
-              >
-                <div className={pfx("icon-button-name")}>
-                  {addSelectedNodesMessage()}
-                </div>
-              </IconButton>
-            </div>
+            <Button
+              icon={<RemoveIcon />}
+              onPress={() => selection.clear()}
+              className={pfx("refuse-shrink")}
+            >
+              Clear Selection
+            </Button>
+            <Button
+              icon={<AddCircleIcon />}
+              onPress={handleAddEntities}
+              className={pfx("refuse-shrink")}
+            >
+              {addSelectedNodesMessage()}
+            </Button>
           </div>
         </Card>
       )}

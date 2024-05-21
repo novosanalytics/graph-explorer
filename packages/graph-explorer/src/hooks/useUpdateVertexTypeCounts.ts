@@ -1,12 +1,14 @@
-import { useMemo } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useConfiguration } from "../core";
-import useConnector from "../core/ConnectorProvider/useConnector";
+import { explorerSelector } from "../core/connector";
 import useUpdateSchema from "./useUpdateSchema";
+import { useRecoilValue } from "recoil";
 
 const useUpdateVertexTypeCounts = (vertexType?: string) => {
   const config = useConfiguration();
-  const connector = useConnector();
+  const configId = config?.id;
+  const explorer = useRecoilValue(explorerSelector);
 
   const vertexConfig = useMemo(() => {
     if (!vertexType) {
@@ -17,45 +19,46 @@ const useUpdateVertexTypeCounts = (vertexType?: string) => {
   }, [config, vertexType]);
 
   const updateSchemaState = useUpdateSchema();
-  useQuery(
-    ["fetchCountsByType", vertexConfig?.type],
-    () => {
+  const query = useQuery({
+    queryKey: ["fetchCountsByType", vertexConfig?.type],
+    queryFn: () => {
       if (vertexConfig?.total != null || vertexConfig?.type == null) {
         return;
       }
 
-      return connector.explorer?.fetchVertexCountsByType({
+      return explorer?.fetchVertexCountsByType({
         label: vertexConfig?.type,
       });
     },
-    {
-      enabled: vertexConfig?.total == null && vertexConfig?.type != null,
-      onSuccess: response => {
-        if (!config?.id || !response) {
-          return;
-        }
+    enabled: vertexConfig?.total == null && vertexConfig?.type != null,
+  });
 
-        updateSchemaState(config.id, prevSchema => {
-          const vertexSchema = prevSchema?.vertices.find(
-            vertex => vertex.type === vertexType
-          );
-          if (!vertexSchema) {
-            return { ...(prevSchema || {}) };
-          }
-
-          vertexSchema.total = response.total;
-          return {
-            vertices: [
-              ...(prevSchema?.vertices.filter(
-                vertex => vertex.type !== vertexType
-              ) || []),
-              vertexSchema,
-            ],
-          };
-        });
-      },
+  // Sync the result over to the schema in Recoil state
+  useEffect(() => {
+    if (!configId || !query.data) {
+      return;
     }
-  );
+    const vertexTotal = query.data.total;
+
+    updateSchemaState(configId, prevSchema => {
+      const vertexSchema = prevSchema?.vertices.find(
+        vertex => vertex.type === vertexType
+      );
+      if (!vertexSchema) {
+        return { ...(prevSchema || {}) };
+      }
+      vertexSchema.total = vertexTotal;
+      return {
+        ...prevSchema,
+        vertices: [
+          ...(prevSchema?.vertices.filter(
+            vertex => vertex.type !== vertexType
+          ) || []),
+          vertexSchema,
+        ],
+      };
+    });
+  }, [query.data, configId, updateSchemaState, vertexType]);
 };
 
 export default useUpdateVertexTypeCounts;

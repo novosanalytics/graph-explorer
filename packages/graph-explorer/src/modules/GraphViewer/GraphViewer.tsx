@@ -1,21 +1,20 @@
 import { cx } from "@emotion/css";
-import { MouseEvent, useCallback, useRef, useState, useEffect } from "react";
+import { MouseEvent, useCallback, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Edge, Vertex } from "../../@types/entities";
-import type { ModuleContainerHeaderProps } from "../../components";
+import { Vertex } from "../../@types/entities";
+import type { ActionItem, ModuleContainerHeaderProps } from "../../components";
 import {
   LoadingSpinner,
   ModuleContainer,
   ModuleContainerHeader,
   RemoveFromCanvasIcon,
-  ResetIcon,
   DateLock,
+  ResetIcon,
   ZoomInIcon,
   ZoomOutIcon,
   Input,
   Checkbox,
 } from "../../components";
-import { clone } from "lodash";
 import Card from "../../components/Card";
 import Graph from "../../components/Graph";
 import { GraphRef } from "../../components/Graph/Graph";
@@ -44,7 +43,7 @@ import { userLayoutAtom } from "../../core/StateProvider/userPreferences";
 import useWithTheme from "../../core/ThemeProvider/useWithTheme";
 import fade from "../../core/ThemeProvider/utils/fade";
 import withClassNamePrefix from "../../core/ThemeProvider/utils/withClassNamePrefix";
-import { useEntities, useExpandNode, useExpandEdge } from "../../hooks";
+import { useEntities, useExpandNode } from "../../hooks";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import useTextTransform from "../../hooks/useTextTransform";
 import defaultStyles from "./GraphViewerModule.styles";
@@ -52,12 +51,10 @@ import ContextMenu from "./internalComponents/ContextMenu";
 import useContextMenu from "./useContextMenu";
 import useGraphGlobalActions from "./useGraphGlobalActions";
 import useGraphStyles from "./useGraphStyles";
-import useGraphViewerInit from "./useGraphViewerInit";
 import useNodeBadges from "./useNodeBadges";
 import useNodeDrop from "./useNodeDrop";
 import mapDateStr from "../../connector/gremlin/mappers/mapDateStr";
 import { useSubgraph } from "../../hooks";
-import { Button } from "@mantine/core";
 
 export type GraphViewerProps = Omit<
   ModuleContainerHeaderProps,
@@ -103,7 +100,7 @@ const LAYOUT_OPTIONS = [
   },
 ];
 
-const HEADER_ACTIONS = [
+const HEADER_ACTIONS: ActionItem[] = [
   {
     value: "download_screenshot",
     label: "Download Screenshot",
@@ -151,31 +148,23 @@ const GraphViewer = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix("ft");
 
-  useGraphViewerInit();
   const graphRef = useRef<GraphRef | null>(null);
-  // We are smart people, we can figure this out!
   const createSubGraph = useSubgraph();
   const [entities] = useEntities();
   const { dropAreaRef, isOver, canDrop } = useNodeDrop();
 
-  const [nodesSelectedIds, setNodesSelectedIds] = useRecoilState(
-    nodesSelectedIdsAtom
-  );
+  const [nodesSelectedIds, setNodesSelectedIds] =
+    useRecoilState(nodesSelectedIdsAtom);
   const hiddenNodesIds = useRecoilValue(nodesHiddenIdsAtom);
 
-  const [edgesSelectedIds, setEdgesSelectedIds] = useRecoilState(
-    edgesSelectedIdsAtom
-  );
+  const [edgesSelectedIds, setEdgesSelectedIds] =
+    useRecoilState(edgesSelectedIdsAtom);
   const hiddenEdgesIds = useRecoilValue(edgesHiddenIdsAtom);
   const nodesOutIds = useRecoilValue(nodesOutOfFocusIdsAtom);
   const edgesOutIds = useRecoilValue(edgesOutOfFocusIdsAtom);
   const setUserLayout = useSetRecoilState(userLayoutAtom);
-  //const [overDate, setOverDateString] = useRecoilState(overDateAtom)
-  //const test = useRecoilValue(overDateAtom)
-  const now = new Date()
-  const testDate = useRef(mapDateStr(now.toLocaleDateString()))
+  const now = new Date();
   const [overDate, setOverDate] = useState(now.toLocaleTimeString());
-  
 
   const onSelectedNodesIdsChange = useCallback(
     (selectedIds: string[] | Set<string>) => {
@@ -198,9 +187,8 @@ const GraphViewer = ({
 
   const config = useConfiguration();
   const [legendOpen, setLegendOpen] = useState(false);
-  const { onZoomIn, onZoomOut, onSaveScreenshot } = useGraphGlobalActions(
-    graphRef
-  );
+  const { onZoomIn, onZoomOut, onSaveScreenshot } =
+    useGraphGlobalActions(graphRef);
 
   const {
     clearAllLayers,
@@ -220,9 +208,7 @@ const GraphViewer = ({
 
   const { enqueueNotification } = useNotification();
   const expandNode = useExpandNode();
-  const expandEdge = useExpandEdge();
   const [expandVertexName, setExpandVertexName] = useState<string | null>(null);
-  const [dateLayout, setDateLayout] = useState<string | null>(null);
   const getDisplayNames = useDisplayNames();
   const onNodeDoubleClick: ElementEventCallback<Vertex["data"]> = useCallback(
     async (_, vertexData) => {
@@ -247,6 +233,7 @@ const GraphViewer = ({
       setExpandVertexName(name);
       await expandNode({
         vertexId: vertexData.id,
+        idType: vertexData.idType,
         vertexType: vertexData.types?.join("::") ?? vertexData.type,
         limit: vertexData.neighborsCount,
         offset: 0,
@@ -268,45 +255,27 @@ const GraphViewer = ({
 
   const onFilterByDate = useCallback(async (inputDate: string) =>{
       
-      let currentCanvas: [Array<Vertex>, Array<Edge>] = [entities.nodes ?? [], entities.edges ?? []]
-      console.log("canvas:")
-      console.log(currentCanvas[0])
+    let currentCanvas: [Array<Vertex>, Array<Edge>] = [entities.nodes ?? [], entities.edges ?? []]
+    console.log("canvas:")
+    console.log(currentCanvas[0])
 
-      // Returns t
-      console.log("OverDate Result:" + overDate);
-      console.log("Ref Result:"+ testDate.current)
-      await createSubGraph({
-        date: inputDate,
-        canV: currentCanvas[0],
-        canE: currentCanvas[1],
-      })
-    },[createSubGraph]);
-  
-    
-  /*const onDateChange = useCallback(
-    (dateInput: string) => {
-      const 
-    }
-  )
-
-  useEffect(() => {
-      //let isActiveDate = true;
-      //if (isActiveDate) {
-      setOverDateString(overDate)
-      //}
-      console.log("OverDate:" + overDate)
-      //return () => {isActiveDate = false}
-  },[])*/
-
+    // Returns t
+    console.log("OverDate Result:" + overDate);
+    await createSubGraph({
+      date: inputDate,
+      canV: currentCanvas[0],
+      canE: currentCanvas[1],
+    })
+  },[createSubGraph]);
 
   const onHeaderActionClick = useCallback(
-    action => {
+    (action: any) => {
       switch (action) {
         case "zoom_in":
           return onZoomIn();
         case "zoom_out":
           return onZoomOut();
-        case "clear_canvas":
+        case "clear_canvas":    
           return onClearCanvas();
         case "download_screenshot":
           return onSaveScreenshot();

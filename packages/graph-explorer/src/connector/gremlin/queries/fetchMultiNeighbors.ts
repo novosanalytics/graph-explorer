@@ -2,7 +2,7 @@ import { Edge } from "../../../@types/entities";
 import type {
   NeighborsRequest,
   NeighborsResponse,
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
 import mapApiEdge from "../mappers/mapApiEdge";
 import mapApiVertex from "../mappers/mapApiVertex";
 import toStringId from "../mappers/toStringId";
@@ -30,12 +30,12 @@ type RawOneHopRequest = {
 const fetchMultiNeighbors = async (
   gremlinFetch: GremlinFetch,
   req: NeighborsRequest,
-  rawIds: Map<string, "string" | "number">
+  //rawIds: Map<string, "string" | "number">
 ): Promise<NeighborsResponse> => {
-  const idType = rawIds.get(req.vertexId) ?? "string";
-  const gremlinTemplate = oneHopTemplate({ ...req, idType });
+  //const idType = rawIds.get(req.vertexId) ?? "string";
+  const gremlinTemplate = oneHopTemplate({ ...req});
   const data = await gremlinFetch<RawOneHopRequest>(gremlinTemplate);
-  console.log(`Node Query: ${gremlinTemplate}`)
+  console.log(`Multi-Expand Query: ${gremlinTemplate}`)
   const rawVertices = data.result.data["@value"]
   let verticesIds: Array<any>[] = [];
   let edges: Edge[] = [];
@@ -57,8 +57,6 @@ const fetchMultiNeighbors = async (
     )
     edges = edges.concat(eDetails)
   });
-  console.log(`Vertices: ${vertices}`);
-  console.log(`Edges: ${edges}`);
   return {
     vertices,
     edges,

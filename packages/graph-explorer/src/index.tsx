@@ -1,11 +1,13 @@
 import queryString from "query-string";
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 import { RawConfiguration } from "./core";
 import ConnectedProvider from "./core/ConnectedProvider";
 import "./index.css";
+import "@mantine/core/styles.css";
+import { DEFAULT_SERVICE_TYPE } from "./utils/constants";
 
 const grabConfig = async (): Promise<RawConfiguration | undefined> => {
   const defaultConnectionPath = `${location.origin}/defaultConnection`;
@@ -27,15 +29,22 @@ const grabConfig = async (): Promise<RawConfiguration | undefined> => {
     defaultConnectionFile = await fetch(defaultConnectionPath);
 
     if (!defaultConnectionFile.ok) {
-      console.log(`Failed to find default connection file at .../defaultConnection, trying path for Sagemaker.`);
+      // eslint-disable-next-line no-console
+      console.log(
+        `Failed to find default connection file at .../defaultConnection, trying path for Sagemaker.`
+      );
       defaultConnectionFile = await fetch(sagemakerConnectionPath);
       if (defaultConnectionFile.ok) {
+        // eslint-disable-next-line no-console
         console.log(`Found file at ../proxy/9250/defaultConnection.`);
-      }
-      else {
-        console.log(`Did not find file at ../proxy/9250/defaultConnection. No defaultConnectionFile will be set.`);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Did not find file at ../proxy/9250/defaultConnection. No defaultConnectionFile will be set.`
+        );
       }
     } else {
+      // eslint-disable-next-line no-console
       console.log(`Found file at ../defaultConnection.`);
     }
 
@@ -55,6 +64,10 @@ const grabConfig = async (): Promise<RawConfiguration | undefined> => {
         graphDbUrl: defaultConnectionData.GRAPH_EXP_CONNECTION_URL || "",
         awsAuthEnabled: !!defaultConnectionData.GRAPH_EXP_IAM,
         awsRegion: defaultConnectionData.GRAPH_EXP_AWS_REGION || "",
+        serviceType:
+          defaultConnectionData.GRAPH_EXP_SERVICE_TYPE || DEFAULT_SERVICE_TYPE,
+        fetchTimeoutMs:
+          defaultConnectionData.GRAPH_EXP_FETCH_REQUEST_TIMEOUT || 240000,
       },
     };
   } catch (error) {
@@ -83,4 +96,6 @@ const BootstrapApp = () => {
   );
 };
 
-ReactDOM.render(<BootstrapApp />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(<BootstrapApp />);

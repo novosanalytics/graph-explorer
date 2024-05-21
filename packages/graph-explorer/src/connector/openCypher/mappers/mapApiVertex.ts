@@ -1,5 +1,5 @@
 import type { Vertex } from "../../../@types/entities";
-import type { NeighborsCountResponse } from "../../AbstractConnector";
+import type { NeighborsCountResponse } from "../../useGEFetchTypes";
 import type { OCVertex } from "../types";
 
 const mapApiVertex = (
@@ -12,6 +12,7 @@ const mapApiVertex = (
   return {
     data: {
       id: apiVertex["~id"],
+      idType: "string",
       type: vt,
       types: labels,
       neighborsCount: neighborsCount?.totalCount || 0,

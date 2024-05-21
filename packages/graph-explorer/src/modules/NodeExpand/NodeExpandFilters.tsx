@@ -15,12 +15,12 @@ import Switch from "../../components/Switch";
 export type NodeExpandFilter = {
   name: string;
   value: string;
-  operator: string;
+  operator?: string;
 };
 export type NodeExpandFiltersProps = {
   classNamePrefix?: string;
   neighborsOptions: Array<{ label: string; value: string }>;
-  searchType: boolean;
+  searchType?: boolean;
   onSearchChange(type: boolean): void;
   selectedType: string;
   onSelectedTypeChange(type: string): void;
@@ -48,16 +48,14 @@ const NodeExpandFilters = ({
   const pfx = withClassNamePrefix(classNamePrefix);
 
   const vtConfig = config?.getVertexTypeConfig(selectedType);
-  const searchableAttributes = config?.getVertexTypeSearchableAttributes(
-    selectedType
-  );
-
-  const comparatives = [
-    "==","like",
-    ">",">=",
-    "<=","<",
-    "!="
-  ]
+  const searchableAttributes =
+    config?.getVertexTypeSearchableAttributes(selectedType);
+  const comparatives = [    
+        "==","like",
+        ">",">=",
+        "<=","<",
+        "!="
+    ]
 
   const onFilterAdd = useCallback(() => {
     onFiltersChange([
@@ -65,7 +63,6 @@ const NodeExpandFilters = ({
       {
         name: vtConfig?.attributes?.[0].name || "",
         value: "",
-        operator: "=="
       },
     ]);
   }, [filters, onFiltersChange, vtConfig?.attributes]);
@@ -80,20 +77,20 @@ const NodeExpandFilters = ({
 
   const onFilterChange = useCallback(
     (filterIndex: number, name?: string, value?: string, operator?: string) => {
-      const currFilters = clone(filters);
-      currFilters[filterIndex].name = name || currFilters[filterIndex].name;
-      currFilters[filterIndex].value = value ?? currFilters[filterIndex].value;
-      currFilters[filterIndex].operator = operator ?? currFilters[filterIndex].operator;
-      onFiltersChange(currFilters);
-    },
-    [filters, onFiltersChange]
+        const currFilters = clone(filters);
+        currFilters[filterIndex].name = name || currFilters[filterIndex].name;
+        currFilters[filterIndex].value = value ?? currFilters[filterIndex].value;
+        currFilters[filterIndex].operator = operator ?? currFilters[filterIndex].operator;
+        onFiltersChange(currFilters);
+      },
+      [filters, onFiltersChange]
   );
 
   useEffect(() => {
     onFiltersChange([]);
   }, [onFiltersChange, selectedType]);
 
-
+  
   let placeholder = "";
   const onPlaceholderChange = useCallback(
     (name:string) => {
@@ -114,10 +111,11 @@ const NodeExpandFilters = ({
     [placeholder]
   )
 
+ 
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
-        <Switch
+      <Switch
         className={pfx("item-switch")}
         labelPosition={"right"}
         isSelected={searchType === true || false }
@@ -180,7 +178,7 @@ const NodeExpandFilters = ({
                 className={pfx("input")}
                 value={filter.value}
                 onChange={value => {
-                  onFilterChange(filterIndex, filter.name, value as string, filter.operator);
+                    onFilterChange(filterIndex, filter.name, value as string, filter.operator);
                 }}
                 hideError={true}
                 noMargin={true}

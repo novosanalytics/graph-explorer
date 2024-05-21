@@ -1,30 +1,37 @@
 import uniq from "lodash/uniq";
 import uniqBy from "lodash/uniqBy";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
-import { useNotification } from "../../components/NotificationProvider";
-import { KeywordSearchResponse } from "../../connector/AbstractConnector";
 import { useConfiguration } from "../../core";
-import useConnector from "../../core/ConnectorProvider/useConnector";
 import useDebounceValue from "../../hooks/useDebounceValue";
-import usePrefixesUpdater from "../../hooks/usePrefixesUpdater";
 import useTextTransform from "../../hooks/useTextTransform";
+import { useKeywordSearchQuery } from "./useKeywordSearchQuery";
 
 export interface PromiseWithCancel<T> extends Promise<T> {
   cancel?: () => void;
 }
+
+const allVerticesValue = "__all";
+const allAttributesValue = "__all";
+const idAttributeValue = "__id";
+
 const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   const config = useConfiguration();
-  const connector = useConnector();
 
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounceValue(searchTerm, 1000);
-  const [selectedVertexType, setSelectedVertexType] = useState("__all");
-  const [selectedAttribute, setSelectedAttribute] = useState("__all");
-  const [exactMatch, setExactMatch] = useState(false);
+  const [selectedVertexType, setSelectedVertexType] =
+    useState(allVerticesValue);
+  const [selectedAttribute, setSelectedAttribute] =
+    useState(allAttributesValue);
+  const [exactMatch, setExactMatch] = useState(true);
   const [neighborsLimit, setNeighborsLimit] = useState(true);
   const textTransform = useTextTransform();
-  const exactMatchOptions = [{ label: "Exact", value: "Exact" }, { label: "Partial", value: "Partial" }];
+  const exactMatchOptions = [
+    { label: "Exact", value: "Exact" },
+    { label: "Partial", value: "Partial" },
+  ];
+  // Sparql uses rdfs:label, not ID
+  const allowsIdSearch = config?.connection?.queryEngine !== "sparql";
 
   const vertexOptions = useMemo(() => {
     const vertexOps =
@@ -38,7 +45,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
         })
         .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-    return [{ label: "All", value: "__all" }, ...vertexOps];
+    return [{ label: "All", value: allVerticesValue }, ...vertexOps];
   }, [config, textTransform]);
 
   const onSearchTermChange = useCallback((value: string) => {
@@ -53,13 +60,10 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     setSelectedAttribute(value as string);
   }, []);
 
-  const onExactMatchChange = useCallback((value: string) => {
-    if (value === "Exact") {
-      setExactMatch(true);
-    }
-    else {
-      setExactMatch(false);
-    }
+  const onExactMatchChange = useCallback((value: string | string[]) => {
+    setExactMatch(
+      Array.isArray(value) ? value[0] === "Exact" : value === "Exact"
+    );
   }, []);
 
   const onNeighborsLimitChange = useCallback(() => {
@@ -67,7 +71,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   }, []);
 
   const searchableAttributes = useMemo(() => {
-    if (selectedVertexType !== "__all") {
+    if (selectedVertexType !== allVerticesValue) {
       return (
         config?.getVertexTypeSearchableAttributes(selectedVertexType) || []
       );
@@ -84,7 +88,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     const searchById =
       config?.connection?.queryEngine === "sparql" ? "URI" : "Id";
 
-    if (selectedVertexType === "__all") {
+    if (selectedVertexType === allVerticesValue) {
       const attributes = uniq(
         searchableAttributes.map(
           attr => attr.displayLabel || textTransform(attr.name)
@@ -106,8 +110,9 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
       .slice(0, 5)
       .join(", ");
 
-    return `Search for ${vertexOptions.find(vt => vt.value === selectedVertexType)?.label
-      } by ${attributes || searchById}`;
+    return `Search for ${
+      vertexOptions.find(vt => vt.value === selectedVertexType)?.label
+    } by ${attributes || searchById}`;
   }, [
     config,
     searchableAttributes,
@@ -117,7 +122,14 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   ]);
 
   const attributesOptions = useMemo(() => {
-    if (selectedVertexType === "__all") {
+    const defaultAttributes = allowsIdSearch
+      ? [
+          { label: "All", value: allAttributesValue },
+          { label: "ID", value: idAttributeValue },
+        ]
+      : [{ label: "All", value: allAttributesValue }];
+
+    if (selectedVertexType === allVerticesValue) {
       const attributes = uniqBy(
         searchableAttributes.map(attr => ({
           value: attr.name,
@@ -125,7 +137,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
         })),
         op => op.value
       );
-      return [{ label: "All", value: "__all" }, ...attributes];
+      return [...defaultAttributes, ...attributes];
     }
 
     const attributes = uniqBy(
@@ -137,82 +149,55 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
         })),
       op => op.value
     );
-    return [{ label: "All", value: "__all" }, ...attributes];
-  }, [config, searchableAttributes, selectedVertexType, textTransform]);
+    return [...defaultAttributes, ...attributes];
+  }, [
+    allowsIdSearch,
+    config,
+    searchableAttributes,
+    selectedVertexType,
+    textTransform,
+  ]);
 
-  const { enqueueNotification } = useNotification();
-  const [isMount, setMount] = useState(false);
+  const defaultSearchAttribute = useMemo(() => {
+    const fallbackValue = allAttributesValue;
+
+    if (config?.connection?.queryEngine === "sparql") {
+      const rdfsLabel = attributesOptions.find(o => o.label === "rdfs:label");
+      return rdfsLabel?.value ?? fallbackValue;
+    }
+
+    if (allowsIdSearch) {
+      return idAttributeValue;
+    }
+
+    return fallbackValue;
+  }, [config?.connection?.queryEngine, allowsIdSearch, attributesOptions]);
 
   const vertexTypes =
-    selectedVertexType === "__all" ? config?.vertexTypes : [selectedVertexType];
+    selectedVertexType === allVerticesValue
+      ? config?.vertexTypes
+      : [selectedVertexType];
   const searchByAttributes =
-    selectedAttribute === "__all"
-      ? uniq(searchableAttributes.map(attr => attr.name).concat("__all"))
+    selectedAttribute === allAttributesValue
+      ? uniq(
+          searchableAttributes.map(attr => attr.name).concat(allAttributesValue)
+        )
       : [selectedAttribute];
 
-  const updatePrefixes = usePrefixesUpdater();
-  const { data, isFetching } = useQuery(
-    [
-      "keyword-search",
-      debouncedSearchTerm,
-      vertexTypes,
-      searchByAttributes,
-      exactMatch,
-      neighborsLimit,
-      isMount,
-      isOpen,
-    ],
-    () => {
-      if (!isOpen || !config) {
-        return;
-      }
-
-      const controller = new AbortController();
-      const promise = connector.explorer?.keywordSearch(
-        {
-          searchTerm: debouncedSearchTerm,
-          vertexTypes,
-          searchByAttributes,
-          searchById: true,
-          exactMatch: exactMatch,
-        },
-        { abortSignal: controller.signal }
-      ) as PromiseWithCancel<KeywordSearchResponse>;
-
-      promise.cancel = () => {
-        controller.abort();
-      };
-
-      return promise;
-    },
-    {
-      enabled: !!config,
-      onSuccess: response => {
-        if (!response) {
-          return;
-        }
-
-        updatePrefixes(response.vertices.map(v => v.data.id));
-      },
-      onError: (e: Error) => {
-        enqueueNotification({
-          type: "error",
-          title: "Something went wrong",
-          message: e.message,
-        });
-      },
-    }
-  );
-
-  if (isOpen && !isMount) {
-    setMount(true);
-  }
+  const { data, isFetching, cancelAll } = useKeywordSearchQuery({
+    debouncedSearchTerm,
+    vertexTypes,
+    searchByAttributes,
+    exactMatch,
+    neighborsLimit,
+    isOpen,
+  });
 
   useEffect(() => {
-    setSelectedAttribute("__all");
-    setExactMatch(false);
+    setSelectedAttribute(defaultSearchAttribute);
+    setExactMatch(true);
     setNeighborsLimit(true);
-  }, [selectedVertexType]);
+  }, [selectedVertexType, defaultSearchAttribute]);
 
   return {
     isFetching,
@@ -232,6 +217,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     neighborsLimit,
     onNeighborsLimitChange,
     searchResults: data?.vertices || [],
+    cancelAll,
   };
 };
 

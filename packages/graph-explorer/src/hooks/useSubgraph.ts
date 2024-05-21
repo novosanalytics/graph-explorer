@@ -1,18 +1,20 @@
 import { useCallback } from "react";
 import { useNotification } from "../components/NotificationProvider";
-import type { SubGraphRequest } from "../connector/AbstractConnector";
-import useConnector from "../core/ConnectorProvider/useConnector";
+import type { SubGraphRequest } from "../connector/useGEFetchTypes";
+import { explorerSelector } from "../core/connector";
 import useEntities from "./useEntities";
+import { Vertex, Edge } from "../@types/entities";
+import { useRecoilValue } from "recoil";
 
 
 const useSubGraph = () => {
   const [, setEntities] = useEntities();
-  const connector = useConnector();
+  const explorer = useRecoilValue(explorerSelector);
   const { enqueueNotification, clearNotification } = useNotification();
 
   return useCallback(
     async (req: SubGraphRequest) => {
-        const result = await connector.explorer?.createSubgraph(req);
+        const result = await explorer?.createSubgraph(req);
         
         if (!result) {
             enqueueNotification({
@@ -43,7 +45,7 @@ const useSubGraph = () => {
 
         
 
-    },[connector.explorer, setEntities, enqueueNotification, clearNotification]
+    },[explorer, setEntities, enqueueNotification, clearNotification]
   );
 };
 

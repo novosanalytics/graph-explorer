@@ -1,8 +1,9 @@
 import { css } from "@emotion/css";
 import type { ThemeStyleFn } from "../../core";
 
-const defaultStyles = (pfx: string): ThemeStyleFn => ({ theme, isDarkTheme }) =>
-  css`
+const defaultStyles =
+  (pfx: string): ThemeStyleFn =>
+  ({ theme, isDarkTheme }) => css`
     position: relative;
     flex-grow: 1;
     display: flex;
@@ -27,7 +28,6 @@ const defaultStyles = (pfx: string): ThemeStyleFn => ({ theme, isDarkTheme }) =>
           display: flex;
           align-items: center;
           color: ${theme.palette.text.secondary};
-          background: ${theme.palette.grey["200"]};
           padding-left: ${theme.spacing["2x"]};
         }
       }
@@ -110,6 +110,8 @@ const defaultStyles = (pfx: string): ThemeStyleFn => ({ theme, isDarkTheme }) =>
         margin-top: 0;
         width: 100%;
         display: flex;
+        flex-direction: row;
+        gap: ${theme.spacing["2x"]};
         padding: ${theme.spacing["2x"]};
         justify-content: space-between;
         align-items: center;
@@ -119,24 +121,14 @@ const defaultStyles = (pfx: string): ThemeStyleFn => ({ theme, isDarkTheme }) =>
         border-top: solid 1px ${theme.palette.border};
 
         .${pfx}-footer-text {
-          padding: ${theme.spacing["2x"]} 0;
           color: ${theme.palette.text.secondary};
           font-size: ${theme.typography.sizes["xs"]};
+          flex-grow: 1;
+          text-wrap: balance;
         }
 
-        .${pfx}-actions-button {
-          display: inline-flex;
-          box-shadow: none;
-          &:not(:last-child) {
-            margin-right: ${theme.spacing["2x"]};
-          }
-          padding-right: ${theme.spacing["2x"]};
-          > svg {
-            font-size: ${theme.typography.sizes["lg"]};
-          }
-        }
-        .${pfx}-icon-button-name {
-          padding-left: ${theme.spacing.base};
+        .${pfx}-refuse-shrink {
+          flex-shrink: 0;
         }
       }
     }

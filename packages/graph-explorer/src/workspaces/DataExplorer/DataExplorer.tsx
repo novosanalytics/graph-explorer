@@ -1,14 +1,14 @@
 import { cx } from "@emotion/css";
 import clone from "lodash/clone";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useQuery } from "react-query";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   Link,
   useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Vertex } from "../../@types/entities";
 import {
   CheckIcon,
@@ -29,13 +29,13 @@ import {
 import ExternalPaginationControl from "../../components/Tabular/controls/ExternalPaginationControl";
 import Tabular from "../../components/Tabular/Tabular";
 import Workspace from "../../components/Workspace/Workspace";
-import { KeywordSearchResponse } from "../../connector/AbstractConnector";
+import type { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
 import {
   useConfiguration,
   useWithTheme,
   withClassNamePrefix,
 } from "../../core";
-import useConnector from "../../core/ConnectorProvider/useConnector";
+import { explorerSelector } from "../../core/connector";
 import {
   userStylingAtom,
   VertexPreferences,
@@ -66,7 +66,7 @@ const DataExplorer = ({ classNamePrefix = "ft" }: ConnectionsProps) => {
 
   const config = useConfiguration();
   const t = useTranslations();
-  const connector = useConnector();
+  const explorer = useRecoilValue(explorerSelector);
   const fetchNode = useFetchNode();
   const [entities] = useEntities({ disableFilters: true });
 
@@ -165,7 +165,7 @@ const DataExplorer = ({ classNamePrefix = "ft" }: ConnectionsProps) => {
               size={"small"}
               iconPlacement={"start"}
               onPress={() => {
-                fetchNode(cell.row.original);
+                fetchNode(cell.row.original, pageSize);
               }}
             >
               {isInExplorer ? "Sent to Explorer" : "Send to Explorer"}
@@ -176,7 +176,14 @@ const DataExplorer = ({ classNamePrefix = "ft" }: ConnectionsProps) => {
     });
 
     return vtColumns;
-  }, [entities.nodes, fetchNode, t, textTransform, vertexConfig?.attributes]);
+  }, [
+    entities.nodes,
+    fetchNode,
+    pageSize,
+    t,
+    textTransform,
+    vertexConfig?.attributes,
+  ]);
 
   const selectOptions = useMemo(() => {
     const options =
@@ -195,31 +202,30 @@ const DataExplorer = ({ classNamePrefix = "ft" }: ConnectionsProps) => {
   }, [t, textTransform, vertexConfig?.attributes]);
 
   const updatePrefixes = usePrefixesUpdater();
-  const { data, isFetching } = useQuery(
-    ["keywordSearch", vertexType, pageIndex, pageSize],
-    () => {
-      if (!vertexType || !connector.explorer) {
+  const { data, isFetching } = useQuery({
+    queryKey: ["keywordSearch", vertexType, pageIndex, pageSize],
+    queryFn: () => {
+      if (!vertexType || !explorer) {
         return { vertices: [] } as KeywordSearchResponse;
       }
 
-      return connector.explorer.keywordSearch({
+      return explorer.keywordSearch({
         vertexTypes: [vertexType],
         limit: pageSize,
         offset: pageIndex * pageSize,
       });
     },
-    {
-      keepPreviousData: true,
-      enabled: Boolean(vertexType) && Boolean(connector.explorer),
-      onSuccess: response => {
-        if (!response) {
-          return;
-        }
+    placeholderData: keepPreviousData,
+    enabled: Boolean(vertexType) && Boolean(explorer),
+  });
 
-        updatePrefixes(response.vertices.map(v => v.data.id));
-      },
+  useEffect(() => {
+    if (!data) {
+      return;
     }
-  );
+
+    updatePrefixes(data.vertices.map((v: { data: { id: any } }) => v.data.id));
+  }, [data, updatePrefixes]);
 
   const setUserStyling = useSetRecoilState(userStylingAtom);
   const onDisplayNameChange = useCallback(

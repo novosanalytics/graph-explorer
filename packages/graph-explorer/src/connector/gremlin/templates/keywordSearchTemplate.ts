@@ -1,5 +1,6 @@
 import uniq from "lodash/uniq";
-import type { KeywordSearchRequest } from "../../AbstractConnector";
+import type { KeywordSearchRequest } from "../../useGEFetchTypes";
+import { escapeString } from "../../../utils";
 
 /**
  * @example
@@ -39,33 +40,32 @@ const keywordSearchTemplate = ({
   }
 
   if (Boolean(searchTerm) && (searchByAttributes.length !== 0 || searchById)) {
+    const escapedSearchTerm = escapeString(searchTerm);
+
     const orContent = uniq(
-        (searchById && searchByAttributes.includes("__all")) ? ["_id", ...searchByAttributes] : searchByAttributes
+      searchById && searchByAttributes.includes("__all")
+        ? ["__id", ...searchByAttributes]
+        : searchByAttributes
     )
       .filter(attr => attr !== "__all")
       .map(attr => {
-        if (attr === "_id") {
+        if (attr === "__id") {
           if (exactMatch === true) {
-             return `has(id,"${searchTerm}")`;
+            return `has(id,"${escapedSearchTerm}")`;
           }
-          return `has(id,containing("${searchTerm}"))`;
+          return `has(id,containing("${escapedSearchTerm}"))`;
         }
         if (exactMatch === true) {
-          return `has("${attr}","${searchTerm}")`;
+          return `has("${attr}","${escapedSearchTerm}")`;
         }
-        return `has("${attr}", TextP.regex("(?i)${searchTerm}."))`
-        //searchTerm?.toLowerCase()
-        //return `has("${attr}",containing("${searchTerm?.toUpperCase()}")), has("${attr}",containing("${searchTerm?.toLowerCase()}")), has("${attr}",containing("${}"))`;
-        //return `filter{it.get().property("${attr}").value().contains("${searchTerm?.toUpperCase()}")}`;
+        return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
       })
       .join(",");
 
-    //template += `.${orContent}`;  
     template += `.or(${orContent})`;
   }
 
   template += `.range(${offset},${offset + limit})`;
-  console.log(`Search Q: ${template}`)
   return template;
 };
 

@@ -16,11 +16,12 @@ import { Vertex, Edge } from "../../@types/entities";
 export type EdgeExpandFilter = {
   name: string;
   value: string;
+  operator?: string;
 };
 export type EdgeExpandFiltersProps = {
   classNamePrefix?: string;
   neighborsOptions: Array<{ label: string; value: string }>;
-  edgeOptions:  Set<string>;
+  edgeOptions:  Array<string>;
   edgeCriteria: Array<string>;
   selectedType: string;
   //criterion: string;
@@ -48,6 +49,7 @@ const EdgeExpandFilters = ({
   const t = useTranslations();
   const textTransform = useTextTransform();
   const pfx = withClassNamePrefix(classNamePrefix);
+
   const vtConfig = config?.getVertexTypeConfig(selectedType);
   const etConfig = config?.getEdgeTypeConfig(selectedType);
   const searchableAttributes = config?.getVertexTypeSearchableAttributes(
@@ -79,9 +81,10 @@ const EdgeExpandFilters = ({
     onFiltersChange([
       ...filters,
       {
-        name: "" || "",
-        //name: etConfig?.attributes?.[0].name || "",
+        //name: "" || "",
+        name: etConfig?.attributes?.[0].name || "",
         value: "",
+        operator: "=="
       },
     ]);
   }, [filters, onFiltersChange, etConfig?.attributes]);
@@ -117,7 +120,6 @@ const EdgeExpandFilters = ({
         aria-label={"edge type"}
         value={selectedType}
         onChange={e => {
-          console.log(edgeOptions)
           onSelectedTypeChange(e as string);
         }}
         options={

@@ -6,6 +6,12 @@ export interface VertexData {
    */
   id: string;
   /**
+   * Data type for the node id.
+   * - For Gremlin, could be string or number
+   * - For openCypher and SPARQL, always string
+   */
+  idType: "string" | "number";
+  /**
    * Single vertex type.
    * - For PG, the node label
    * - For RDF, the resource class
@@ -60,10 +66,6 @@ export interface VertexData {
    * Fetched outgoing edges connected with the vertex
    */
   __fetchedOutEdgeCount?: number;
-  /**
-   * Non-fetched edges by type (?)
-   */
-  __unfetchedEdgeCounts?: Record<string, number>;
 }
 
 /**
@@ -119,6 +121,6 @@ export interface EdgeData {
  * of en edge.
  * For example, EdgesTabular add __is_visible property to hide/show an edge.
  */
-export type Edge<T = Record<string, unknown>> = T & {
-  data: EdgeData;
-};
+export interface Edge<T = Record<string, unknown>> {
+  data: EdgeData & T;
+}

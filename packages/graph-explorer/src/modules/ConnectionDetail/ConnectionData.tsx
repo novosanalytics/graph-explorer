@@ -10,7 +10,7 @@ import {
   EdgeIcon,
   GraphIcon,
   IconButton,
-  VertexIcon
+  VertexIcon,
 } from "../../components";
 import HumanReadableNumberFormatter from "../../components/HumanReadableNumberFormatter";
 import { fade, useWithTheme, withClassNamePrefix } from "../../core";
@@ -38,7 +38,7 @@ const ConnectionData = ({ classNamePrefix = "ft" }: VertexDetailProps) => {
     (config?.vertexTypes || []).forEach(vt => {
       const vtConfig = config?.getVertexTypeConfig(vt);
       const displayLabel = vtConfig?.displayLabel || vt;
-      const vDetailCounts =  vtConfig?.total;
+      const vDetailCounts = config?.getVertexTypeConfig(vt)?.total;
 
       items.push({
         id: vt,
@@ -46,7 +46,7 @@ const ConnectionData = ({ classNamePrefix = "ft" }: VertexDetailProps) => {
         titleComponent: (
           <div className={pfx("advanced-list-item-title")}>
             <div className={pfx("node-title")}>
-            {textTransform(displayLabel)}
+              {textTransform(displayLabel)}
             </div>
             <div className={pfx("node-count")} style={{color: "grey", fontStyle: 'italic'}}>
               {vDetailCounts?.toString()}
@@ -139,8 +139,9 @@ const ConnectionData = ({ classNamePrefix = "ft" }: VertexDetailProps) => {
     return items;
   }, [config, pfx, textTransform, navigate]);
 
+  const databaseItems = verticesByTypeItems.concat(edgesByTypeItems.sort())
 
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [search, setSearch] = useState("");
 
@@ -181,7 +182,7 @@ const ConnectionData = ({ classNamePrefix = "ft" }: VertexDetailProps) => {
         search={search}
         onSearch={setSearch}
         className={pfx("advanced-list")}
-        items={verticesByTypeItems.concat(edgesByTypeItems.sort())}
+        items={databaseItems}
         emptyState={{
           noSearchResultsTitle: t("connection-detail.no-search-title"),
           noSearchResultsSubtitle: t("connection-detail.no-search-subtitle"),

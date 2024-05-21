@@ -1,7 +1,7 @@
 import type {
     NeighborsRequest,
     NeighborsResponse,
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
   import mapApiEdge from "../mappers/mapApiEdge";
   import mapApiVertex from "../mappers/mapApiVertex";
   import toStringId from "../mappers/toStringId";
@@ -31,14 +31,10 @@ type RawOneHopRequest = {
   const fetchEdgeNeighbors = async (
     gremlinFetch: GremlinFetch,
     req: NeighborsRequest,
-    rawIds: Map<string, "string" | "number">
   ): Promise<NeighborsResponse> => {
-    const idType = rawIds.get(req.vertexId) ?? "string";
-    //const gremlinTemplate = edgeVertHopTemplate({ ...req, idType });
-    const gremlinTemplate = edgeVertHopTemplate({...req, idType}); // Gets the vertices
-    const edgeTemplate = edgeEdgeHopTemplate({...req, idType}); // Gets the edges
-    console.log(`Edge Query ${edgeTemplate} ... AND ... ${gremlinTemplate}`)
-
+    //const idType = rawIds.get(req.vertexId) ?? "string";
+    const gremlinTemplate = edgeVertHopTemplate({...req}); // Gets the vertices
+    const edgeTemplate = edgeEdgeHopTemplate({...req}); // Gets the edges
     let [vData, eData] = await Promise.all([
       gremlinFetch<RawOneHopRequest>(gremlinTemplate),
       gremlinFetch<RawOneHopRequest>(edgeTemplate),
@@ -63,8 +59,6 @@ type RawOneHopRequest = {
           verticesIds.includes(edge.data.source) ||
           verticesIds.includes(edge.data.target)
       );
-      console.log(`Vertices: ${vertices}`);
-      console.log(`Edges: ${edges}`);
     return {
       vertices,
       edges,

@@ -1,7 +1,7 @@
 import { 
     SubGraphRequest,
     SubGraphResponse
-} from "../../AbstractConnector";
+} from "../../useGEFetchTypes";
 import toStringId from "../mappers/toStringId";
 import subgraphTemplate from "../templates/subgraphTemplate";
 import subedgeTemplate from "../templates/subedgeTemplate";
@@ -41,10 +41,10 @@ const idType = (id: string | GInt64) => {
     return "number";
 };
 
-const subgraphResult = async (
+const createSubgraph = async (
     gremlinFetch: GremlinFetch,
     req: SubGraphRequest,
-    rawIds: Map<string, "string" | "number">
+    //rawIds: Map<string, "string" | "number">
 ): Promise<SubGraphResponse> => {
     let vertices: SubGraphResponse["vertices"] = []
     let edges: SubGraphResponse["edges"] = []
@@ -72,9 +72,8 @@ const subgraphResult = async (
       edges = []
     } else {
       let [eData] = await Promise.all([gremlinFetch<RawSubEdgeRequest>(eSG)])
-      const edgesResponse = 
+      const edgesResponse =  
         eData.result.data["@value"];
-      console.log("CONFIRMATION");
       console.log(edgesResponse);
       edges = edgesResponse?.map(
         edge => mapApiEdge(edge)
@@ -95,4 +94,4 @@ const subgraphResult = async (
     return { vertices, edges };
 };
 
-export default subgraphResult;
+export default createSubgraph;

@@ -2,10 +2,10 @@
  * Creates a pseudo-subgraph and allows for interaction with the subgraph in other templates
  */
 import { forEach } from "lodash";
-import { SubGraphRequest } from "../../AbstractConnector";
+import { SubGraphRequest } from "../../useGEFetchTypes";
 import mapDateStr from "../mappers/mapDateStr";
-import { m } from "framer-motion";
-// nodes = Set
+
+
 const subgraphTemplate = ({
     date = "string", 
     canV,

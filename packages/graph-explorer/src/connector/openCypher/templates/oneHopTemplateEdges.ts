@@ -1,4 +1,4 @@
-import type { Criterion, NeighborsRequest } from "../../AbstractConnector";
+import type { Criterion, NeighborsRequest } from "../../useGEFetchTypes";
 
 const criterionNumberTemplate = ({
   name,
@@ -92,55 +92,57 @@ const criterionTemplate = (criterion: Criterion): string => {
  * vertexTypes = ["airport"]
  * edgeTypes = ["route"]
  * limit = 10
- * offset = 0
  *
  * MATCH (v)-[edge:route]->(v:airport)
  * WHERE ID(v) = "124"
- * WITH collect(DISTINCT tgt) AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)}) AS eObjects 
- * RETURN vObjects, eObjects 
+ * WITH collect(DISTINCT tgt) AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)}) AS eObjects
+ * RETURN vObjects, eObjects
  * SKIP 0
  * LIMIT 10
  */
 const oneHopTemplateEdges = ({
-    vertexId,
-    filterByVertexTypes = [],
-    edgeTypes = [],
-    filterCriteria = [],
-    limit = 10,
-    offset = 0,
-    edgeIds = [],
-  }: Omit<NeighborsRequest, "vertexType"> & {edgeIds: string[] | undefined;}): string => {
-    let template = `MATCH (v)`;
-  
-    const formattedVertexTypes = filterByVertexTypes
-      .flatMap(type => type.split("::"))
-      .map(type => `v:${type}`)
-      .join(" OR ");
-    const formattedEdgeTypes = edgeTypes.map(type => `${type}`).join("|");
-    const formattedEdgeIds = edgeIds.map(id => `\"${id}\"`).join(",");
+  vertexId,
+  filterByVertexTypes = [],
+  edgeTypes = [],
+  filterCriteria = [],
+  limit = 10,
+  edgeIds = [],
+}: Omit<NeighborsRequest, "vertexType"> & {
+  edgeIds: string[] | undefined;
+}): string => {
+  let template = `MATCH (v)`;
 
-    if (edgeTypes.length > 0) {
-        template += `-[e:${formattedEdgeTypes}]-`;
-    } else {
-        template += `-[e]-`;
-    }
-    
-    if (filterByVertexTypes.length == 1) {
-      template += `(tgt:${filterByVertexTypes[0]}) WHERE ID(v) = \"${vertexId}\" AND ID(e) IN [${formattedEdgeIds}] `;
-    } else if (filterByVertexTypes.length > 1) {
-      template += `(tgt) WHERE ID(v) = \"${vertexId}\" AND ${formattedVertexTypes} AND ID(e) IN [${formattedEdgeIds}] `;
-    } else {
-      template += `(tgt) WHERE ID(v) = \"${vertexId}\" AND ID(e) IN [${formattedEdgeIds}] `;
-    }
-  
-    let filterCriteriaTemplate = filterCriteria?.map(criterionTemplate).join(" AND ");
-    if (filterCriteriaTemplate) {
-      template += `AND ${filterCriteriaTemplate} `;
-    }
+  const formattedVertexTypes = filterByVertexTypes
+    .flatMap(type => type.split("::"))
+    .map(type => `v:${type}`)
+    .join(" OR ");
+  const formattedEdgeTypes = edgeTypes.map(type => `${type}`).join("|");
+  const formattedEdgeIds = edgeIds.map(id => `"${id}"`).join(",");
 
-    template += `WITH collect(DISTINCT tgt)[..${limit}] AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)})[..${limit}] AS eObjects RETURN vObjects, eObjects`;
-  
-    return template;
-  };
+  if (edgeTypes.length > 0) {
+    template += `-[e:${formattedEdgeTypes}]-`;
+  } else {
+    template += `-[e]-`;
+  }
+
+  if (filterByVertexTypes.length == 1) {
+    template += `(tgt:${filterByVertexTypes[0]}) WHERE ID(v) = "${vertexId}" AND ID(e) IN [${formattedEdgeIds}] `;
+  } else if (filterByVertexTypes.length > 1) {
+    template += `(tgt) WHERE ID(v) = "${vertexId}" AND ${formattedVertexTypes} AND ID(e) IN [${formattedEdgeIds}] `;
+  } else {
+    template += `(tgt) WHERE ID(v) = "${vertexId}" AND ID(e) IN [${formattedEdgeIds}] `;
+  }
+
+  const filterCriteriaTemplate = filterCriteria
+    ?.map(criterionTemplate)
+    .join(" AND ");
+  if (filterCriteriaTemplate) {
+    template += `AND ${filterCriteriaTemplate} `;
+  }
+
+  template += `WITH collect(DISTINCT tgt)[..${limit}] AS vObjects, collect({edge: e, sourceType: labels(v), targetType: labels(tgt)})[..${limit}] AS eObjects RETURN vObjects, eObjects`;
+
+  return template;
+};
 
 export default oneHopTemplateEdges;

@@ -1,4 +1,4 @@
-import type { NeighborsCountRequest } from "../../AbstractConnector";
+import type { NeighborsCountRequest } from "../../useGEFetchTypes";
 
 /**
  * Given a single node ids, it returns a Gremlin template with
@@ -14,8 +14,8 @@ import type { NeighborsCountRequest } from "../../AbstractConnector";
 const neighborsCountTemplate = ({
   vertexId,
   limit = 500,
-  idType = "string",
-}: NeighborsCountRequest & { idType?: "string" | "number" }) => {
+  idType,
+}: NeighborsCountRequest) => {
   let template = "";
   if (idType === "number") {
     template = `g.V(${vertexId}L).both()`;

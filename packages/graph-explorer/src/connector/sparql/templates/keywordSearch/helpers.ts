@@ -1,3 +1,5 @@
+import { escapeString } from "../../../../utils";
+
 export const getSubjectClasses = (subjectClasses?: string[]) => {
   if (!subjectClasses?.length) {
     return "";
@@ -16,15 +18,16 @@ export const getSubjectClasses = (subjectClasses?: string[]) => {
 };
 
 export const getFilterPredicates = (predicates?: string[]) => {
-  if (!predicates?.length) {
+  const filteredPredicates = predicates?.filter(p => p !== "__all") || [];
+  if (!filteredPredicates.length) {
     return "";
   }
 
   let filterByAttributes = "";
   filterByAttributes += "FILTER (?predicate IN (";
-  predicates.forEach((p, i) => {
+  filteredPredicates.forEach((p, i) => {
     filterByAttributes += `<${p}>`;
-    if (i < predicates.length - 1) {
+    if (i < filteredPredicates.length - 1) {
       filterByAttributes += ", ";
     }
   });
@@ -32,12 +35,18 @@ export const getFilterPredicates = (predicates?: string[]) => {
   return filterByAttributes;
 };
 
-export const getFilterObject = (searchTerm?: string) => {
+export const getFilterObject = (exactMatch: boolean, searchTerm?: string) => {
   if (!searchTerm) {
     return "";
   }
 
+  const escapedSearchTerm = escapeString(searchTerm);
+
   let filterBySearchTerm = "";
-  filterBySearchTerm = `FILTER (regex(str(?value), "${searchTerm}", "i"))`;
+  if (exactMatch === true) {
+    filterBySearchTerm = `FILTER (?value = "${escapedSearchTerm}")`;
+  } else {
+    filterBySearchTerm = `FILTER (regex(str(?value), "${escapedSearchTerm}", "i"))`;
+  }
   return filterBySearchTerm;
 };

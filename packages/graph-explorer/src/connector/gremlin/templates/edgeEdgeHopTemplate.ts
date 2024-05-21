@@ -1,5 +1,5 @@
 import { toUpper } from "lodash";
-import type { Criterion, NeighborsRequest } from "../../AbstractConnector";
+import type { Criterion, NeighborsRequest } from "../../useGEFetchTypes";
 
 const criterionNumberTemplate = ({
     name,
@@ -124,16 +124,9 @@ const edgeEdgeHopTemplate = ({
       template = `g.V("${vertexId}")`;
     }
 
-    console.log(`vertexId:`, vertexId)
-    console.log(`filterByVertexTypes:`, filterByVertexTypes)
-    console.log(`edgeTypes:`, edgeTypes)
-    console.log(`filters:`, filterCriteria)
-
     template += `.project("vertices", "edges")`;
 
     const bothEContent = edgeTypes.map(type => `"${type}"`).join(",");
-
-    //let activeDate = filterCriteria[0]['value'];
     let activeDate = ""
     //activeDate += filterCriteria[0]['value']
     if (filterCriteria.length > 0){

@@ -2,6 +2,7 @@ import { Modal } from "@mantine/core";
 import { useCallback, useState } from "react";
 import { useRecoilCallback } from "recoil";
 import {
+  ActionItem,
   Chip,
   DatabaseIcon,
   DeleteIcon,
@@ -35,7 +36,10 @@ export type ConnectionDetailProps = {
   onSyncChange(isSync: boolean): void;
 };
 
-const HEADER_ACTIONS = (isSync: boolean, isFileBased: boolean) => [
+const HEADER_ACTIONS = (
+  isSync: boolean,
+  isFileBased: boolean
+): ActionItem[] => [
   {
     label: "Synchronize Database",
     icon: <SyncIcon className={isSync ? "animate-spin" : ""} />,
@@ -90,25 +94,26 @@ const ConnectionDetail = ({ isSync, onSyncChange }: ConnectionDetailProps) => {
   }, [config]);
 
   const onConfigDelete = useRecoilCallback(
-    ({ set }) => () => {
-      if (!config?.id) {
-        return;
-      }
+    ({ set }) =>
+      () => {
+        if (!config?.id) {
+          return;
+        }
 
-      set(activeConfigurationAtom, null);
+        set(activeConfigurationAtom, null);
 
-      set(configurationAtom, prevConfigs => {
-        const updatedConfigs = new Map(prevConfigs);
-        updatedConfigs.delete(config.id);
-        return updatedConfigs;
-      });
+        set(configurationAtom, prevConfigs => {
+          const updatedConfigs = new Map(prevConfigs);
+          updatedConfigs.delete(config.id);
+          return updatedConfigs;
+        });
 
-      set(schemaAtom, prevSchemas => {
-        const updatedSchemas = new Map(prevSchemas);
-        updatedSchemas.delete(config.id);
-        return updatedSchemas;
-      });
-    },
+        set(schemaAtom, prevSchemas => {
+          const updatedSchemas = new Map(prevSchemas);
+          updatedSchemas.delete(config.id);
+          return updatedSchemas;
+        });
+      },
     [config?.id]
   );
 
@@ -210,12 +215,16 @@ const ConnectionDetail = ({ isSync, onSyncChange }: ConnectionDetailProps) => {
         <CreateConnection
           onClose={() => setEdit(false)}
           configId={config.id}
-          disabledFields={config.__fileBase ? ["type", "url"] : undefined}
+          disabledFields={
+            config.__fileBase ? ["type", "url", "serviceType"] : undefined
+          }
           initialData={{
             ...(config.connection || {}),
             name: config.displayLabel || config.id,
             url: config.connection?.url,
             type: config.connection?.queryEngine,
+            fetchTimeMs: config.connection?.fetchTimeoutMs,
+            serviceType: config.connection?.serviceType,
           }}
         />
       </Modal>
