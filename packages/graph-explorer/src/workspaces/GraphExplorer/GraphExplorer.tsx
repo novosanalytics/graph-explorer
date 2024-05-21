@@ -19,6 +19,7 @@ import {
   FilterIcon,
   GraphIcon,
   MagicExpandIcon,
+  MultiExpandIcon,
 } from "../../components/icons";
 import GridIcon from "../../components/icons/GridIcon";
 import Workspace from "../../components/Workspace";
@@ -318,6 +319,12 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           icon={<MagicExpandIcon />}
           onPress={toggleSidebar("edge-expand")}
           active={userLayout.activeSidebarItem === "edge-expand"}
+        />
+        <Workspace.SideBar.Button
+          tooltipText={"Multiple Selection"}
+          icon={<MultiExpandIcon />}
+          onPress={toggleSidebar("multi-details")}
+          active={userLayout.activeSidebarItem === "multi-details"}
         />
         <Workspace.SideBar.Button
           tooltipText={t("nodes-styling.title")}

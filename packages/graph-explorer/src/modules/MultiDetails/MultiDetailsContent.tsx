@@ -18,7 +18,7 @@ import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
-import { MultiDetailsFilter } from "./MultiDetailsFilters"
+import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
 import { useExpandNode } from "../../hooks";
 
@@ -106,22 +106,22 @@ const MultiDetailsContent = ({
   const onExpandClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
-      multiVertexId: gListNames,
-      vertexId: vertex.data.id,
-      vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
-      filterByVertexTypes: [selectedMultiType],
-      filterCriteria: filters.map(filter => ({
-        name: filter.name,
-        operator: "LIKE",
-        value: filter.value,
-      })),
-      // TODO - review limit and offset when data is not sorted
-      limit: limit ?? vertex.data.neighborsCount,
-      offset:
-        limit === null
-          ? 0
-          : vertex.data.neighborsCount -
+        multiVertexId: gListNames,
+        vertexId: vertex.data.id,
+        vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
+        filterByVertexTypes: [selectedMultiType],
+        filterCriteria: filters.map(filter => ({
+            name: filter.name,
+            operator: "LIKE",
+            value: filter.value,
+        })),
+        // TODO - review limit and offset when data is not sorted
+        limit: limit ?? vertex.data.neighborsCount,
+        offset: limit === null
+            ? 0
+            : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
+        idType: "string"
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedMultiType, vertex.data, gListNames]);
@@ -131,15 +131,15 @@ const MultiDetailsContent = ({
   const onFullClick = useCallback(async () => {
     setIsExpanding(true);
     await expandNode({
-      vertexId: vertex.data.id,
-      vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
-      // TODO - review limit and offset when data is not sorted
-      limit: limit ?? vertex.data.neighborsCount,
-      offset:
-        limit === null
-          ? 0
-          : vertex.data.neighborsCount -
+        vertexId: vertex.data.id,
+        vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
+        // TODO - review limit and offset when data is not sorted
+        limit: limit ?? vertex.data.neighborsCount,
+        offset: limit === null
+            ? 0
+            : vertex.data.neighborsCount -
             (vertex.data.__unfetchedNeighborCount ?? 0),
+        idType: "string"
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, vertex.data]);

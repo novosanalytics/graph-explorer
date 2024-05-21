@@ -41,10 +41,10 @@ const idType = (id: string | GInt64) => {
     return "number";
 };
 
-const subgraphResult = async (
+const createSubgraph = async (
     gremlinFetch: GremlinFetch,
     req: SubGraphRequest,
-    rawIds: Map<string, "string" | "number">
+    //rawIds: Map<string, "string" | "number">
 ): Promise<SubGraphResponse> => {
     let vertices: SubGraphResponse["vertices"] = []
     let edges: SubGraphResponse["edges"] = []
@@ -94,4 +94,4 @@ const subgraphResult = async (
     return { vertices, edges };
 };
 
-export default subgraphResult;
+export default createSubgraph;

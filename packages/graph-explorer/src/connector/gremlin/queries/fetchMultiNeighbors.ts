@@ -30,10 +30,10 @@ type RawOneHopRequest = {
 const fetchMultiNeighbors = async (
   gremlinFetch: GremlinFetch,
   req: NeighborsRequest,
-  rawIds: Map<string, "string" | "number">
+  //rawIds: Map<string, "string" | "number">
 ): Promise<NeighborsResponse> => {
-  const idType = rawIds.get(req.vertexId) ?? "string";
-  const gremlinTemplate = oneHopTemplate({ ...req, idType });
+  //const idType = rawIds.get(req.vertexId) ?? "string";
+  const gremlinTemplate = oneHopTemplate({ ...req});
   const data = await gremlinFetch<RawOneHopRequest>(gremlinTemplate);
   console.log(`Multi-Expand Query: ${gremlinTemplate}`)
   const rawVertices = data.result.data["@value"]
