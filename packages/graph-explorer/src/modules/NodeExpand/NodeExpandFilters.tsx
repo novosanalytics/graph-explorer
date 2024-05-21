@@ -115,6 +115,15 @@ const NodeExpandFilters = ({
   return (
     <div className={pfx("filters-section")}>
       <div className={pfx("title")}>{t("node-expand.neighbors-of-type")}</div>
+      <Switch
+        className={pfx("item-switch")}
+        labelPosition={"right"}
+        isSelected={searchType === true || false }
+        onChange={() => onSearchChange(!searchType)}
+        //onChange={(v: number | null) => onLimitChange(v ?? 0)} 
+        >
+        {searchType ? "Exact Term Search" : "Partial Term Search"}
+        </Switch>
       <Select
         aria-label={"neighbor type"}
         value={selectedType}
@@ -173,6 +182,10 @@ const NodeExpandFilters = ({
                 }}
                 hideError={true}
                 noMargin={true}
+                placeholder={
+                    //"Date: YYYY-MM-DD"
+                    onPlaceholderChange(filter.name)
+                }
               />
               <IconButton
                 icon={<DeleteIcon />}

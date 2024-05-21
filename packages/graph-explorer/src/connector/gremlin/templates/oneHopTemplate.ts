@@ -34,7 +34,7 @@ const criterionStringTemplate = ({
     name,
     operator,
     value,
-    //searchType,
+    searchType,
   }: Omit<Criterion, "dataType">): string => {
     switch (operator.toLowerCase()) {
       case "eq":

@@ -45,6 +45,8 @@ const NodeExpandContent = ({
   const [selectedType, setSelectedType] = useState<string>(
     neighborsOptions[0]?.value
   );
+
+  const [searchType, setSearchType] = useState<boolean>(true);
   const [filters, setFilters] = useState<Array<NodeExpandFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
@@ -59,6 +61,7 @@ const NodeExpandContent = ({
         name: filter.name,
         operator: "LIKE",
         value: filter.value,
+        searchType: searchType
       })),
       // TODO - review limit and offset when data is not sorted
       limit: limit ?? vertex.data.neighborsCount,
@@ -70,6 +73,23 @@ const NodeExpandContent = ({
     });
     setIsExpanding(false);
   }, [expandNode, filters, limit, selectedType, vertex.data]);
+
+
+  const onFullClick = useCallback(async () => {
+    setIsExpanding(true);
+    await expandNode({
+        vertexId: vertex.data.id,
+        vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
+        // TODO - review limit and offset when data is not sorted
+        limit: limit ?? vertex.data.neighborsCount,
+        offset: limit === null
+            ? 0
+            : vertex.data.neighborsCount -
+            (vertex.data.__unfetchedNeighborCount ?? 0),
+        idType: "string"
+    });
+    setIsExpanding(false);
+  }, [expandNode, filters, limit, vertex.data]);
 
   const displayLabels = useMemo(() => {
     return (vertex.data.types ?? [vertex.data.type])
@@ -132,6 +152,8 @@ const NodeExpandContent = ({
               classNamePrefix={classNamePrefix}
               neighborsOptions={neighborsOptions}
               selectedType={selectedType}
+              searchType={searchType}
+              onSearchChange={setSearchType}
               onSelectedTypeChange={setSelectedType}
               filters={filters}
               onFiltersChange={setFilters}
@@ -172,9 +194,9 @@ const NodeExpandContent = ({
                 !vertex.data.__unfetchedNeighborCount ||
                 !selectedType
               }
-              onPress={onExpandClick}
+              onPress={onFullClick}
             >
-              Expand
+              Full Expand
             </Button>
           </ModuleContainerFooter>
         </>
