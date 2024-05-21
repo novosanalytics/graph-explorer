@@ -2,6 +2,8 @@ import { ConnectionConfig } from "../../core";
 import fetchNeighbors from "./queries/fetchNeighbors";
 import fetchEdgeNeighbors from "./queries/fetchEdgeNeighbors";
 import fetchNeighborsCount from "./queries/fetchNeighborsCount";
+import fetchMultiNeighbors from "./queries/fetchMultiNeighbors";
+import createSubgraph from "./queries/createSubgraph";
 import fetchSchema from "./queries/fetchSchema";
 import fetchVertexTypeCounts from "./queries/fetchVertexTypeCounts";
 import keywordSearch from "./queries/keywordSearch";
@@ -9,6 +11,7 @@ import { fetchDatabaseRequest } from "../fetchDatabaseRequest";
 import { GraphSummary } from "./types";
 import { v4 } from "uuid";
 import { Explorer } from "../useGEFetchTypes";
+
 
 function _gremlinFetch(connection: ConnectionConfig, options: any) {
   return async (queryTemplate: string) => {
@@ -60,7 +63,13 @@ export function createGremlinExplorer(connection: ConnectionConfig): Explorer {
     },
     async fetchEdgeNeighbors(req, options) {
         return fetchEdgeNeighbors(_gremlinFetch(connection, options), req);
-      },
+    },
+    async createSubgraph(req, options) {
+        return createSubgraph(_gremlinFetch(connection, options), req);
+    },
+    async fetchMultiNeighbors(req, options) {
+        return fetchMultiNeighbors(_gremlinFetch(connection, options), req);
+    },
     async fetchNeighborsCount(req, options) {
       return fetchNeighborsCount(_gremlinFetch(connection, options), req);
     },

@@ -290,7 +290,7 @@ export type Explorer = {
     options?: any
   ) => Promise<NeighborsCountResponse>;
   createSubgraph: (
-    req: any, 
+    req: SubGraphRequest, 
     options?: any
     ) => Promise<SubGraphResponse>
   keywordSearch: (

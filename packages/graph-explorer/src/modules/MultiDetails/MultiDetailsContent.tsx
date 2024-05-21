@@ -18,7 +18,7 @@ import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
-import MultiDetailsFilters, { MultiDetailsFilter } from "./MultiDetailsFilters"
+import { MultiDetailsFilter } from "./MultiDetailsFilters"
 import defaultStyles from "./MutliDetailsContent.styles"
 import { useExpandNode } from "../../hooks";
 
