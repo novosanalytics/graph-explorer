@@ -34,3 +34,24 @@ To begin exploring the various data graphs that exist, users need to connect to 
 
 
 ## Nodes and Edges 
+
+The essence of the Graph-Explorer is to be able to visualize the nodes and edges and their details. Within the graph-explorer, the user is able to analyze the details of Nodes (Offers, Drugs, etc..) and Edges (J tables, Network Participation, etc ...) simply by clicking on the object itself and it will be displayed on the Details View.
+
+[Insert Node Image Here] [Insert Edge Image Here]
+
+Further, users can also style the attributes of nodes and edges in the `Nodes Styling` and `Edge Styling` tabs of the sidebar including the naming of the objects on the graph. 
+
+[Insrt Images of Node Styling] [Insert Images of Edge Styling]  
+
+
+The numbers highlighted 
+
+## Expand by Object
+
+With the nodes, the user is able to view the connections on the graph that a given node has and the types of neighbors it has in the  `Expand by Object` tool in the sidebar. 
+
+[Insert small hover image]
+
+In this tool, each type of neighbor with available connections to the given node.
+
+
