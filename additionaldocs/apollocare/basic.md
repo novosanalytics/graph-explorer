@@ -35,7 +35,7 @@ To begin exploring the various data graphs that exist, users need to connect to 
 
 ## Nodes and Edges 
 
-The essence of the Graph-Explorer is to be able to visualize the nodes and edges and their details. Within the graph-explorer, the user is able to analyze the details of Nodes (Offers, Drugs, etc..) and Edges (J tables, Network Participation, etc ...) simply by clicking on the object itself and it will be displayed on the Details View.
+The essence of the Graph-Explorer is to be able to visualize the nodes and edges and their details on the `canvas` of the graph-explorer. Within the graph-explorer, the user is able to analyze the details of Nodes (Offers, Drugs, etc..) and Edges (J tables, Network Participation, etc ...) simply by clicking on the object itself and it will be displayed on the Details View.
 
 [Insert Node Image Here] [Insert Edge Image Here]
 
@@ -44,7 +44,7 @@ Further, users can also style the attributes of nodes and edges in the `Nodes St
 [Insrt Images of Node Styling] [Insert Images of Edge Styling]  
 
 
-The numbers highlighted 
+The numbers displayed on top of the node is the number of neighbors/connections that the node has 
 
 ## Expand by Object
 
@@ -52,6 +52,14 @@ With the nodes, the user is able to view the connections on the graph that a giv
 
 [Insert small hover image]
 
-In this tool, each type of neighbor with available connections to the given node.
+In this tool, each type of neighbor with available connections to the given node is displayed on the right hand side of the `Expand By Object`. From here, the user has several options to view the various neighbors and filter on which neighbors they wish to analyze. A basic connection can be made by choosing the type of neighbor in the drop-down menu in the graph explore followed by pressing on the `Exact Expand` button at the bottom. This will return all possible neighbors of the selected neighbor type.
 
+[Insert Basic Expand here]
 
+The user should note that there is another button on the right called `Full Expand` that will display all possible neighbors for a given node on the `canvas`. Some nodes will have even up to 500 nodes so the user must proceed with caution when doing a `Full Expand` on nodes with greater than 20 neighbor since this will provide 41 objects on the `canvas` for all the nodes and edges.
+
+There are more ways to analyze and find the needed objects with filtering options in the tool. To do so, click the " + " icon on the right hand side of the tool and a form shows below. In this form, this dis
+
+[Insert Filtering Image Here]
+
+The user can assign which attribute out of all possible neighbors to display on the `canvas`, 
