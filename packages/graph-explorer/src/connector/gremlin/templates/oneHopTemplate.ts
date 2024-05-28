@@ -206,9 +206,6 @@ const oneHopTemplate = ({
   }*/
 
 
-  console.log(template);
-
-
   return template;
 };
 
