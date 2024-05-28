@@ -51,7 +51,7 @@ G-E Overhaul Plan:
 
 4. Major Fixes II: Auxillary Fixes
 	i. added Schema object
-	ii. addeed new functions totalFiltered	count
+	ii. added new functions totalFiltered	count
 	iii. added vertexTypeSelector and edgeTypeSelector
 	iv. Creates a config with the schema and makes it active, then renders the `useFiltersConfig` hook.
 	v. Added TestSchema and better Testing
