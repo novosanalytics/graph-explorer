@@ -450,15 +450,16 @@ if (process.env.NEPTUNE_NOTEBOOK === "true") {
     key: fs.readFileSync("./cert-info/server.key"),
     cert: fs.readFileSync("./cert-info/server.crt"),
   };
+  // CHECK THIS BEFORE DEPLOYING
   https.createServer(options, app)
-    .listen(4430, () => {
+    .listen(443, () => {
       proxyLogger.info(`Proxy server located at https://localhost`);
       proxyLogger.info(
         `Graph Explorer live at: ${process.env.GRAPH_CONNECTION_URL}/explorer`
       );
     });
 } else {
-  app.listen(8000
+  app.listen(80
     , () => {
     proxyLogger.info(`Proxy server located at http://localhost`);
   });
