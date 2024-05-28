@@ -8,6 +8,7 @@ Within the graph-explorer, the user can specify a given date on the top of the t
 
 [Insert Date Fixed To Graph Detail here]
 
-Once the user specified their desired date, they can press the "Lock" icon which filters for every node and edge connection that is "Active" (date between `Record Expiration Date` and `Record Active Date` )
+Once the user specified their desired date, they can press the "Lock" icon which filters for every node and edge connection that is "Active" (date between `Record Expiration Date` and `Record Active Date`) which is a `subgraph` of the `canvas`.
 
 [Insert Filtered Results]
+
