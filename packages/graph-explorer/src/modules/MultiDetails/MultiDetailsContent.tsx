@@ -26,7 +26,6 @@ export type MultiDetailsContentProps = {
   classNamePrefix?: string;
   selectedItems: Vertex[];
   vertex:Vertex;
-  odFlag: boolean;
   overDate: string;
 };
 
@@ -34,7 +33,6 @@ const MultiDetailsContent = ({
   classNamePrefix = "ft",
   selectedItems,
   vertex,
-  odFlag,
   overDate
 }: MultiDetailsContentProps) => {
   const config = useConfiguration();

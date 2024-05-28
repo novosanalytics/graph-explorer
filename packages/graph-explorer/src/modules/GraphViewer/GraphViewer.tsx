@@ -1,7 +1,7 @@
 import { cx } from "@emotion/css";
-import { MouseEvent, useCallback, useRef, useState } from "react";
+import { MouseEvent, SetStateAction, useCallback, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Vertex } from "../../@types/entities";
+import { Vertex , Edge } from "../../@types/entities";
 import type { ActionItem, ModuleContainerHeaderProps } from "../../components";
 import {
   LoadingSpinner,
@@ -12,8 +12,7 @@ import {
   ResetIcon,
   ZoomInIcon,
   ZoomOutIcon,
-  Input,
-  Checkbox,
+  Input
 } from "../../components";
 import Card from "../../components/Card";
 import Graph from "../../components/Graph";
@@ -38,7 +37,7 @@ import {
   nodesOutOfFocusIdsAtom,
   nodesSelectedIdsAtom,
 } from "../../core/StateProvider/nodes";
-import { overDateFlagAtom, overDateAtom } from "../../core/StateProvider/overdate";
+import { overDateAtom } from "../../core/StateProvider/overdate";
 import { userLayoutAtom } from "../../core/StateProvider/userPreferences";
 import useWithTheme from "../../core/ThemeProvider/useWithTheme";
 import fade from "../../core/ThemeProvider/utils/fade";
@@ -144,7 +143,6 @@ const GraphViewer = ({
   onEdgeCustomize,
   ...headerProps
 }: GraphViewerProps) => {
-  const [overDateFlag, setOverDateFlag ] = useRecoilState(overDateFlagAtom);
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix("ft");
 
@@ -179,11 +177,6 @@ const GraphViewer = ({
     },
     [setEdgesSelectedIds]
   );
-
-  const onODFlagChange = useCallback(
-    () => {
-    setOverDateFlag(overDateFlag => !overDateFlag);
-  }, [setOverDateFlag]);
 
   const config = useConfiguration();
   const [legendOpen, setLegendOpen] = useState(false);
@@ -338,13 +331,6 @@ const GraphViewer = ({
                 variant={"text"}
                 onPress={() => onFilterByDate(overDate)}
               />
-              <Checkbox
-                aria-label={`Set OverDate Flag?`}
-                isSelected={overDateFlag}
-                onChange={onODFlagChange}
-              >
-                <div className={pfx("set-odf-checkbox")}>Set OverDate?</div>
-              </Checkbox>
             </div>
           }
           variant={"default"}

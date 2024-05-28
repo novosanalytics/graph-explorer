@@ -13,7 +13,7 @@ import {
     edgesSelectedIdsAtom,
     edgesTypesFilteredAtom,
   } from "../../core/StateProvider/edges";
-import { overDateAtom, overDateFlagAtom } from "../../core/StateProvider/overdate";
+import { overDateAtom } from "../../core/StateProvider/overdate";
 import MultiDetailsContent from "./MultiDetailsContent";
 import { Vertex } from "../../@types/entities";
 
@@ -44,7 +44,6 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
         return nodes.find(node => nodesSelectedIds);
       }, [nodes, nodesSelectedIds]);
     
-    const odFlag = useRecoilValue(overDateFlagAtom);
     const overDate = useRecoilValue(overDateAtom);
 
     return (
@@ -65,7 +64,6 @@ const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsPr
             <MultiDetailsContent
             selectedItems={nodesSelected} 
             vertex={leadingNode}
-            odFlag={odFlag}
             overDate={overDate}/>
         )}
         </ModuleContainer>

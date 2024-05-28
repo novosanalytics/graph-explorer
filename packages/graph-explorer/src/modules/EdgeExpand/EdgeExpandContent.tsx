@@ -25,7 +25,6 @@ export type EdgeExpandContentProps = {
   classNamePrefix?: string;
   vertex: Vertex;
   edgeList: Array<string>;
-  odFlag?: boolean;
   overDate?: string; 
 };
 
@@ -33,7 +32,6 @@ const EdgeExpandContent = ({
   classNamePrefix = "ft",
   vertex,
   edgeList,
-  odFlag,
   overDate
 }: EdgeExpandContentProps) => {
   const config = useConfiguration();
@@ -64,7 +62,6 @@ const EdgeExpandContent = ({
       idType: vertex.data.idType,
       vertexType: (vertex.data.types ?? [vertex.data.type])?.join("::"),
       edgeTypes: [selectedType],
-      odFlag: odFlag,
       overdate: overDate,
       filterByVertexTypes: [selectedType],
 
