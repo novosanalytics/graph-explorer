@@ -122,10 +122,6 @@ export type NeighborsRequest = {
      */
     offset?: number;
     /**
-     * Include the date as a required filter
-     */
-    odFlag?: boolean;
-    /**
      * Date to be applied everywhere
      */
     overdate?: string;

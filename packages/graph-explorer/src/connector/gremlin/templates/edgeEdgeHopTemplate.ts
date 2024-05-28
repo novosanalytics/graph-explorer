@@ -105,7 +105,6 @@ const criterionTemplate = (criterion: Criterion): string => {
 
 const edgeEdgeHopTemplate = ({
     vertexId,
-    odFlag,
     overdate,
     filterByVertexTypes = [],
     edgeTypes = [],
