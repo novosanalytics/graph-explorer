@@ -62,4 +62,19 @@ There are more ways to analyze and find the needed objects with filtering option
 
 [Insert Filtering Image Here]
 
-The user can assign which attribute out of all possible neighbors to display on the `canvas`, 
+The user can assign which attribute out of all possible neighbors to display on the `canvas` they would want to filter upon. Sometimes  The filter form is within the format of: 
+
+    - Attribute: Attribute of the neighbor (e.g. Expiration Date, ID, Specific Codes, etc..)
+    - Comparative: Comparative of the data (e.g. <, = , >=, LIKE, etc...)
+    - Input: User input textbox, placeholder provide hints for text 
+
+There is also an option for the user to search when they don't fully all the details. The toggle above changes it between `Exact Term Search` and `Partial Term Search`. By toggling the term search, the user can search across the neighbors for attributes even they don't fully known the text they need,. 
+
+In addition to the type of neighbors that the user would like to find, the user can also filter the number of results from their request in the form below labeled `Limit returned neighbors to`. After pressing the plus(+) icon to set the number of neighbors to display on the `canvas`, no additional steps are required to confirm the limit.
+
+## Multi-Details
+Sometimes users may want to select multiple nodes to see possible intermediary node relationships between two or more nodes exist or finding the possible neighbors of several similar nodes. In the toolbar, there is a feature called `Multi-Details` which allows for `Expand By Object` but expands several node-neighbor relation at once. This has the same form functionality as the `Expand By Object` tool but allows for __ONLY__ multiple nodes of the __SAME__ type (e.g. [Tylenol, Ibuprofen, Aspirin] __NOT__ [CVS, Walgreens, Ibuprofen, Tylenol]). This means taking multiple nodes of the same type can display their connection to any similar nodes as (Example Below)
+
+[Insert PCR-ADZENSYS Example Here]
+
+
