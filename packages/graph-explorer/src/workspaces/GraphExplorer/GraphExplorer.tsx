@@ -309,6 +309,12 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           active={userLayout.activeSidebarItem === "filters"}
         />
         <Workspace.SideBar.Button
+          tooltipText={"Multi-Search"}
+          icon={<ExpandGraphIcon />}
+          onPress={toggleSidebar("multi-search")}
+          active={userLayout.activeSidebarItem === "multi-search"}
+        />
+        <Workspace.SideBar.Button
           tooltipText={"Expand By Object"}
           icon={<ExpandGraphIcon />}
           onPress={toggleSidebar("expand")}

@@ -452,14 +452,14 @@ if (process.env.NEPTUNE_NOTEBOOK === "true") {
   };
   // CHECK THIS BEFORE DEPLOYING
   https.createServer(options, app)
-    .listen(443, () => {
+    .listen(4430, () => {
       proxyLogger.info(`Proxy server located at https://localhost`);
       proxyLogger.info(
         `Graph Explorer live at: ${process.env.GRAPH_CONNECTION_URL}/explorer`
       );
     });
 } else {
-  app.listen(80
+  app.listen(8000
     , () => {
     proxyLogger.info(`Proxy server located at http://localhost`);
   });
