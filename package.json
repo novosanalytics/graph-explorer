@@ -30,7 +30,7 @@
     "@typescript-eslint/parser": "^7.8.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "husky": "^9.0.11",
     "lint-staged": "^13.3.0",
@@ -56,7 +56,7 @@
       "semver@<7.5.2": ">=7.5.2",
       "postcss@<8.4.31": ">=8.4.31",
       "@babel/traverse@<7.23.2": ">=7.23.2",
-      "crypto-js@<4.2.0": ">=4.2.0",
+      "crypto-js@>=4.2.0": ">=4.2.0",
       "@adobe/css-tools@<4.3.2": ">=4.3.2",
       "undici@<5.28.3": ">=5.28.3"
     }
