@@ -25,10 +25,9 @@ export type MultiSearchProp = Omit<
 };
 
 
-// #Multi-Details v0.1: All common nodes shall reflect the necessary neighbors or so.
-//      NO MULTI-TYPE
+// MMulti-Search
 
-const MultiSearch = ({title = "Multi-Details", ...headerProps }: MultiSearchProp) =>{
+const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp) =>{
     const t = useTranslations();
     const nodes = useRecoilValue(nodesAtom);
     const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
@@ -56,8 +55,8 @@ const MultiSearch = ({title = "Multi-Details", ...headerProps }: MultiSearchProp
         {nodesSelectedIds.size === 0 && edgesSelectedIds.size === 0 && (
             <PanelEmptyState
                 icon={<GridIcon />}
-                title={t("multi-details.no-selection-title")}
-                subtitle={t("multi-details.no-selection-subtitle")}
+                title={t("multi-search.no-selection-title")}
+                subtitle={t("multi-search.no-selection-subtitle")}
             />
         )}
         {nodesSelectedIds.size >= 1 && leadingNode && (

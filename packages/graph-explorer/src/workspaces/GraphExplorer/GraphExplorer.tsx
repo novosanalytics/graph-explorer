@@ -20,6 +20,7 @@ import {
   GraphIcon,
   MagicExpandIcon,
   MultiExpandIcon,
+  MultiSearchIcon
 } from "../../components/icons";
 import GridIcon from "../../components/icons/GridIcon";
 import Workspace from "../../components/Workspace";
@@ -47,6 +48,7 @@ import NodesStyling from "../../modules/NodesStyling/NodesStyling";
 import TopBarWithLogo from "../common/TopBarWithLogo";
 import defaultStyles from "./GraphExplorer.styles";
 import MultiDetails from "../../modules/MultiDetails";
+import MultiSearch from "../../modules/MultiSearch";
 
 
 export type GraphViewProps = {
@@ -310,7 +312,7 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
         />
         <Workspace.SideBar.Button
           tooltipText={"Multi-Search"}
-          icon={<ExpandGraphIcon />}
+          icon={<MultiSearchIcon />}
           onPress={toggleSidebar("multi-search")}
           active={userLayout.activeSidebarItem === "multi-search"}
         />

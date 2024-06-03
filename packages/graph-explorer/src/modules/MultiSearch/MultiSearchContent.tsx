@@ -200,8 +200,8 @@ const MultiSearchContent = ({
       {vertex.data.neighborsCount === 0 && (
         <PanelEmptyState
           icon={<GraphIcon />}
-          title={t("multi-details.no-selection-title")}
-          subtitle={t("multi-details.no-connections-subtitle")}
+          title={t("multi-search.no-selection-title")}
+          subtitle={t("multi-search.no-connections-subtitle")}
         />
       )}
       {vertex.data.neighborsCount !== 0 && (
