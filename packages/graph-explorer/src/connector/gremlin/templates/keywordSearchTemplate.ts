@@ -66,6 +66,7 @@ const keywordSearchTemplate = ({
   }
 
   template += `.range(${offset},${offset + limit})`;
+  console.log(template)
   return template;
 };
 

@@ -23,6 +23,7 @@ import {
 } from "../../components";
 import { CarouselRef } from "../../components/Carousel/Carousel";
 import HumanReadableNumberFormatter from "../../components/HumanReadableNumberFormatter";
+import { useNotification } from "../../components/NotificationProvider";
 import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
 import {
   fade,
@@ -39,6 +40,8 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import defaultStyles from "./KeywordSearch.styles";
 import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
+import { multiQueryAtom } from "../../core/StateProvider/multiquery";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 export type KeywordSearchProps = {
   classNamePrefix?: string;
@@ -55,7 +58,7 @@ const KeywordSearch = ({
   const [entities, setEntities] = useEntities();
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
-
+  const { enqueueNotification } = useNotification();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isFocused, setInputFocused] = useState(false);
   const selection = useSet<string>(new Set());
@@ -88,6 +91,16 @@ const KeywordSearch = ({
     },
     []
   );
+
+  //const multiQuery = useRecoilValue(multiQueryAtom);
+  const [multiQuery, setMultiQuery] = useRecoilState(multiQueryAtom);
+
+  const onMultiQueryChange = useCallback(
+    (selectedQuery: object[] | Set<object>) => {
+        setMultiQuery(new Set(selectedQuery));
+    },
+    [setMultiQuery]
+  )
 
   const ref = useClickOutside(onInputFocusChange(false));
   useHotkeys([["Escape", onInputFocusChange(false)]]);
@@ -183,6 +196,8 @@ const KeywordSearch = ({
     return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
   };
 
+
+
   const getNodeSearchedById = (nodeId: string): Vertex | undefined => {
     return searchResults.find(result => result.data.id === nodeId);
   };
@@ -193,6 +208,7 @@ const KeywordSearch = ({
       nodeIdsToAdd.length > 0 ? `(${nodeIdsToAdd.length})` : "";
     return `Add Selected ${numberOfNodesToAdd}`;
   };
+
 
   const handleOnClose = useCallback(() => {
     selection.clear();
@@ -207,6 +223,30 @@ const KeywordSearch = ({
     const numNeighborsLimit = neighborsLimit ? 500 : 0;
     fetchNode(nodes, numNeighborsLimit);
     handleOnClose();
+  };
+
+
+  const handleAddQueries = () => {
+    // __all will be handled by keywordSearchTemplate
+    const svt = selectedVertexType == "__all" ? "ALL" : selectedVertexType
+    if(selectedVertexType == "__all" && (selectedAttribute == "__id" || selectedAttribute == "__all")) {
+        enqueueNotification({
+            title: "Bad Query!",
+            message: "Please Provide either an Attribute or Node Type for a search"
+        });
+        handleOnClose();
+    }
+    const pieceQueryDetails = [svt, selectedAttribute, searchTerm]
+    setMultiQuery(pieceQueryDetails)
+
+
+    //selectedVertexType + selectedAttribute + (exactMatch ? "Exact" : "Partial")
+    //Follows like so: Vertex OR Attribute --> Search term 
+    /**
+     * const queriesToAdd = getQueriesToAdd();
+     * someFunctionToAddToPanel
+     */
+    
   };
 
   const currentTotal = useMemo(() => {
@@ -444,6 +484,14 @@ const KeywordSearch = ({
               className={pfx("refuse-shrink")}
             >
               {addSelectedNodesMessage()}
+            </Button>
+            <Button
+              icon={<AddCircleIcon />}
+              onPress={handleAddQueries}
+              className={pfx("refuse-shrink")}
+            >
+            
+            Add Search Attribute
             </Button>
           </div>
         </Card>

@@ -70,10 +70,10 @@
     "no-selection-subtitle":"Select one or more Nodes to start a list"
   },
   "multi-search": {
-    "multi-search-title":"Current Nodes and Edge List",
-    "multi-search-subtitle":"Select a Node or Edge to create with a list",
+    "multi-search-title":"Current Search List",
+    "multi-search-subtitle":"Select one or more attributes and provide a term to fufill the search",
     "no-selection-title":"No Selection",
-    "no-selection-subtitle":"Select one or more Nodes to start a list"
+    "no-selection-subtitle":"Select one or more attributes and provide a term to fufill the search"
   },
   "entities-tabular": {
     "all-nodes": "All Nodes",

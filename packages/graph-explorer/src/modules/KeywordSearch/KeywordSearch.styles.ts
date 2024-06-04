@@ -43,7 +43,7 @@ const defaultStyles =
       display: flex;
       height: min(600px, 90vh);
       overflow: hidden;
-      max-width: 700px;
+      max-width: 800px;
       padding-top: ${theme.spacing.base};
       position: absolute;
       width: 100vw;
