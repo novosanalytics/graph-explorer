@@ -120,60 +120,6 @@ const MultiSearchContent = ({
           )}
 
           <ModuleContainerFooter>
-          <Button
-              icon={
-                isExpanding ? (
-                  <LoadingSpinner style={{ width: 24, height: 24 }} />
-                ) : (
-                  <MagicExpandIcon />
-                )
-              }
-              variant={"filled"}
-              isDisabled={
-                isExpanding ||
-                !vertex.data.__unfetchedNeighborCount ||
-                !selectedMultiType
-              }
-              onPress={onExpandClick}
-            >
-              Exact Expand
-          </Button>
-          <Button
-              icon={
-                isExpanding ? (
-                  <LoadingSpinner style={{ width: 24, height: 24 }} />
-                ) : (
-                  <MagicExpandIcon />
-                )
-              }
-              variant={"filled"}
-              isDisabled={
-                isExpanding ||
-                !vertex.data.__unfetchedNeighborCount ||
-                !selectedMultiType
-              }
-              onPress={onExpandClick}
-            >
-              Exact Expand
-            </Button>
-            <Button
-              icon={
-                isExpanding ? (
-                  <LoadingSpinner style={{ width: 24, height: 24 }} />
-                ) : (
-                  <ExpandGraphIcon />
-                )
-              }
-              variant={"filled"}
-              isDisabled={
-                isExpanding ||
-                !vertex.data.__unfetchedNeighborCount ||
-                !selectedMultiType
-              }
-              onPress={onFullClick}
-            >
-              Full Expand
-            </Button>
           </ModuleContainerFooter>
         </>
       )}
