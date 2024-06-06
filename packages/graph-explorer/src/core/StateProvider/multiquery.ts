@@ -1,6 +1,14 @@
-import { atom } from "recoil";
+import { atom, selector} from "recoil";
+import type { SubQuery } from "../../@types/subqueries";
 
-export const multiQueryAtom = atom<Set<Object>>({
-    key: "multi-query-atom",
-    default: new Set(), 
+export const subQueriesAtom = atom<Array<SubQuery>>({
+    key: "multi-queries",
+    default: [],
 });
+
+export const subQuerySelector = selector<Array<SubQuery>>({
+    key: "multi-query-selector",
+});
+
+
+

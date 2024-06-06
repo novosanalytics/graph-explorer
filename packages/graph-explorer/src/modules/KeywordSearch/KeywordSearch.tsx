@@ -96,7 +96,7 @@ const KeywordSearch = ({
   const [multiQuery, setMultiQuery] = useRecoilState(multiQueryAtom);
 
   const onMultiQueryChange = useCallback(
-    (selectedQuery: object[] | Set<object>) => {
+    (selectedQuery: Set<string[]>) => {
         setMultiQuery(new Set(selectedQuery));
     },
     [setMultiQuery]
@@ -222,6 +222,7 @@ const KeywordSearch = ({
       .filter(Boolean) as Vertex[];
     const numNeighborsLimit = neighborsLimit ? 500 : 0;
     fetchNode(nodes, numNeighborsLimit);
+
     handleOnClose();
   };
 
@@ -236,6 +237,12 @@ const KeywordSearch = ({
         });
         handleOnClose();
     }
+    const subQueryDetails = {
+        "svt": svt,
+        "selectedAttribute": selectedAttribute,
+        "searchTerm": searchTerm,
+    }
+
     const pieceQueryDetails = [svt, selectedAttribute, searchTerm]
     setMultiQuery(pieceQueryDetails)
 
@@ -487,7 +494,7 @@ const KeywordSearch = ({
             </Button>
             <Button
               icon={<AddCircleIcon />}
-              onPress={handleAddQueries}
+              onPress={(subQuery) => setMultiQuery(subQuery)}
               className={pfx("refuse-shrink")}
             >
             
