@@ -18,6 +18,6 @@ export interface SubQueryData {
      */
 }
 
-export interface SubQuery<T = Record<string, unknown>> {
-    data:SubQueryData & T;
-}
+export type SubQuery<T = Record<string, unknown>> = T & {
+    data: SubQueryData;
+};

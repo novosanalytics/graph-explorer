@@ -19,22 +19,12 @@ export type MultiSearchFilter = {
 
 export type MultiSearchFiltersContentProps = {
   classNamePrefix?: string;
-  neighborsOptions: Array<{ label: string; value: string }>;
-  selectedType: string;
-  onSelectedTypeChange(type: string): void;
-  filters: Array<MultiSearchFilter>;
-  onFiltersChange(filters: Array<MultiSearchFilter>): void;
   limit: number | null;
   onLimitChange(limit: number | null): void;
 }
 
 const MultiSearchFilter =({
   classNamePrefix = "ft",
-  neighborsOptions,
-  selectedType,
-  onSelectedTypeChange,
-  filters,
-  onFiltersChange,
   limit,
   onLimitChange
 }: MultiSearchFiltersContentProps) => {

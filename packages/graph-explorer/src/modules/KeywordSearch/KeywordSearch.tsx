@@ -40,7 +40,7 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import defaultStyles from "./KeywordSearch.styles";
 import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
-import { multiQueryAtom } from "../../core/StateProvider/multiquery";
+import { subQueriesAtom } from "../../core/StateProvider/subquery";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 export type KeywordSearchProps = {

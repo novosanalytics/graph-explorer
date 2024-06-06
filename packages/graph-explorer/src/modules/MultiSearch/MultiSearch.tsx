@@ -5,17 +5,11 @@ import { GridIcon, ModuleContainer, ModuleContainerHeader } from "../../componen
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import useTranslations from "../../hooks/useTranslations";
 import { 
-    nodesAtom,
-    nodesSelectedIdsAtom, 
-} from "../../core/StateProvider/nodes";
-import {
-    edgesAtom,
-    edgesSelectedIdsAtom,
-    edgesTypesFilteredAtom,
-  } from "../../core/StateProvider/edges";
-import { overDateAtom } from "../../core/StateProvider/overdate";
+    subQueriesAtom, 
+    //subQuerySelector 
+} from "../../core/StateProvider/subquery"
 import MultiSearchContent from "./MultiSearchContent";
-import { Vertex } from "../../@types/entities";
+import { SubQuery } from "../../@types/subqueries";
 
 export type MultiSearchProp = Omit<
     ModuleContainerHeaderProps,
@@ -25,15 +19,18 @@ export type MultiSearchProp = Omit<
 };
 
 
-// MMulti-Search
-
 const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp) =>{
     const t = useTranslations();
-    const nodes = useRecoilValue(nodesAtom);
-    const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
-    const edgesSelectedIds = useRecoilValue(edgesSelectedIdsAtom)
-    const nodesSelected: Vertex[] = [];
-    nodes.forEach(nItem => {
+    const subQuery = useRecoilValue(subQueriesAtom);
+    const subQueriesSelected: SubQuery[] = [];
+    subQuery.forEach(sqItem => {
+        subQueriesSelected.push(sqItem)
+    })
+
+    //const nodes = useRecoilValue(nodesAtom);
+    //const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
+    //const nodesSelected: Vertex[] = [];
+    /*nodes.forEach(nItem => {
         if (nodesSelectedIds.has(nItem.data.id)){
             nodesSelected.push(nItem)
         }
@@ -44,7 +41,7 @@ const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp)
       }, [nodes, nodesSelectedIds]);
     
     const overDate = useRecoilValue(overDateAtom);
-
+    */ 
     return (
         <ModuleContainer>
             <ModuleContainerHeader
@@ -52,18 +49,17 @@ const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp)
             variant={"sidebar"}
             {...headerProps}
         />
-        {nodesSelectedIds.size === 0 && edgesSelectedIds.size === 0 && (
+        {subQuery.size === 0 && (
             <PanelEmptyState
                 icon={<GridIcon />}
                 title={t("multi-search.no-selection-title")}
                 subtitle={t("multi-search.no-selection-subtitle")}
             />
         )}
-        {nodesSelectedIds.size >= 1 && leadingNode && (
+        {subQuery.size >= 1 && (
             <MultiSearchContent
-            selectedItems={nodesSelected} 
-            vertex={leadingNode}
-            overDate={overDate}/>
+            selectedQueries={subQueriesSelected}
+            />
         )}
         </ModuleContainer>
     );
