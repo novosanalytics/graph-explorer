@@ -20,6 +20,7 @@ import { escapeString } from "../../../utils";
  *  )
  *  .range(0, 100)
  */
+
 const keywordSearchTemplate = ({
   searchTerm,
   vertexTypes = [],

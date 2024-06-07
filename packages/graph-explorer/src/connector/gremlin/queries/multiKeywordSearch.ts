@@ -1,6 +1,6 @@
 import type {
   ErrorResponse,
-  KeywordSearchRequest,
+  MultiKeywordSearchRequest,
   KeywordSearchResponse,
 } from "../../useGEFetchTypes";
 import isErrorResponse from "../../utils/isErrorResponse";
@@ -20,9 +20,9 @@ type RawKeySearchResponse = {
   };
 };
 
-const keywordSearch = async (
+const multiKeywordSearch = async (
   gremlinFetch: GremlinFetch,
-  req: KeywordSearchRequest
+  req: MultiKeywordSearchRequest
 ): Promise<KeywordSearchResponse> => {
   const gremlinTemplate = keywordSearchTemplate(req);
   const data = await gremlinFetch<RawKeySearchResponse | ErrorResponse>(
@@ -40,5 +40,4 @@ const keywordSearch = async (
   return { vertices };
 };
 
-export default keywordSearch;
-
+export default multiKeywordSearch;

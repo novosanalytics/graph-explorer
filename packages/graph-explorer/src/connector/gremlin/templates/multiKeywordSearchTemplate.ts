@@ -1,5 +1,5 @@
 import uniq from "lodash/uniq";
-import type { KeywordSearchRequest } from "../../useGEFetchTypes";
+import type {KeywordSearchRequest, MultiKeywordSearchRequest } from "../../useGEFetchTypes";
 import { escapeString } from "../../../utils";
 
 /**
@@ -20,42 +20,37 @@ import { escapeString } from "../../../utils";
  *  )
  *  .range(0, 100)
  */
-const keywordSearchTemplate = ({
-  searchTerm,
-  vertexTypes = [],
-  searchById = true,
-  searchByAttributes = [],
-  limit = 10,
-  offset = 0,
-  exactMatch = false,
-}: KeywordSearchRequest): string => {
-  let template = "g.V()";
 
-  if (vertexTypes.length !== 0) {
-    const hasLabelContent = vertexTypes
+const keywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest): string => {
+    let template = "g.V()";
+    let firstSearch = multiKeywordSearch[0]
+    if (firstSearch.vertexTypes?.length !== 0) {
+    const hasLabelContent = firstSearch.vertexTypes
       .flatMap(type => type.split("::"))
       .map(type => `"${type}"`)
       .join(",");
     template += `.hasLabel(${hasLabelContent})`;
-  }
+    }
 
-  if (Boolean(searchTerm) && (searchByAttributes.length !== 0 || searchById)) {
-    const escapedSearchTerm = escapeString(searchTerm);
+    const orContent =``
 
-    const orContent = uniq(
-      searchById && searchByAttributes.includes("__all")
-        ? ["__id", ...searchByAttributes]
-        : searchByAttributes
-    )
+    multiKeywordSearch.forEach(function (subKey){
+        const escapedSearchTerm = escapeString(subKey.searchTerm)
+
+        const subOrContent = uniq(
+        subKey.searchByAttributes.includes("__all")
+            ? ["__id", ...subKey.searchByAttributes]
+            : subKey.searchByAttributes
+        )
       .filter(attr => attr !== "__all")
       .map(attr => {
         if (attr === "__id") {
-          if (exactMatch === true) {
+          if (subKey.exactMatch === true) {
             return `has(id,"${escapedSearchTerm}")`;
           }
           return `has(id,containing("${escapedSearchTerm}"))`;
         }
-        if (exactMatch === true) {
+        if (subKey.exactMatch === true) {
           return `has("${attr}","${escapedSearchTerm}")`;
         }
         return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
@@ -63,9 +58,9 @@ const keywordSearchTemplate = ({
       .join(",");
 
     template += `.or(${orContent})`;
-  }
-
-  template += `.range(${offset},${offset + limit})`;
+    })
+    
+  template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
   console.log(template)
   return template;
 };
