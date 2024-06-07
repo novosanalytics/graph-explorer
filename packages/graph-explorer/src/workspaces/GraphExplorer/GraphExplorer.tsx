@@ -372,7 +372,7 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
             <EdgeExpand onClose={closeSidebar} />
           )}
           {userLayout.activeSidebarItem === "multi-search" && (
-            <MultiDetails onClose={closeSidebar} />
+            <MultiSearch onClose={closeSidebar} />
           )}
           {userLayout.activeSidebarItem === "multi-details" && (
             <MultiDetails onClose={closeSidebar} />
