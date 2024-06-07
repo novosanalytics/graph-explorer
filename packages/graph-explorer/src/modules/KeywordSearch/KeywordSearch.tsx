@@ -93,13 +93,13 @@ const KeywordSearch = ({
   );
 
   //const multiQuery = useRecoilValue(multiQueryAtom);
-  const [multiQuery, setMultiQuery] = useRecoilState(multiQueryAtom);
+  const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
 
   const onMultiQueryChange = useCallback(
     (selectedQuery: Set<string[]>) => {
-        setMultiQuery(new Set(selectedQuery));
+        setSubQuery(new Set(selectedQuery));
     },
-    [setMultiQuery]
+    [setSubQuery]
   )
 
   const ref = useClickOutside(onInputFocusChange(false));

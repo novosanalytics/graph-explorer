@@ -20,7 +20,7 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
-import { useExpandNode } from "../../hooks";
+import { useExpandNode, useFetchNode } from "../../hooks";
 import { SubQuery } from "../../@types/subqueries";
 
 export type MultiSearchContentProps = {
@@ -37,6 +37,7 @@ const MultiSearchContent = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
+  const fetchNode = useFetchNode()
 
   //const [isExpanding, setIsExpanding] = useState(false); // this isn't super necessary
   //const neighborsOptions = useNeighborsOptions(vertex);
@@ -46,6 +47,12 @@ const MultiSearchContent = ({
   //);
   //const [filters, setFilters] = useState<Array<MultiSearchFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
+
+  const onSearchQueries = useCallback(async () => {
+    await fetchNode({
+        
+    })
+  })
   
   // Try merging or something, let's make a detailed node type inspector
   let collectQueries: AdvancedListItemType<any>[] = [];
@@ -118,6 +125,15 @@ const MultiSearchContent = ({
               onLimitChange={setLimit}
             />
           )}
+          <Button
+            icon={
+                <MagicExpandIcon/>
+            }
+            variant={"filled"}
+            onPress={onExpandClick}
+            >
+                Search SubQueries 
+          </Button>
 
           <ModuleContainerFooter>
           </ModuleContainerFooter>
