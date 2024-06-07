@@ -7,7 +7,7 @@ import useTranslations from "../../hooks/useTranslations";
 import { 
     subQueriesAtom, 
     //subQuerySelector 
-} from "../../core/StateProvider/subquery"
+    } from "../../core/StateProvider/subquery"
 import MultiSearchContent from "./MultiSearchContent";
 import { SubQuery } from "../../@types/subqueries";
 
