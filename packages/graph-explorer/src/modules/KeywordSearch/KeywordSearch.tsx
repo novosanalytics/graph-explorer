@@ -42,6 +42,7 @@ import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
 import { subQueriesAtom } from "../../core/StateProvider/subquery";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { SubQuery } from "../../@types/subqueries";
 
 export type KeywordSearchProps = {
   classNamePrefix?: string;
@@ -96,7 +97,7 @@ const KeywordSearch = ({
   const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
 
   const onMultiQueryChange = useCallback(
-    (selectedQuery: Set<string[]>) => {
+    (selectedQuery: SubQuery[]) => {
         setSubQuery(new Set(selectedQuery));
     },
     [setSubQuery]
@@ -244,7 +245,7 @@ const KeywordSearch = ({
     }
 
     const pieceQueryDetails = [svt, selectedAttribute, searchTerm]
-    setMultiQuery(pieceQueryDetails)
+    setSubQuery()
 
 
     //selectedVertexType + selectedAttribute + (exactMatch ? "Exact" : "Partial")

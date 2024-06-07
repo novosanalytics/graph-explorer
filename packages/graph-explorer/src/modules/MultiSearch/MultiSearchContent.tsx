@@ -50,9 +50,10 @@ const MultiSearchContent = ({
 
   const onSearchQueries = useCallback(async () => {
     await fetchNode({
-        
+        nodeOrNodes: null, 
+        limit: limit || 500,
     })
-  })
+  }, [fetchNode, limit])
   
   // Try merging or something, let's make a detailed node type inspector
   let collectQueries: AdvancedListItemType<any>[] = [];
@@ -130,7 +131,7 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={onExpandClick}
+            onPress={onSearchQueries}
             >
                 Search SubQueries 
           </Button>
