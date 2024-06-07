@@ -244,8 +244,6 @@ const KeywordSearch = ({
         "searchTerm": searchTerm,
     }
 
-    const pieceQueryDetails = [svt, selectedAttribute, searchTerm]
-    setSubQuery()
 
 
     //selectedVertexType + selectedAttribute + (exactMatch ? "Exact" : "Partial")
@@ -495,7 +493,7 @@ const KeywordSearch = ({
             </Button>
             <Button
               icon={<AddCircleIcon />}
-              onPress={(subQuery) => setMultiQuery(subQuery)}
+              onPress={(subQuery) => setSubQuery(subQuery)}
               className={pfx("refuse-shrink")}
             >
             

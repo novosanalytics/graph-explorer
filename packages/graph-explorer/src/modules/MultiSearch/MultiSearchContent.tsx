@@ -21,6 +21,7 @@ import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
 import { useExpandNode, useFetchNode } from "../../hooks";
+import useKeywordSearch from "./useKeywordSearch";
 import { SubQuery } from "../../@types/subqueries";
 
 export type MultiSearchContentProps = {
@@ -48,12 +49,9 @@ const MultiSearchContent = ({
   //const [filters, setFilters] = useState<Array<MultiSearchFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
-  const onSearchQueries = useCallback(async () => {
-    await fetchNode({
-        nodeOrNodes: null, 
-        limit: limit || 500,
-    })
-  }, [fetchNode, limit])
+  const onSearchQueries = useCallback(async () => {}, [])
+//    await 
+
   
   // Try merging or something, let's make a detailed node type inspector
   let collectQueries: AdvancedListItemType<any>[] = [];
