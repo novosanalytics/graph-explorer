@@ -93,15 +93,7 @@ const KeywordSearch = ({
     []
   );
 
-  //const multiQuery = useRecoilValue(multiQueryAtom);
   const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
-
-  const onMultiQueryChange = useCallback(
-    (selectedQuery: SubQuery[]) => {
-        setSubQuery(new Set(selectedQuery));
-    },
-    [setSubQuery]
-  )
 
   const ref = useClickOutside(onInputFocusChange(false));
   useHotkeys([["Escape", onInputFocusChange(false)]]);
@@ -139,7 +131,7 @@ const KeywordSearch = ({
           endAdornment: entities.nodes.find(
             n => n.data.id === vertex.data.id
           ) ? (
-            <IconButton
+            <IconButton 
               tooltipText={"Remove from canvas"}
               icon={
                 <RemoveFromCanvasIcon className={pfx("graph-remove-icon")} />
@@ -225,34 +217,6 @@ const KeywordSearch = ({
     fetchNode(nodes, numNeighborsLimit);
 
     handleOnClose();
-  };
-
-
-  const handleAddQueries = () => {
-    // __all will be handled by keywordSearchTemplate
-    const svt = selectedVertexType == "__all" ? "ALL" : selectedVertexType
-    if(selectedVertexType == "__all" && (selectedAttribute == "__id" || selectedAttribute == "__all")) {
-        enqueueNotification({
-            title: "Bad Query!",
-            message: "Please Provide either an Attribute or Node Type for a search"
-        });
-        handleOnClose();
-    }
-    const subQueryDetails = {
-        "svt": svt,
-        "selectedAttribute": selectedAttribute,
-        "searchTerm": searchTerm,
-    }
-
-
-
-    //selectedVertexType + selectedAttribute + (exactMatch ? "Exact" : "Partial")
-    //Follows like so: Vertex OR Attribute --> Search term 
-    /**
-     * const queriesToAdd = getQueriesToAdd();
-     * someFunctionToAddToPanel
-     */
-    
   };
 
   const currentTotal = useMemo(() => {
@@ -493,7 +457,16 @@ const KeywordSearch = ({
             </Button>
             <Button
               icon={<AddCircleIcon />}
-              onPress={(subQuery) => setSubQuery(subQuery)}
+              onPress={() => {
+                setSubQuery(prev => ({
+                    ...prev,
+                    subQuery:{
+                        selectedVertexType:selectedVertexType,
+                        attribute:selectedAttribute,
+                        searchTerm:searchTerm,
+                    },
+                  }));
+              }}
               className={pfx("refuse-shrink")}
             >
             

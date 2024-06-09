@@ -49,7 +49,11 @@ const MultiSearchContent = ({
   //const [filters, setFilters] = useState<Array<MultiSearchFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
-  const onSearchQueries = useCallback(async () => {}, [])
+  const onSearchQueries = useCallback(async () => {
+
+    //await 
+
+  }, [])
 //    await 
 
   
@@ -110,13 +114,7 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-        {selectedQueries.length === 0 && (
-            <PanelEmptyState
-            icon={<GraphIcon />}
-            title={t("multi-search.no-selection-title")}
-            subtitle={t("multi-search.no-connections-subtitle")}
-            />
-        )}
+
         {!!(selectedQueries.length > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
@@ -129,7 +127,9 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={onSearchQueries}
+            onPress={()=>{
+                set
+            }}
             >
                 Search SubQueries 
           </Button>
