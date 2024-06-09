@@ -128,7 +128,7 @@ const MultiSearchContent = ({
             }
             variant={"filled"}
             onPress={()=>{
-                set
+                console.log("Test")
             }}
             >
                 Search SubQueries 

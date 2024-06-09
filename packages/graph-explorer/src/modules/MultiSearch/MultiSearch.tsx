@@ -23,25 +23,11 @@ const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp)
     const t = useTranslations();
     const subQuery = useRecoilValue(subQueriesAtom);
     const subQueriesSelected: SubQuery[] = [];
+    console.log(`${subQuery.values}`)
     subQuery.forEach(sqItem => {
         subQueriesSelected.push(sqItem)
     })
 
-    //const nodes = useRecoilValue(nodesAtom);
-    //const nodesSelectedIds = useRecoilValue(nodesSelectedIdsAtom)
-    //const nodesSelected: Vertex[] = [];
-    /*nodes.forEach(nItem => {
-        if (nodesSelectedIds.has(nItem.data.id)){
-            nodesSelected.push(nItem)
-        }
-    })
-
-    const leadingNode = useMemo(() => {
-        return nodes.find(node => nodesSelectedIds);
-      }, [nodes, nodesSelectedIds]);
-    
-    const overDate = useRecoilValue(overDateAtom);
-    */ 
     return (
         <ModuleContainer>
             <ModuleContainerHeader
