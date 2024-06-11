@@ -219,6 +219,21 @@ const KeywordSearch = ({
     handleOnClose();
   };
 
+  const addSubQuery = () => {
+    setSubQuery((prev) => {
+        console.log(prev);
+        const newSubQuery = {
+            selectedVertexType:selectedVertexType,
+            attribute:selectedAttribute,
+            searchTerm:searchTerm,
+        }
+        console.log('New SubQuery:', newSubQuery);
+        const updatedSubQueries = new Set([...prev, newSubQuery]);
+        console.log('Updated SubQueries:', updatedSubQueries);
+        return updatedSubQueries;
+      });    
+  }
+
   const currentTotal = useMemo(() => {
     if (!config?.vertexTypes.length) {
       return null;
@@ -457,16 +472,7 @@ const KeywordSearch = ({
             </Button>
             <Button
               icon={<AddCircleIcon />}
-              onPress={() => {
-                setSubQuery(prev => ({
-                    ...prev,
-                    subQuery:{
-                        selectedVertexType:selectedVertexType,
-                        attribute:selectedAttribute,
-                        searchTerm:searchTerm,
-                    },
-                  }));
-              }}
+              onPress={addSubQuery} //Ok I don't get this... why does void items work but inline function?
               className={pfx("refuse-shrink")}
             >
             

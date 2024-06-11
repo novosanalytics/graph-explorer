@@ -12,6 +12,10 @@ export interface SubQueryData {
     /**
      * Attribute for the query
      */
+    exactMatch?: boolean
+    /**
+     * Exact or Partial match
+     */
     searchTerm: string;
     /**
      * Search term for the query

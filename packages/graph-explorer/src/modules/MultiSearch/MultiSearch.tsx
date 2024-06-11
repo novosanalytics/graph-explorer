@@ -22,11 +22,11 @@ export type MultiSearchProp = Omit<
 const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp) =>{
     const t = useTranslations();
     const subQuery = useRecoilValue(subQueriesAtom);
-    const subQueriesSelected: SubQuery[] = [];
-    console.log(`${subQuery.values}`)
-    subQuery.forEach(sqItem => {
-        subQueriesSelected.push(sqItem)
-    })
+    //const subQueriesSelected: SubQuery[] = [];
+    console.log(`${subQuery.size}`)
+    //subQuery.forEach(sqItem => {
+    //    subQueriesSelected.push(sqItem)
+    //})
 
     return (
         <ModuleContainer>
@@ -44,7 +44,7 @@ const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp)
         )}
         {subQuery.size >= 1 && (
             <MultiSearchContent
-            selectedQueries={subQueriesSelected}
+            selectedQueries={subQuery}
             />
         )}
         </ModuleContainer>

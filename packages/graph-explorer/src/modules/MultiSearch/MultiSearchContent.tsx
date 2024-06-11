@@ -26,7 +26,7 @@ import { SubQuery } from "../../@types/subqueries";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
-  selectedQueries:SubQuery[] ;
+  selectedQueries: Set<SubQuery> ;
 };
 
 const MultiSearchContent = ({
@@ -39,40 +39,29 @@ const MultiSearchContent = ({
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
   const fetchNode = useFetchNode()
-
-  //const [isExpanding, setIsExpanding] = useState(false); // this isn't super necessary
-  //const neighborsOptions = useNeighborsOptions(vertex);
-  //const selectedNeighborOptions = useNeighborsOptions(selectedItems[0])
-  //const [selectedType, setSelectedType] = useState<string>(
-  //  neighborsOptions[0]?.value
-  //);
-  //const [filters, setFilters] = useState<Array<MultiSearchFilter>>([]);
   const [limit, setLimit] = useState<number | null>(null);
 
   const onSearchQueries = useCallback(async () => {
 
     //await 
 
-  }, [])
-//    await 
-
-  
-  // Try merging or something, let's make a detailed node type inspector
+  }, []);
   let collectQueries: AdvancedListItemType<any>[] = [];
+  console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
     collectQueries.push({
-        id: [
-            sQItem.data.selectedVertexType,
-            sQItem.data.attribute,
-            sQItem.data.searchTerm
-            ].toString(),
-        title: [
-            sQItem.data.selectedVertexType,
-            sQItem.data.attribute,
-            sQItem.data.searchTerm
-            ].toString(),
-    })
-  })
+        id: `
+            Selected Vertex: ${sQItem.selectedVertexType.replace("/__/gi", "")},
+            Attribute:  ${sQItem.attribute.replace("/__/gi", "")},
+            Attribute:  ${sQItem.searchTerm.replace("/__/gi", "")}, 
+        `,
+        title: `
+        Selected Vertex: ${sQItem.selectedVertexType.replace("/__/gi", "")},
+        Attribute:  ${sQItem.attribute.replace("/__/gi", "")},
+        Attribute:  ${sQItem.searchTerm.replace("/__/gi", "")}, 
+        `,
+    });
+  });
 
 /**
  *  CHANGE TO MULTI-SEARCH ICON
@@ -115,7 +104,7 @@ const MultiSearchContent = ({
             defaultItemType={"graph-viewer__node"}
           />
 
-        {!!(selectedQueries.length > 0) && (
+        {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
               limit={limit}
