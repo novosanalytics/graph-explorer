@@ -226,6 +226,7 @@ const KeywordSearch = ({
             selectedVertexType:selectedVertexType,
             attribute:selectedAttribute,
             searchTerm:searchTerm,
+            exactMatch: exactMatch,
         }
         console.log('New SubQuery:', newSubQuery);
         const updatedSubQueries = new Set([...prev, newSubQuery]);

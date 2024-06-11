@@ -12,7 +12,7 @@ export interface SubQueryData {
     /**
      * Attribute for the query
      */
-    exactMatch?: boolean
+    exactMatch: boolean
     /**
      * Exact or Partial match
      */

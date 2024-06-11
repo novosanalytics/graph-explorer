@@ -49,18 +49,18 @@ const MultiSearchContent = ({
   let collectQueries: AdvancedListItemType<any>[] = [];
   console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
-    collectQueries.push({
-        id: `
-            Selected Vertex: ${sQItem.selectedVertexType.replace("/__/gi", "")},
-            Attribute:  ${sQItem.attribute.replace("/__/gi", "")},
-            Attribute:  ${sQItem.searchTerm.replace("/__/gi", "")}, 
+    return collectQueries.push({
+          id: `
+            Attribute:  ${textTransform(sQItem.attribute)},
+            Search Term:  ${sQItem.searchTerm},
+            Precision:  ${sQItem.exactMatch ? "Exact" : "Partial"}
         `,
-        title: `
-        Selected Vertex: ${sQItem.selectedVertexType.replace("/__/gi", "")},
-        Attribute:  ${sQItem.attribute.replace("/__/gi", "")},
-        Attribute:  ${sQItem.searchTerm.replace("/__/gi", "")}, 
+          title: `
+        Attribute:  ${textTransform(sQItem.attribute)},
+        Search Term:  ${sQItem.searchTerm},
+        Precision:  ${sQItem.exactMatch ? "Exact" : "Partial"}
         `,
-    });
+      });
   });
 
 /**
