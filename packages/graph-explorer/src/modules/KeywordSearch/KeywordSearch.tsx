@@ -221,7 +221,6 @@ const KeywordSearch = ({
 
   const addSubQuery = () => {
     setSubQuery((prev) => {
-        console.log(prev);
         const newSubQuery = {
             selectedVertexType:selectedVertexType,
             attribute:selectedAttribute,

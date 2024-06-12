@@ -43,6 +43,7 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
 
     .${pfx}-selected-items-advanced-list {
       width: 500px;
+      height: 70px;
       background: ${theme.palette.background.default};
       .${pfx}-advanced-list-item {
         background: ${theme.palette.background.secondary};

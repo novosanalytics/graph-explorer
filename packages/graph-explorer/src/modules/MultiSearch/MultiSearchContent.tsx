@@ -5,6 +5,7 @@ import {
     AdvancedListItemType,
     ModuleContainerFooter, 
     MagicExpandIcon,
+    DeleteIcon,
     VertexIcon } from "../../components";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -23,6 +24,7 @@ import defaultStyles from "./MutliSearchContent.styles"
 import { useExpandNode, useFetchNode } from "../../hooks";
 import useKeywordSearch from "./useKeywordSearch";
 import { SubQuery } from "../../@types/subqueries";
+import useManageElementsLock from "../../components/Graph/hooks/useManageElementsLock";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -62,6 +64,14 @@ const MultiSearchContent = ({
         `,
       });
   });
+
+  const onSubQueryRemove = useCallback(
+    (searchTerm: string) => {
+        const updatedSubQueries = selectedQueries.delete();
+        collectQueries = updatedSubQueries;
+    },
+    [collectQueries]
+  )
 
 /**
  *  CHANGE TO MULTI-SEARCH ICON
@@ -111,6 +121,17 @@ const MultiSearchContent = ({
               onLimitChange={setLimit}
             />
           )}
+          <Button
+            icon={
+                <DeleteIcon/>
+            }
+            variant={"filled"}
+            onPress={()=>{
+                console.log("Test")
+            }}
+            >
+                Delete Subquery 
+          </Button>
           <Button
             icon={
                 <MagicExpandIcon/>

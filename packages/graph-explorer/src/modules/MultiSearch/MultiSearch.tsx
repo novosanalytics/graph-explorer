@@ -22,12 +22,7 @@ export type MultiSearchProp = Omit<
 const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp) =>{
     const t = useTranslations();
     const subQuery = useRecoilValue(subQueriesAtom);
-    //const subQueriesSelected: SubQuery[] = [];
-    console.log(`${subQuery.size}`)
-    //subQuery.forEach(sqItem => {
-    //    subQueriesSelected.push(sqItem)
-    //})
-
+    
     return (
         <ModuleContainer>
             <ModuleContainerHeader
