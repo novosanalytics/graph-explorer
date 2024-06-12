@@ -43,11 +43,15 @@ const MultiSearchContent = ({
   const fetchNode = useFetchNode()
   const [limit, setLimit] = useState<number | null>(null);
 
+  let nodes = Vertex[];
+
+
   const onSearchQueries = useCallback(async () => {
 
-    //await 
-
-  }, []);
+    await fetchNode({
+        nodesOrNodes: nodes
+    })
+  }, [fetchNode, limit]);
   let collectQueries: AdvancedListItemType<any>[] = [];
   console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
@@ -67,8 +71,8 @@ const MultiSearchContent = ({
 
   const onSubQueryRemove = useCallback(
     (searchTerm: string) => {
-        const updatedSubQueries = selectedQueries.delete();
-        collectQueries = updatedSubQueries;
+        console.log("test")
+        //collectQueries = updatedSubQueries;
     },
     [collectQueries]
   )
@@ -137,9 +141,7 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={()=>{
-                console.log("Test")
-            }}
+            onPress={onSearchQueries}
             >
                 Search SubQueries 
           </Button>
