@@ -22,9 +22,11 @@ import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
 import { useExpandNode, useFetchNode } from "../../hooks";
-import useKeywordSearch from "./useKeywordSearch";
+import useKeywordSearch from "../KeywordSearch/useKeywordSearch"
+import useMultiQueryFetch from "../../hooks";
 import { SubQuery } from "../../@types/subqueries";
 import useManageElementsLock from "../../components/Graph/hooks/useManageElementsLock";
+import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -40,10 +42,11 @@ const MultiSearchContent = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
-  const fetchNode = useFetchNode()
+  const fetchNode = useFetchNode();
+  const multiQueryFetch = useMultiQueryFetch();
   const [limit, setLimit] = useState<number | null>(null);
 
-  let nodes = Vertex[];
+/*  let nodes = Vertex[];
 
 
   const onSearchQueries = useCallback(async () => {
@@ -51,7 +54,7 @@ const MultiSearchContent = ({
     await fetchNode({
         nodesOrNodes: nodes
     })
-  }, [fetchNode, limit]);
+  }, [fetchNode, limit]);*/
   let collectQueries: AdvancedListItemType<any>[] = [];
   console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
@@ -70,12 +73,15 @@ const MultiSearchContent = ({
   });
 
   const onSubQueryRemove = useCallback(
-    (searchTerm: string) => {
-        console.log("test")
+    async (searchTerm: string) => {
         //collectQueries = updatedSubQueries;
     },
     [collectQueries]
   )
+
+  const searchAllQueries = useCallback(async () =>{
+    await keywordSearch
+  });
 
 /**
  *  CHANGE TO MULTI-SEARCH ICON
@@ -141,7 +147,9 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={onSearchQueries}
+            onPress={() => {
+                console.log("test")
+            }}
             >
                 Search SubQueries 
           </Button>
