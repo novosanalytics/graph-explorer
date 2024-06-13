@@ -5,6 +5,7 @@ import { useConfiguration } from "../../core";
 import useDebounceValue from "../../hooks/useDebounceValue";
 import useTextTransform from "../../hooks/useTextTransform";
 import { useKeywordSearchQuery } from "./useKeywordSearchQuery";
+import { useMultiQueryFetch } from "./useMultiQueryFetch";
 
 export interface PromiseWithCancel<T> extends Promise<T> {
   cancel?: () => void;
@@ -32,6 +33,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   ];
   // Sparql uses rdfs:label, not ID
   const allowsIdSearch = config?.connection?.queryEngine !== "sparql";
+
 
   const vertexOptions = useMemo(() => {
     const vertexOps =
@@ -199,6 +201,13 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     setNeighborsLimit(true);
   }, [selectedVertexType, defaultSearchAttribute]);
 
+
+  const { multiData } = useMultiQueryFetch({
+
+  });
+ 
+  let finalData = !multiData ? data : multiData 
+
   return {
     isFetching,
     debouncedSearchTerm,
@@ -216,7 +225,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     onExactMatchChange,
     neighborsLimit,
     onNeighborsLimitChange,
-    searchResults: data?.vertices || [],
+    searchResults: finalData?.vertices || [],
     cancelAll,
   };
 };

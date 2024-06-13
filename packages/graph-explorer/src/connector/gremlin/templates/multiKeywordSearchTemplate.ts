@@ -21,7 +21,7 @@ import { escapeString } from "../../../utils";
  *  .range(0, 100)
  */
 
-const keywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest): string => {
+const multiKeywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest): string => {
     let template = "g.V()";
     let firstSearch = multiKeywordSearch[0]
     if (firstSearch.vertexTypes?.length !== 0) {
@@ -31,19 +31,16 @@ const keywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest):
       .join(",");
     template += `.hasLabel(${hasLabelContent})`;
     }
-
-    const orContent =``
-
+    template += `.and(`
     multiKeywordSearch.forEach(function (subKey){
         const escapedSearchTerm = escapeString(subKey.searchTerm)
-
-        const subOrContent = uniq(
+        const multiContent = uniq(
         subKey.searchByAttributes.includes("__all")
             ? ["__id", ...subKey.searchByAttributes]
             : subKey.searchByAttributes
         )
-      .filter(attr => attr !== "__all")
-      .map(attr => {
+        .filter(attr => attr !== "__all")
+        .map(attr => {
         if (attr === "__id") {
           if (subKey.exactMatch === true) {
             return `has(id,"${escapedSearchTerm}")`;
@@ -56,13 +53,13 @@ const keywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest):
         return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
       })
       .join(",");
+      template += `${multiContent},`;
 
-    template += `.or(${orContent})`;
     })
-    
+
   template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
   console.log(template)
   return template;
 };
 
-export default keywordSearchTemplate;
+export default multiKeywordSearchTemplate;

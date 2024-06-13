@@ -5,7 +5,7 @@ import type {
 } from "../../useGEFetchTypes";
 import isErrorResponse from "../../utils/isErrorResponse";
 import mapApiVertex from "../mappers/mapApiVertex";
-import keywordSearchTemplate from "../templates/keywordSearchTemplate";
+import multiKeywordSearchTemplate from "../templates/multiKeywordSearchTemplate";
 import type { GVertexList } from "../types";
 import { GremlinFetch } from "../types";
 
@@ -24,7 +24,7 @@ const multiKeywordSearch = async (
   gremlinFetch: GremlinFetch,
   req: MultiKeywordSearchRequest
 ): Promise<KeywordSearchResponse> => {
-  const gremlinTemplate = keywordSearchTemplate(req);
+  const gremlinTemplate = multiKeywordSearchTemplate(req);
   const data = await gremlinFetch<RawKeySearchResponse | ErrorResponse>(
     gremlinTemplate
   );

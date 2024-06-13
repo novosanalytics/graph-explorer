@@ -31,7 +31,7 @@ import {
   useWithTheme,
   withClassNamePrefix,
 } from "../../core";
-import { useEntities, useFetchNode, useSet } from "../../hooks";
+import { useEntities, useFetchNode, useMultiQueryFetch, useSet } from "../../hooks";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
@@ -85,6 +85,7 @@ const KeywordSearch = ({
   } = useKeywordSearch({
     isOpen: isFocused,
   });
+
 
   const onInputFocusChange = useCallback(
     (isFocused: boolean) => () => {
@@ -472,7 +473,7 @@ const KeywordSearch = ({
             </Button>
             <Button
               icon={<AddCircleIcon />}
-              onPress={addSubQuery} //Ok I don't get this... why does void items work but inline function?
+              onPress={addSubQuery} 
               className={pfx("refuse-shrink")}
             >
             
