@@ -32,7 +32,7 @@ const multiKeywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequ
     template += `.hasLabel(${hasLabelContent})`;
     }
     template += `.and(`
-    multiKeywordSearch.forEach(function (subKey){
+    let fullSearch = multiKeywordSearch.forEach((subKey) => {
         const escapedSearchTerm = escapeString(subKey.searchTerm)
         const multiContent = uniq(
         subKey.searchByAttributes.includes("__all")
@@ -53,9 +53,9 @@ const multiKeywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequ
         return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
       })
       .join(",");
-      template += `${multiContent},`;
-
-    })
+      template += `${multiContent}`;
+    });
+    template += `${fullSearch})`
 
   template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
   console.log(template)
