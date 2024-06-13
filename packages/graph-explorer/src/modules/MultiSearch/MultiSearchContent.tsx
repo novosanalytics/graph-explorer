@@ -79,8 +79,10 @@ const MultiSearchContent = ({
     [collectQueries]
   )
 
-  const searchAllQueries = useCallback(async () =>{
-    await keywordSearch
+  const searchAllQueries = useMemo(async () =>{
+    console.log("test")
+    //await keywordSearch
+
   });
 
 /**

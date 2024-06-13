@@ -5,7 +5,7 @@ import { useConfiguration } from "../../core";
 import useDebounceValue from "../../hooks/useDebounceValue";
 import useTextTransform from "../../hooks/useTextTransform";
 import { useKeywordSearchQuery } from "./useKeywordSearchQuery";
-import { useMultiQueryFetch } from "./useMultiQueryFetch";
+import { useMultiKeywordSearchQuery } from "./useMultiKeywordSearchQuery";
 
 export interface PromiseWithCancel<T> extends Promise<T> {
   cancel?: () => void;
@@ -202,7 +202,7 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   }, [selectedVertexType, defaultSearchAttribute]);
 
 
-  const { multiData } = useMultiQueryFetch({
+  const { multiData } = useMultiKeywordSearchQuery({
 
   });
  

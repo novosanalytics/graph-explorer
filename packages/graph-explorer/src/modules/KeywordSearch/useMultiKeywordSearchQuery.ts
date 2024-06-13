@@ -1,13 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotification } from "../../components/NotificationProvider";
-import type { MultiKeywordSearchRequest, NeighborsCountRequest } from "../../connector/useGEFetchTypes";
+import { KeywordSearchRequest, type MultiKeywordSearchRequest, type NeighborsCountRequest } from "../../connector/useGEFetchTypes";
 import { explorerSelector } from "../../core/connector";
 import useEntities from "../../hooks/useEntities";
 import { Vertex } from "../../@types/entities";
 import { useRecoilValue } from "recoil";
 import type { SearchQueryRequest } from "./useKeywordSearchQuery";
 
-export function useMultiQueryFetch({
+export function useMultiKeywordSearchQuery({
     multiKeywordSearch,
 }: MultiKeywordSearchRequest){
   const [, setEntities] = useEntities();
@@ -16,7 +16,7 @@ export function useMultiQueryFetch({
 
   const multiQueryKey = ['multiQueryKey'];
 
-  const multiQueryFetch = useQuery({
+  const multiQuery = useQuery({
     multiQueryKey,
     multiQueryFn: async ({ signal }) => {
         if (!explorer) {
@@ -24,16 +24,16 @@ export function useMultiQueryFetch({
         }
   
         return await explorer.multiKeywordSearch (
-          {
-            searchTerm: debouncedSearchTerm,
-            vertexTypes,
-            searchByAttributes,
-            searchById: true,
-            exactMatch,
-          },
-          { signal }
+            {
+                null, //change this to KeywordSearchRequest
+            },
+            { signal }
         );
       },
       enabled: isOpen && !!explorer,
   });
+
+  return {
+    ...multiQuery
+  }
 };
