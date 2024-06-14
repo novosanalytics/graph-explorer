@@ -16,13 +16,13 @@ export function useMultiKeywordSearchQuery() {
   const [trigger, setTrigger] = useRecoilState(queryTriggerAtom);
 
   const multiQueryKey = ['multiQueryKey'];
-  const subQueries = useRecoilState(subQueriesAtom);
+  const [subQueries] = useRecoilState(subQueriesAtom);
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     return Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
       searchById: true,
-      searchByAttributes: subQuery.attribute ? [subQuery.attribute] : [],
-      vertexTypes: subQuery.selectedVertexType ? [subQuery.selectedVertexType] : [],
+      searchByAttributes: subQuery.attribute,
+      vertexTypes: subQuery.selectedVertexType,
       exactMatch: subQuery.exactMatch,
     }));
   };
@@ -34,21 +34,19 @@ export function useMultiKeywordSearchQuery() {
         if (!explorer) {
           return;
         }
-  
-        return await explorer.multiKeywordSearch (
-            {
-                multiKeywordSearch:multiKeywordTotal  
-            },
-            { signal }
-        );
+
+        const requests = multiKeywordTotal(subQueries)
+        console.log(`Sending: ${requests}`)
+        return await explorer.multiKeywordSearch (requests, { signal });
       },
       enabled: false,
   });
 
   useEffect(() => {
     if (trigger) {
-      multiQuery.refetch();
-      setTrigger(false); // Reset the trigger
+        console.log("Got multi request")
+        multiQuery.refetch();
+        setTrigger(false); 
     }
   }, [trigger, multiQuery, setTrigger]);
 
