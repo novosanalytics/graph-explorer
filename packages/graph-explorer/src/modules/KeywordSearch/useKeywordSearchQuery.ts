@@ -4,7 +4,7 @@ import { explorerSelector } from "../../core/connector";
 import usePrefixesUpdater from "../../hooks/usePrefixesUpdater";
 import { useCallback, useEffect, useMemo } from "react";
 import { createDisplayError } from "../../utils/createDisplayError";
-import { useRecoilValue } from "recoil";
+import { atom, useRecoilValue } from "recoil";
 
 export type SearchQueryRequest = {
   debouncedSearchTerm: string;
@@ -14,6 +14,12 @@ export type SearchQueryRequest = {
   neighborsLimit: boolean;
   isOpen: boolean;
 };
+
+export const queryTriggerAtom = atom({
+    key: 'queryTrigger',
+    default: false,
+  });
+
 
 export function useKeywordSearchQuery({
   debouncedSearchTerm,

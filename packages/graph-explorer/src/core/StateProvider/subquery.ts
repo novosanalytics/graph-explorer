@@ -6,6 +6,11 @@ export const subQueriesAtom = atom<Set<SubQuery>>({
     default: new Set()
 });
 
+export const queryTriggerAtom = atom({
+    key: 'queryTrigger',
+    default: false,
+  });
+
 /*export const subQuerySelector = selector<Array<SubQuery>>({
     key: "sub-query-selector",
     get: ({ get }) => {

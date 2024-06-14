@@ -6,7 +6,6 @@ import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import useTranslations from "../../hooks/useTranslations";
 import { 
     subQueriesAtom, 
-    //subQuerySelector 
     } from "../../core/StateProvider/subquery"
 import MultiSearchContent from "./MultiSearchContent";
 import { SubQuery } from "../../@types/subqueries";
@@ -22,7 +21,7 @@ export type MultiSearchProp = Omit<
 const MultiSearch = ({title = "Multi-Search", ...headerProps }: MultiSearchProp) =>{
     const t = useTranslations();
     const subQuery = useRecoilValue(subQueriesAtom);
-    
+
     return (
         <ModuleContainer>
             <ModuleContainerHeader

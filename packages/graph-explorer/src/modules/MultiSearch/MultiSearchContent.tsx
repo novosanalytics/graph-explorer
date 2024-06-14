@@ -6,7 +6,7 @@ import {
     ModuleContainerFooter, 
     MagicExpandIcon,
     DeleteIcon,
-    VertexIcon } from "../../components";
+ } from "../../components";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
@@ -23,10 +23,11 @@ import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
 import { useExpandNode, useFetchNode } from "../../hooks";
 import useKeywordSearch from "../KeywordSearch/useKeywordSearch"
-import useMultiQueryFetch from "../../hooks";
 import { SubQuery } from "../../@types/subqueries";
 import useManageElementsLock from "../../components/Graph/hooks/useManageElementsLock";
 import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
+import { queryTriggerAtom } from "../../core/StateProvider/subquery";
+import { useSetRecoilState } from "recoil";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -43,18 +44,14 @@ const MultiSearchContent = ({
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
   const fetchNode = useFetchNode();
-  const multiQueryFetch = useMultiQueryFetch();
   const [limit, setLimit] = useState<number | null>(null);
 
-/*  let nodes = Vertex[];
+  const setTrigger = useSetRecoilState(queryTriggerAtom);
 
+  const handleButtonClick = () => {
+    setTrigger(true);
+  };
 
-  const onSearchQueries = useCallback(async () => {
-
-    await fetchNode({
-        nodesOrNodes: nodes
-    })
-  }, [fetchNode, limit]);*/
   let collectQueries: AdvancedListItemType<any>[] = [];
   console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
@@ -82,7 +79,6 @@ const MultiSearchContent = ({
   const searchAllQueries = useMemo(async () =>{
     console.log("test")
     //await keywordSearch
-
   });
 
 /**
@@ -149,9 +145,7 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={() => {
-                console.log("test")
-            }}
+            onPress={handleButtonClick}
             >
                 Search SubQueries 
           </Button>
