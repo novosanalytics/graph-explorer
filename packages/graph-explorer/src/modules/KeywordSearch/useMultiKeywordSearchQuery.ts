@@ -24,6 +24,8 @@ export function useMultiKeywordSearchQuery() {
       searchByAttributes: subQuery.attribute,
       vertexTypes: subQuery.selectedVertexType,
       exactMatch: subQuery.exactMatch,
+      offset: 0,
+      limit: 10,
     }));
     return setResult;
   };
@@ -41,8 +43,6 @@ export function useMultiKeywordSearchQuery() {
       },
       enabled: false,
   });
-
-  console.log(multiQuery)
 
   useEffect(() => {
     if (trigger) {
