@@ -42,6 +42,8 @@ export function useMultiKeywordSearchQuery() {
       enabled: false,
   });
 
+  console.log(multiQuery)
+
   useEffect(() => {
     if (trigger) {
         console.log("Got multi request")
