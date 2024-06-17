@@ -48,9 +48,12 @@ const multiKeywordSearchTemplate = (
             ? ["__id", ...subKey.searchByAttributes]
             : subKey.searchByAttributes
         )*/ // Find a way to use the uniq
-        const multiContent = (subKey.searchByAttributes.includes("__all")
+        const multiContent = `has("${subKey.searchByAttributes}","${subKey.searchTerm}")`
+        /*(subKey.searchByAttributes.includes("__all")
         ? ["__id", ...subKey.searchByAttributes]
         : subKey.searchByAttributes)
+
+        multiContent += 
         .filter((attr: string) => attr !== "__all")
         .map((attr: string) => {
         if (attr === "__id") {
@@ -62,18 +65,18 @@ const multiKeywordSearchTemplate = (
         if (subKey.exactMatch === true) {
           return `has("${attr}","${escapedSearchTerm}")`;
         }
-        
+
         return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
       })
-      .join(",");
+      .join(",");*/
       console.log(multiContent);
-      template += `${multiContent}`;
+      template += `${multiContent}, `;
     });
     
     //template += `${fullSearch})`
 
   //template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
-  console.log(template)
+  console.log(`Template: ${template}`)
   //return template;
   return `g.V().hasLabel("drug").range(0,10)`
 };
