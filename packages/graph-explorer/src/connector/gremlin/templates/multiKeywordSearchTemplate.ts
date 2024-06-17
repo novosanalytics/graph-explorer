@@ -1,6 +1,7 @@
 import uniq from "lodash/uniq";
 import type {KeywordSearchRequest, MultiKeywordSearchRequest } from "../../useGEFetchTypes";
 import { escapeString } from "../../../utils";
+import multiKeywordSearch from "../queries/multiKeywordSearch";
 
 /**
  * @example
@@ -21,7 +22,19 @@ import { escapeString } from "../../../utils";
  *  .range(0, 100)
  */
 
-const multiKeywordSearchTemplate = ({multiKeywordSearch}: MultiKeywordSearchRequest): string => {
+const multiKeywordSearchTemplate = ({
+    multiKeywordSearch: {
+        searchterm,
+        vertexTypes,
+        searchByAttributes,
+        limit,
+        offset,
+        searchById,
+        exactMatch
+    }
+}: MultiKeywordSearchRequest | any): string => {
+    //console.log(`Input sub ${multiKeywordSearch[0]}}`)
+    console.log(`Input: ${multiKeywordSearch}`)
     let template = "g.V()";
     let firstSearch = multiKeywordSearch[0]
     if (firstSearch.vertexTypes?.length !== 0) {

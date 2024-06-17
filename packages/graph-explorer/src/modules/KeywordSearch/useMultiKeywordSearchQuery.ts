@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotification } from "../../components/NotificationProvider";
-import { KeywordSearchRequest } from "../../connector/useGEFetchTypes";
+import { KeywordSearchRequest, MultiKeywordSearchRequest } from "../../connector/useGEFetchTypes";
 import { explorerSelector } from "../../core/connector";
 import useEntities from "../../hooks/useEntities";
 import { Vertex } from "../../@types/entities";
@@ -18,15 +18,16 @@ export function useMultiKeywordSearchQuery() {
   const multiQueryKey = ['multiQueryKey'];
   const [subQueries] = useRecoilState(subQueriesAtom);
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
-    return Array.from(subQueries).map((subQuery) => ({
+    console.log(`transforming: ${Array.from(subQueries).join(' ')}`)
+    const setResult = Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
-      searchById: true,
+      searchById: false,
       searchByAttributes: subQuery.attribute,
       vertexTypes: subQuery.selectedVertexType,
       exactMatch: subQuery.exactMatch,
     }));
+    return setResult;
   };
-
 
   const multiQuery = useQuery({
     queryKey: multiQueryKey,
@@ -35,9 +36,9 @@ export function useMultiKeywordSearchQuery() {
           return;
         }
 
-        const requests = multiKeywordTotal(subQueries)
-        console.log(`Sending: ${requests}`)
-        return await explorer.multiKeywordSearch (requests, { signal });
+        const requests =  multiKeywordTotal(subQueries)
+        console.log(`Sending: ${requests[0]}`)
+        return await explorer?.multiKeywordSearch (requests, { signal });
       },
       enabled: false,
   });
