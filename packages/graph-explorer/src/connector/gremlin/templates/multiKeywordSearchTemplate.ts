@@ -40,17 +40,19 @@ const multiKeywordSearchTemplate = (
         template += `.hasLabel(${hasLabelContent})`;
     }
     template += `.and(`
-    console.log(`So far: ${template}`)
     multiKeywordSearch.forEach((subKey) => {
-        console.log(`${subkey.vertexType} :: ${subkey.searchByAttributes}} :: ${subkey.searchTerm}`)
+        console.log(`${subKey.vertexTypes} :: ${subKey.searchByAttributes}} :: ${subKey.searchTerm}`)
         const escapedSearchTerm = escapeString(subKey.searchTerm)
-        const multiContent = uniq(
+        /*const multiContent = uniq(
         subKey.searchByAttributes.includes("__all")
             ? ["__id", ...subKey.searchByAttributes]
             : subKey.searchByAttributes
-        )
-        .filter(attr => attr !== "__all")
-        .map(attr => {
+        )*/ // Find a way to use the uniq
+        const multiContent = (subKey.searchByAttributes.includes("__all")
+        ? ["__id", ...subKey.searchByAttributes]
+        : subKey.searchByAttributes)
+        .filter((attr: string) => attr !== "__all")
+        .map((attr: string) => {
         if (attr === "__id") {
           if (subKey.exactMatch === true) {
             return `has(id,"${escapedSearchTerm}")`;
@@ -60,15 +62,17 @@ const multiKeywordSearchTemplate = (
         if (subKey.exactMatch === true) {
           return `has("${attr}","${escapedSearchTerm}")`;
         }
+        
         return `has("${attr}",TextP.regex("(?i)${escapedSearchTerm}."))`;
       })
       .join(",");
+      console.log(multiContent);
       template += `${multiContent}`;
     });
     
     //template += `${fullSearch})`
 
-  template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
+  //template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
   console.log(template)
   //return template;
   return `g.V().hasLabel("drug").range(0,10)`

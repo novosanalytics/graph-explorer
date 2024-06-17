@@ -18,7 +18,6 @@ export function useMultiKeywordSearchQuery() {
   const multiQueryKey = ['multiQueryKey'];
   const [subQueries] = useRecoilState(subQueriesAtom);
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
-    console.log(`transforming: ${Array.from(subQueries).join(' ')}`)
     let setResult = Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
       searchById: false,
@@ -26,7 +25,6 @@ export function useMultiKeywordSearchQuery() {
       vertexTypes: subQuery.selectedVertexType,
       exactMatch: subQuery.exactMatch,
     }));
-    console.log(`Set Result: ${setResult.toString()}`)
     return setResult;
   };
 
