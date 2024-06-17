@@ -37,9 +37,9 @@ const multiKeywordSearchTemplate = (
             .map(type => `"${type}"`)
             .join(",");*/
         const  hasLabelContent = firstSearch.vertexTypes;
-        template += `.hasLabel(${hasLabelContent})`;
+        template += `.hasLabel("${hasLabelContent}")`;
     }
-    template += `.and(`
+    template += `.or(`
     multiKeywordSearch.forEach((subKey) => {
         console.log(`${subKey.vertexTypes} :: ${subKey.searchByAttributes}} :: ${subKey.searchTerm}`)
         const escapedSearchTerm = escapeString(subKey.searchTerm)
@@ -57,8 +57,9 @@ const multiKeywordSearchTemplate = (
           }
           if (subKey.exactMatch === true) {
             multiContent += `has("${subKey.searchByAttributes}","${escapedSearchTerm}")`;
-          }
-          multiContent += `has("${subKey.searchByAttributes}",TextP.regex("(?i)${escapedSearchTerm}."))`;
+          } else {
+            multiContent += `has("${subKey.searchByAttributes}",TextP.regex("(?i)${escapedSearchTerm}."))`
+        };
         //`has("${subKey.searchByAttributes}","${subKey.searchTerm}")`
         /*(subKey.searchByAttributes.includes("__all")
         ? ["__id", ...subKey.searchByAttributes]
