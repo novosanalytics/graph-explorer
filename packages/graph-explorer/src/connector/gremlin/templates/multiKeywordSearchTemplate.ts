@@ -3,6 +3,7 @@ import type {KeywordSearchRequest, MultiKeywordSearchRequest } from "../../useGE
 import { escapeString } from "../../../utils";
 import multiKeywordSearch from "../queries/multiKeywordSearch";
 
+
 /**
  * @example
  * searchTerm = "JFK"
@@ -27,16 +28,19 @@ const multiKeywordSearchTemplate = (
     //console.log(`Input sub ${multiKeywordSearch[0];
     console.log(`Input: ${multiKeywordSearch}`);
     let template = "g.V()";
-    let firstSearch = multiKeywordSearch[0]
-    console.log(`Try this: ${firstSearch.vertexTypes}`)
-    if (firstSearch.vertexTypes?.length !== 0) {
-        const hasLabelContent = firstSearch.vertexTypes
-        .flatMap(type => type.split("::"))
-        .map(type => `"${type}"`)
-        .join(",");
+    let firstSearch = multiKeywordSearch[0];
+    console.log(firstSearch)
+    if (firstSearch.vertexTypes) { 
+        //Adjust this later for _all option
+        /*const hasLabelContent = firstSearch.vertexTypes
+            .flatMap(type => type.split("::"))
+            .map(type => `"${type}"`)
+            .join(",");*/
+        const  hasLabelContent = firstSearch.vertexTypes;
         template += `.hasLabel(${hasLabelContent})`;
     }
     template += `.and(`
+    console.log(`So far: ${template}`)
     let fullSearch = multiKeywordSearch.forEach((subKey) => {
         const escapedSearchTerm = escapeString(subKey.searchTerm)
         const multiContent = uniq(
