@@ -41,7 +41,7 @@ const multiKeywordSearchTemplate = (
     }
     template += `.and(`
     console.log(`So far: ${template}`)
-    let fullSearch = multiKeywordSearch.forEach((subKey) => {
+    multiKeywordSearch.forEach((subKey) => {
         console.log(`${subkey.vertexType} :: ${subkey.searchByAttributes}} :: ${subkey.searchTerm}`)
         const escapedSearchTerm = escapeString(subKey.searchTerm)
         const multiContent = uniq(
@@ -65,6 +65,7 @@ const multiKeywordSearchTemplate = (
       .join(",");
       template += `${multiContent}`;
     });
+    
     //template += `${fullSearch})`
 
   template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;

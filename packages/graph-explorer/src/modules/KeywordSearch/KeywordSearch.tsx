@@ -40,15 +40,10 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import defaultStyles from "./KeywordSearch.styles";
 import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
-import { subQueriesAtom } from "../../core/StateProvider/subquery";
+import { subQueriesAtom, queryTriggerAtom } from "../../core/StateProvider/subquery";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { SubQuery } from "../../@types/subqueries";
 
-
-export const queryTriggerAtom = atom({
-    key: 'queryTrigger',
-    default: false,
-  });
 
 export type KeywordSearchProps = {
   classNamePrefix?: string;
