@@ -19,13 +19,14 @@ export function useMultiKeywordSearchQuery() {
   const [subQueries] = useRecoilState(subQueriesAtom);
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     console.log(`transforming: ${Array.from(subQueries).join(' ')}`)
-    const setResult = Array.from(subQueries).map((subQuery) => ({
+    let setResult = Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
       searchById: false,
       searchByAttributes: subQuery.attribute,
       vertexTypes: subQuery.selectedVertexType,
       exactMatch: subQuery.exactMatch,
     }));
+    console.log(`Set Result: ${setResult.toString()}`)
     return setResult;
   };
 
@@ -38,7 +39,7 @@ export function useMultiKeywordSearchQuery() {
 
         const requests =  multiKeywordTotal(subQueries)
         console.log(`Sending: ${requests[0]}`)
-        return await explorer?.multiKeywordSearch (requests, { signal });
+        return await explorer?.multiKeywordSearch(requests, { signal });
       },
       enabled: false,
   });

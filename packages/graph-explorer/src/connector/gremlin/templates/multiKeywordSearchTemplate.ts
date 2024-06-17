@@ -22,27 +22,19 @@ import multiKeywordSearch from "../queries/multiKeywordSearch";
  *  .range(0, 100)
  */
 
-const multiKeywordSearchTemplate = ({
-    multiKeywordSearch: {
-        searchterm,
-        vertexTypes,
-        searchByAttributes,
-        limit,
-        offset,
-        searchById,
-        exactMatch
-    }
-}: MultiKeywordSearchRequest | any): string => {
-    //console.log(`Input sub ${multiKeywordSearch[0]}}`)
-    console.log(`Input: ${multiKeywordSearch}`)
+const multiKeywordSearchTemplate = (
+    multiKeywordSearch: MultiKeywordSearchRequest): string => {
+    //console.log(`Input sub ${multiKeywordSearch[0];
+    console.log(`Input: ${multiKeywordSearch}`);
     let template = "g.V()";
     let firstSearch = multiKeywordSearch[0]
+    console.log(`Try this: ${firstSearch.vertexTypes}`)
     if (firstSearch.vertexTypes?.length !== 0) {
-    const hasLabelContent = firstSearch.vertexTypes
-      .flatMap(type => type.split("::"))
-      .map(type => `"${type}"`)
-      .join(",");
-    template += `.hasLabel(${hasLabelContent})`;
+        const hasLabelContent = firstSearch.vertexTypes
+        .flatMap(type => type.split("::"))
+        .map(type => `"${type}"`)
+        .join(",");
+        template += `.hasLabel(${hasLabelContent})`;
     }
     template += `.and(`
     let fullSearch = multiKeywordSearch.forEach((subKey) => {
