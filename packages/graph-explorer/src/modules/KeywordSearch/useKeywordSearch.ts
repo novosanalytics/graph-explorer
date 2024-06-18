@@ -5,7 +5,7 @@ import { useConfiguration } from "../../core";
 import useDebounceValue from "../../hooks/useDebounceValue";
 import useTextTransform from "../../hooks/useTextTransform";
 import { useKeywordSearchQuery } from "./useKeywordSearchQuery";
-import { useMultiKeywordSearchQuery } from "./useMultiKeywordSearchQuery";
+import { useMultiKeywordSearchQuery } from "../MultiDetails/useMultiKeywordSearchQuery";
 
 export interface PromiseWithCancel<T> extends Promise<T> {
   cancel?: () => void;

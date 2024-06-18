@@ -87,9 +87,6 @@ const KeywordSearch = ({
     isOpen: isFocused,
   });
 
-  //const {multiSearchResults} = use 
-
-
   const onInputFocusChange = useCallback(
     (isFocused: boolean) => () => {
       setInputFocused(isFocused);

@@ -4,9 +4,7 @@ import type { ModuleContainerHeaderProps } from "../../components";
 import { GridIcon, ModuleContainer, ModuleContainerHeader } from "../../components";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import useTranslations from "../../hooks/useTranslations";
-import { 
-    subQueriesAtom, 
-    } from "../../core/StateProvider/subquery"
+import { subQueriesAtom } from "../../core/StateProvider/subquery"
 import MultiSearchContent from "./MultiSearchContent";
 import { SubQuery } from "../../@types/subqueries";
 

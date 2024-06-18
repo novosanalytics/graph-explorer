@@ -218,6 +218,10 @@ export type MultiKeywordSearchRequest = {
      * Multiple Keyword Search Request 
      */
     multiKeywordSearch: Array<KeywordSearchRequest>
+    /**
+     * CLusiver(OR/AND)
+     */
+    clusiver?:boolean;
 }
 
 export type SubGraphRequest = {

@@ -21,6 +21,8 @@ export type MultiSearchFiltersContentProps = {
   classNamePrefix?: string;
   limit: number | null;
   onLimitChange(limit: number | null): void;
+  clusive?: string | null;
+  onClusiveChange?(clusive: string | null): void;
 }
 
 const MultiSearchFilter =({

@@ -12,7 +12,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
 import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
-import GraphIcon from "../../components/icons/GraphIcon";
+import GraphIcon from "..multiKeywordTotal: (subQueries: Set<SubQuery>) => { searchTerm: unknown; searchById: boolean; searchByAttributes: unknown; vertexTypes: unknown; exactMatch: unknown; offset: number; limit: number; }[]multiKeywordTotal?: (subQueries: Set<SubQuery>) => { searchTerm: unknown; searchById: boolean; searchByAttributes: unknown; vertexTypes: unknown; exactMatch: unknown; offset: number; limit: number; }[]/../components/icons/GraphIcon";
 import useTranslations from "../../hooks/useTranslations";
 import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
@@ -28,6 +28,7 @@ import useManageElementsLock from "../../components/Graph/hooks/useManageElement
 import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 import { useSetRecoilState } from "recoil";
+import useFetchMultiQuery from "../../hooks/useFetchMultiQuery";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -43,14 +44,24 @@ const MultiSearchContent = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
-  const fetchNode = useFetchNode();
+  //const fetchNode = useFetchNode();
+  const fetchMultiQuery = useFetchMultiQuery;
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
 
   const setTrigger = useSetRecoilState(queryTriggerAtom);
 
-  const handleButtonClick = () => {
-    setTrigger(true);
+  const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
+    let setResult = Array.from(subQueries).map((subQuery) => ({
+      searchTerm: subQuery.searchTerm,
+      searchById: false,
+      searchByAttributes: subQuery.attribute,
+      vertexTypes: subQuery.selectedVertexType,
+      exactMatch: subQuery.exactMatch,
+      offset: 0,
+      limit: 10,
+    }));
+    return setResult;
   };
 
   let collectQueries: AdvancedListItemType<any>[] = [];
@@ -69,37 +80,18 @@ const MultiSearchContent = ({
       });
   });
 
+  const handleButtonClick = () => {
+    setTrigger(true);
+    await fetchMultiQuery(
+        multiKeywordTotal)
+  };
+
   const onSubQueryRemove = useCallback(
     async (searchTerm: string) => {
         //collectQueries = updatedSubQueries;
     },
     [collectQueries]
-  )
-
-  const searchAllQueries = useMemo(async () =>{
-    console.log("test")
-    //await keywordSearch
-  });
-
-/**
- *  CHANGE TO MULTI-SEARCH ICON
- * 
- *      {vtConfig?.iconUrl && (
-          <div
-            className={pfx("icon")}
-            style={{
-              background: fade(vtConfig?.color, 0.2),
-              color: vtConfig?.color,
-            }}
-        >
-          <VertexIcon
-            iconUrl={vtConfig?.iconUrl}
-            iconImageType={vtConfig?.iconImageType}
-            />
-          </div>
-        )}
- * 
- */
+  );
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -133,9 +125,11 @@ const MultiSearchContent = ({
               classNamePrefix={classNamePrefix}
               limit={limit}
               onLimitChange={setLimit}
-              clusive={}
+              clusive={clusive}
+              onClusiveChange={setClusive}
             />
           )}
+          <ModuleContainerFooter>
           <Button
             icon={
                 <DeleteIcon/>
@@ -156,8 +150,18 @@ const MultiSearchContent = ({
             >
                 Search SubQueries 
           </Button>
+          <Button
+            icon={
+                <MagicExpandIcon/>
+            }
+            variant={"filled"}
+            onPress={()=>{
+                console.log("Test")
+            }}
+            >
+                Add Selected 
+          </Button>
 
-          <ModuleContainerFooter>
           </ModuleContainerFooter>
         </>
       )}

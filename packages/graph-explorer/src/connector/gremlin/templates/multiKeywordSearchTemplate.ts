@@ -43,11 +43,7 @@ const multiKeywordSearchTemplate = (
     multiKeywordSearch.forEach((subKey) => {
         console.log(`${subKey.vertexTypes} :: ${subKey.searchByAttributes}} :: ${subKey.searchTerm}`)
         const escapedSearchTerm = escapeString(subKey.searchTerm)
-        /*const multiContent = uniq(
-        subKey.searchByAttributes.includes("__all")
-            ? ["__id", ...subKey.searchByAttributes]
-            : subKey.searchByAttributes
-        )*/ // Find a way to use the uniq
+
         let multiContent = ``;
         if (subKey.searchByAttributes === "__id") {
             if (subKey.exactMatch === true) {
@@ -60,6 +56,11 @@ const multiKeywordSearchTemplate = (
           } else {
             multiContent += `has("${subKey.searchByAttributes}",TextP.regex("(?i)${escapedSearchTerm}."))`
         };
+        /*const multiContent = uniq(
+        subKey.searchByAttributes.includes("__all")
+            ? ["__id", ...subKey.searchByAttributes]
+            : subKey.searchByAttributes
+        )*/ // Find a way to use the uniq
         //`has("${subKey.searchByAttributes}","${subKey.searchTerm}")`
         /*(subKey.searchByAttributes.includes("__all")
         ? ["__id", ...subKey.searchByAttributes]
