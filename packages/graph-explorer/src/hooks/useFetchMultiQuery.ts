@@ -3,24 +3,14 @@ import { useNotification } from "../components/NotificationProvider";
 import { explorerSelector } from "../core/connector";
 import useEntities from "./useEntities";
 import { Vertex } from "../@types/entities";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useCallback } from "react";
 import { SubQuery } from "../@types/subqueries";
-import { MultiKeywordSearchRequest } from "../connector/useGEFetchTypes";
-
-/*const useFetchMultiQuery = () => {
-  const [, setEntities] = useEntities();
-  const explorer = useRecoilValue(explorerSelector);
-  const { enqueueNotification, clearNotification } = useNotification();
-
-
-};
-
-export default useFetchMultiQuery;*/
-
+import { multiQueriesResultAtom } from "../core/StateProvider/subquery";
 
 const useFetchMultiQuery = () => {
     const explorer = useRecoilValue(explorerSelector);
+    //const setMultiQueryAtom = useSetRecoilState(multiQueriesResultAtom);
     const { enqueueNotification, clearNotification } = useNotification();
     
     return useCallback(
@@ -32,13 +22,27 @@ const useFetchMultiQuery = () => {
                   message: "Your search has returned no results",
                 });
                 return;
-            }
+            };
+            //setMultiQueryAtom(result);
         }, [explorer, enqueueNotification, clearNotification]
       );
 };
   
 export default useFetchMultiQuery;
-
+            /*const addSubQuery = () => {
+                setSubQuery((prev) => {
+                    const newSubQuery = {
+                        selectedVertexType:selectedVertexType,
+                        attribute:selectedAttribute,
+                        searchTerm:searchTerm,
+                        exactMatch: exactMatch,
+                    }
+                    console.log('New SubQuery:', newSubQuery);
+                    const updatedSubQueries = new Set([...prev, newSubQuery]);
+                    console.log('Updated SubQueries:', updatedSubQueries);
+                    return updatedSubQueries;
+                  });    
+              }*/
 
 /*  const multiQuery = useQuery({
     queryKey: multiQueryKey,

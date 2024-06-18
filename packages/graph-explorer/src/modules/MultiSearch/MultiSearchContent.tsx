@@ -8,7 +8,9 @@ import {
     DeleteIcon,
     VertexIcon,
     GraphIcon,
+    Carousel,
  } from "../../components";
+import { useRecoilValue } from "recoil";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
@@ -20,12 +22,13 @@ import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
 import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
-import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
+import MultiSearchFilters from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
-import { useExpandNode, useFetchNode,useFetchMultiQuery } from "../../hooks";
-import useKeywordSearch from "../KeywordSearch/useKeywordSearch"
+import { useFetchNode, useFetchMultiQuery } from "../../hooks";
+import NodeDetail from "../EntityDetails/NodeDetail";
 import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
+import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
@@ -48,6 +51,7 @@ const MultiSearchContent = ({
   const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
+  const multiResult = useRecoilValue(multiQueriesResultAtom);
 
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     let setResult = Array.from(subQueries).map((subQuery) => ({
@@ -78,6 +82,7 @@ const MultiSearchContent = ({
       });
   });
 
+
   let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
     searchTerm: subQuery.searchTerm,
     searchById: false,
@@ -89,15 +94,11 @@ const MultiSearchContent = ({
 
   const onSearchClick = useCallback(async () => {
     setIsExpanding(true);
-    let results = await fetchMultiQuery(multiSearch);
+    let finalResult = await fetchMultiQuery(multiSearch);
     // add something here to send the results in the carousel
+    console.log(finalResult)
     setIsExpanding(false);
   }, [fetchMultiQuery, multiSearch]);
-
-
-  const resultItems = useMemo(() => {
-    return toAdvancedList(results)
-  })
 
   /*const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
@@ -135,51 +136,7 @@ const MultiSearchContent = ({
           />
 
 
-          <div className={pfx("multi-search-grid")}>
-          <AdvancedList
-                  classNamePrefix={classNamePrefix}
-                  className={pfx("search-results-advanced-list")}
-                  items={resultItems}
-                  draggable={true}
-                  defaultItemType={"graph-viewer__node"}
-                  onItemClick={(event, item) => {
-                    selection.toggle(item.id);
-                  }}
-                  selectedItemsIds={Array.from(selection.state)}
-                  hideFooter
-                />
-                {selection.state.size > 0 && (
-                  <Carousel
-                    ref={carouselRef}
-                    slidesToShow={1}
-                    className={pfx("carousel")}
-                    pagination={{
-                      el: `.swiper-pagination`,
-                    }}
-                  >
-                    {Array.from(selection.state).map(nodeId => {
-                      const node = searchResults.find(
-                        n => n.data.id === nodeId
-                      );
-
-                      return node !== undefined ? (
-                        <NodeDetail
-                          key={nodeId}
-                          node={node}
-                          hideNeighbors={true}
-                        />
-                      ) : null;
-                    })}
-                  </Carousel>
-                )}
-                {selection.state.size === 0 && (
-                  <PanelEmptyState
-                    className={pfx("node-preview")}
-                    title="Select an item to preview"
-                    icon={<GraphIcon />}
-                  />
-                )}
-          </div>
+          
 
 
         {!!(selectedQueries.size > 0) && (

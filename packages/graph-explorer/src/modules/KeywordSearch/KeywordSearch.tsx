@@ -40,8 +40,8 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import defaultStyles from "./KeywordSearch.styles";
 import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
-import { subQueriesAtom, queryTriggerAtom } from "../../core/StateProvider/subquery";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { subQueriesAtom } from "../../core/StateProvider/subquery";
+import { useRecoilState } from "recoil";
 import { SubQuery } from "../../@types/subqueries";
 
 
