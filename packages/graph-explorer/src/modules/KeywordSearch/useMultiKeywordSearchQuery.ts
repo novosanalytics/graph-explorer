@@ -38,16 +38,17 @@ export function useMultiKeywordSearchQuery() {
         }
 
         const requests =  multiKeywordTotal(subQueries)
-        console.log(`Sending: ${requests[0]}`)
-        return await explorer?.multiKeywordSearch(requests, { signal });
+        return await explorer.multiKeywordSearch(requests, { signal });
       },
       enabled: false,
   });
 
   useEffect(() => {
     if (trigger) {
-        console.log("Got multi request")
-        multiQuery.refetch();
+        console.log("Got multi request");
+        selection.clear();
+        let result = multiQuery.refetch();
+        console.log(result);
         setTrigger(false); 
     }
   }, [trigger, multiQuery, setTrigger]);

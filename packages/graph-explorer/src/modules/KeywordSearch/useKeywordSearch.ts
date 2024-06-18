@@ -202,11 +202,11 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
   }, [selectedVertexType, defaultSearchAttribute]);
 
 
-  const { multiData } = useMultiKeywordSearchQuery({
+  const { multiData } = useMultiKeywordSearchQuery();
 
-  });
+  console.log(multiData);
  
-  let finalData = !multiData ? data : multiData 
+  let finalData = !multiData ? data : multiData;
 
   return {
     isFetching,
