@@ -195,18 +195,18 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
     isOpen,
   });
 
+  const { multiData } = useMultiKeywordSearchQuery();
+
+
+  console.log(`Full out: ${multiData}`);
+ 
+  let finalData = !multiData ? data : multiData;
+
   useEffect(() => {
     setSelectedAttribute(defaultSearchAttribute);
     setExactMatch(true);
     setNeighborsLimit(true);
   }, [selectedVertexType, defaultSearchAttribute]);
-
-
-  const { multiData } = useMultiKeywordSearchQuery();
-
-  console.log(multiData);
- 
-  let finalData = !multiData ? data : multiData;
 
   return {
     isFetching,

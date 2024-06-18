@@ -46,7 +46,7 @@ export function useMultiKeywordSearchQuery() {
   useEffect(() => {
     if (trigger) {
         console.log("Got multi request");
-        selection.clear();
+        //selection.clear();
         let result = multiQuery.refetch();
         console.log(result);
         setTrigger(false); 
