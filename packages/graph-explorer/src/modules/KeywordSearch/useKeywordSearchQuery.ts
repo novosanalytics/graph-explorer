@@ -15,11 +15,6 @@ export type SearchQueryRequest = {
   isOpen: boolean;
 };
 
-export const queryTriggerAtom = atom({
-    key: 'queryTrigger',
-    default: false,
-  });
-
 
 export function useKeywordSearchQuery({
   debouncedSearchTerm,

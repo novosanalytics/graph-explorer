@@ -6,6 +6,8 @@ import {
     ModuleContainerFooter, 
     MagicExpandIcon,
     DeleteIcon,
+    VertexIcon,
+    GraphIcon,
  } from "../../components";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -41,7 +43,7 @@ const MultiSearchContent = ({
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
   //const fetchNode = useFetchNode();
-  const fetchMultiQuery = useFetchMultiQuery;
+  const fetchMultiQuery = useFetchMultiQuery();
   const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
@@ -75,7 +77,7 @@ const MultiSearchContent = ({
       });
   });
 
-  const transformQueries = useMemo(() => {
+  /*const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
               searchTerm: subQuery.searchTerm,
               searchById: false,
@@ -86,15 +88,25 @@ const MultiSearchContent = ({
               limit: 10,
     }));
     return multiSearch;
-  },[selectedQueries])
+  },[selectedQueries])*/
+
+  let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
+    searchTerm: subQuery.searchTerm,
+    searchById: false,
+    searchByAttributes: subQuery.attribute,
+    vertexTypes: subQuery.selectedVertexType,
+    exactMatch: subQuery.exactMatch,
+    offset: 0,
+    limit: 10,}));
   
 
-  const onSearchClick =useCallback(async () => {
+  const onSearchClick = useCallback(async () => {
     setIsExpanding(true);
-    await fetchMultiQuery(transformQueries);
+    let results = await fetchMultiQuery(multiSearch);
+    // add something here to send the results in the carousel
     setIsExpanding(false);
-  }, [fetchMultiQuery, filters, limit, selectedMultiType, vertex.data, gListNames]);
-
+  }, [fetchMultiQuery, multiSearch]);
+  
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
@@ -115,13 +127,15 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-          <AdvancedList
-            classNamePrefix={classNamePrefix}
-            className={pfx("selected-items-advanced-list")}
-            items={collectQueries}
-            draggable={true}
-            defaultItemType={"graph-viewer__node"}
-          />
+          <div className={pfx("multi-search-grid")}>
+            <AdvancedList
+                classNamePrefix={classNamePrefix}
+                className={pfx("selected-items-advanced-list")}
+                items={collectQueries}
+                draggable={true}
+                defaultItemType={"graph-viewer__node"}
+            />
+          </div>
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
@@ -154,14 +168,14 @@ const MultiSearchContent = ({
           </Button>
           <Button
             icon={
-                <MagicExpandIcon/>
+                <GraphIcon/>
             }
             variant={"filled"}
             onPress={()=>{
                 console.log("Test")
             }}
             >
-                Add Selected 
+                Display Results 
           </Button>
 
           </ModuleContainerFooter>

@@ -20,13 +20,12 @@ export default useFetchMultiQuery;*/
 
 
 const useFetchMultiQuery = () => {
-    //const [, setEntities] = useEntities();
+    const [, setEntities] = useEntities();
     const explorer = useRecoilValue(explorerSelector);
     const { enqueueNotification, clearNotification } = useNotification();
     
     return useCallback(
-        async (req: MultiKeywordSearchRequest | any) => {
-            
+        async (req: any) => {
             const result = await explorer?.multiKeywordSearch(req);
             if (!result || !result.vertices.length) {
                 enqueueNotification({
@@ -35,6 +34,7 @@ const useFetchMultiQuery = () => {
                 });
                 return;
             }
+            console.log(result)
     
         }, [explorer, enqueueNotification, clearNotification]
       );

@@ -305,7 +305,7 @@ export type Explorer = {
     options?: any
   ) => Promise<KeywordSearchResponse>;
   multiKeywordSearch: (
-    req: MultiKeywordSearchRequest,
+    req: any,
     options?: any
   ) => Promise<KeywordSearchResponse>;
 };
