@@ -197,8 +197,9 @@ const useKeywordSearch = ({ isOpen }: { isOpen: boolean }) => {
 
   const { multiData } = useMultiKeywordSearchQuery();
 
-
-  console.log(`Full out: ${multiData}`);
+  if (multiData){
+    console.log(`MultiData exists: ${multiData}`);
+  }
  
   let finalData = !multiData ? data : multiData;
 

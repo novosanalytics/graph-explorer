@@ -17,6 +17,8 @@ export function useMultiKeywordSearchQuery() {
 
   const multiQueryKey = ['multiQueryKey'];
   const [subQueries] = useRecoilState(subQueriesAtom);
+  const queryClient = useQueryClient();
+
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     let setResult = Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
@@ -38,22 +40,23 @@ export function useMultiKeywordSearchQuery() {
         }
 
         const requests =  multiKeywordTotal(subQueries)
+        if (trigger) {
+            setTrigger(false);
+        }
         return await explorer.multiKeywordSearch(requests, { signal });
       },
       enabled: false,
   });
 
-  useEffect(() => {
-    if (trigger) {
-        console.log("Got multi request");
-        //selection.clear();
-        let result = multiQuery.refetch();
-        console.log(result);
-        setTrigger(false); 
-    }
-  }, [trigger, multiQuery, setTrigger]);
+  const cancelAll = useCallback(async () => {
+    await queryClient.cancelQueries({
+      queryKey: ["keyword-search"],
+      exact: false,
+    });
+  }, [queryClient]);
 
   return {
-    ...multiQuery
+    ...multiQuery,
+    cancelAll,
   };
 };

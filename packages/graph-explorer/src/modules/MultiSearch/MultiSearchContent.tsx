@@ -45,6 +45,7 @@ const MultiSearchContent = ({
   const textTransform = useTextTransform();
   const fetchNode = useFetchNode();
   const [limit, setLimit] = useState<number | null>(null);
+  const [clusive, setClusive] = useState<string | null>(null);
 
   const setTrigger = useSetRecoilState(queryTriggerAtom);
 
@@ -53,7 +54,6 @@ const MultiSearchContent = ({
   };
 
   let collectQueries: AdvancedListItemType<any>[] = [];
-  console.log(selectedQueries)
   selectedQueries.forEach(sQItem => {
     return collectQueries.push({
           id: `
@@ -121,12 +121,19 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-
+          <AdvancedList
+            classNamePrefix={classNamePrefix}
+            className={pfx("selected-items-advanced-list")}
+            items={collectQueries}
+            draggable={true}
+            defaultItemType={"graph-viewer__node"}
+          />
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
               limit={limit}
               onLimitChange={setLimit}
+              clusive={}
             />
           )}
           <Button
