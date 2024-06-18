@@ -134,11 +134,6 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-
-
-          
-
-
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
