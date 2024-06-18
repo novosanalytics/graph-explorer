@@ -6,38 +6,40 @@ import { Vertex } from "../@types/entities";
 import { useRecoilValue } from "recoil";
 import { useCallback } from "react";
 import { SubQuery } from "../@types/subqueries";
+import { MultiKeywordSearchRequest } from "../connector/useGEFetchTypes";
 
-const useFetchMultiQuery = () => {
+/*const useFetchMultiQuery = () => {
   const [, setEntities] = useEntities();
   const explorer = useRecoilValue(explorerSelector);
   const { enqueueNotification, clearNotification } = useNotification();
 
-  return useCallback(
-    async (querySet: Set<SubQuery>) => {
-        const requests = Array.from(querySet).map((subQuery) => ({
-              searchTerm: subQuery.searchTerm,
-              searchById: false,
-              searchByAttributes: subQuery.attribute,
-              vertexTypes: subQuery.selectedVertexType,
-              exactMatch: subQuery.exactMatch,
-              offset: 0,
-              limit: 10,
-        }));
-        const result = await explorer?.multiKeywordSearch(requests);
 
-        if (!result || !result.vertices.length) {
-            enqueueNotification({
-              title: "No Results",
-              message: "Your search has returned no results",
-            });
-            return;
-        }
-
-    },
-    [explorer, setEntities, enqueueNotification, clearNotification]
-  );
 };
 
+export default useFetchMultiQuery;*/
+
+
+const useFetchMultiQuery = () => {
+    //const [, setEntities] = useEntities();
+    const explorer = useRecoilValue(explorerSelector);
+    const { enqueueNotification, clearNotification } = useNotification();
+    
+    return useCallback(
+        async (req: MultiKeywordSearchRequest | any) => {
+            
+            const result = await explorer?.multiKeywordSearch(req);
+            if (!result || !result.vertices.length) {
+                enqueueNotification({
+                  title: "No Results",
+                  message: "Your search has returned no results",
+                });
+                return;
+            }
+    
+        }, [explorer, enqueueNotification, clearNotification]
+      );
+};
+  
 export default useFetchMultiQuery;
 
 

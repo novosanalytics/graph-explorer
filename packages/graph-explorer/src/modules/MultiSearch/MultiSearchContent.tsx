@@ -42,6 +42,7 @@ const MultiSearchContent = ({
   const textTransform = useTextTransform();
   //const fetchNode = useFetchNode();
   const fetchMultiQuery = useFetchMultiQuery;
+  const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
 
@@ -74,9 +75,25 @@ const MultiSearchContent = ({
       });
   });
 
-  const searchClick = useCallback(async () => {
-    await fetchMultiQuery();
-  }, [fetchMultiQuery]);
+  const transformQueries = useMemo(() => {
+    let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
+              searchTerm: subQuery.searchTerm,
+              searchById: false,
+              searchByAttributes: subQuery.attribute,
+              vertexTypes: subQuery.selectedVertexType,
+              exactMatch: subQuery.exactMatch,
+              offset: 0,
+              limit: 10,
+    }));
+    return multiSearch;
+  },[selectedQueries])
+  
+
+  const onSearchClick =useCallback(async () => {
+    setIsExpanding(true);
+    await fetchMultiQuery(transformQueries);
+    setIsExpanding(false);
+  }, [fetchMultiQuery, filters, limit, selectedMultiType, vertex.data, gListNames]);
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -131,7 +148,7 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={searchClick}
+            onPress={onSearchClick}
             >
                 Search SubQueries 
           </Button>
