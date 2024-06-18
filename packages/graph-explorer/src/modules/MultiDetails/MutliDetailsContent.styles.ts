@@ -59,13 +59,13 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
         height: 0;
         padding: ${theme.spacing["2x"]} 0;
 
-        .${pfx}-search-results-grid {
+        .${pfx}-multi-search-grid {
           display: flex;
           height: 100%;
           width: 100%;
           gap: ${theme.spacing.base};
 
-          .${pfx}-search-results-advanced-list {
+          .${pfx}-multi-search-advanced-list {
             width: 300px;
             background: ${theme.palette.background.default};
             .${pfx}-advanced-list-item {

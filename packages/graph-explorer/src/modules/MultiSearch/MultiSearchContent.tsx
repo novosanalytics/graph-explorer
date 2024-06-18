@@ -25,6 +25,7 @@ import defaultStyles from "./MutliSearchContent.styles"
 import { useExpandNode, useFetchNode,useFetchMultiQuery } from "../../hooks";
 import useKeywordSearch from "../KeywordSearch/useKeywordSearch"
 import { SubQuery } from "../../@types/subqueries";
+import toAdvancedList from "../KeywordSearch/toAdvancedList";
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
@@ -77,6 +78,27 @@ const MultiSearchContent = ({
       });
   });
 
+  let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
+    searchTerm: subQuery.searchTerm,
+    searchById: false,
+    searchByAttributes: subQuery.attribute,
+    vertexTypes: subQuery.selectedVertexType,
+    exactMatch: subQuery.exactMatch,
+    offset: 0,
+    limit: 10,}));
+
+  const onSearchClick = useCallback(async () => {
+    setIsExpanding(true);
+    let results = await fetchMultiQuery(multiSearch);
+    // add something here to send the results in the carousel
+    setIsExpanding(false);
+  }, [fetchMultiQuery, multiSearch]);
+
+
+  const resultItems = useMemo(() => {
+    return toAdvancedList(results)
+  })
+
   /*const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
               searchTerm: subQuery.searchTerm,
@@ -90,22 +112,6 @@ const MultiSearchContent = ({
     return multiSearch;
   },[selectedQueries])*/
 
-  let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
-    searchTerm: subQuery.searchTerm,
-    searchById: false,
-    searchByAttributes: subQuery.attribute,
-    vertexTypes: subQuery.selectedVertexType,
-    exactMatch: subQuery.exactMatch,
-    offset: 0,
-    limit: 10,}));
-  
-
-  const onSearchClick = useCallback(async () => {
-    setIsExpanding(true);
-    let results = await fetchMultiQuery(multiSearch);
-    // add something here to send the results in the carousel
-    setIsExpanding(false);
-  }, [fetchMultiQuery, multiSearch]);
   
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -127,15 +133,55 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
+
+
           <div className={pfx("multi-search-grid")}>
-            <AdvancedList
-                classNamePrefix={classNamePrefix}
-                className={pfx("selected-items-advanced-list")}
-                items={collectQueries}
-                draggable={true}
-                defaultItemType={"graph-viewer__node"}
-            />
+          <AdvancedList
+                  classNamePrefix={classNamePrefix}
+                  className={pfx("search-results-advanced-list")}
+                  items={resultItems}
+                  draggable={true}
+                  defaultItemType={"graph-viewer__node"}
+                  onItemClick={(event, item) => {
+                    selection.toggle(item.id);
+                  }}
+                  selectedItemsIds={Array.from(selection.state)}
+                  hideFooter
+                />
+                {selection.state.size > 0 && (
+                  <Carousel
+                    ref={carouselRef}
+                    slidesToShow={1}
+                    className={pfx("carousel")}
+                    pagination={{
+                      el: `.swiper-pagination`,
+                    }}
+                  >
+                    {Array.from(selection.state).map(nodeId => {
+                      const node = searchResults.find(
+                        n => n.data.id === nodeId
+                      );
+
+                      return node !== undefined ? (
+                        <NodeDetail
+                          key={nodeId}
+                          node={node}
+                          hideNeighbors={true}
+                        />
+                      ) : null;
+                    })}
+                  </Carousel>
+                )}
+                {selection.state.size === 0 && (
+                  <PanelEmptyState
+                    className={pfx("node-preview")}
+                    title="Select an item to preview"
+                    icon={<GraphIcon />}
+                  />
+                )}
           </div>
+
+
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}

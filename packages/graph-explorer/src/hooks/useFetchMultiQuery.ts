@@ -20,7 +20,6 @@ export default useFetchMultiQuery;*/
 
 
 const useFetchMultiQuery = () => {
-    const [, setEntities] = useEntities();
     const explorer = useRecoilValue(explorerSelector);
     const { enqueueNotification, clearNotification } = useNotification();
     
@@ -34,8 +33,6 @@ const useFetchMultiQuery = () => {
                 });
                 return;
             }
-            console.log(result)
-    
         }, [explorer, enqueueNotification, clearNotification]
       );
 };
