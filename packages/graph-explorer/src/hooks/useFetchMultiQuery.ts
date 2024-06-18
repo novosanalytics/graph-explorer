@@ -1,29 +1,20 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNotification } from "../components/NotificationProvider";
-import { KeywordSearchRequest, MultiKeywordSearchRequest } from "../connector/useGEFetchTypes";
+//import { KeywordSearchRequest, MultiKeywordSearchRequest } from "../connector/useGEFetchTypes";
 import { explorerSelector } from "../core/connector";
 import useEntities from "./useEntities";
 import { Vertex } from "../@types/entities";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useCallback } from "react";
-import { queryTriggerAtom, subQueriesAtom } from '../core/StateProvider/subquery';
 import { SubQuery } from "../@types/subqueries";
 
 const useFetchMultiQuery = () => {
   const [, setEntities] = useEntities();
   const explorer = useRecoilValue(explorerSelector);
   const { enqueueNotification, clearNotification } = useNotification();
-  const [trigger, setTrigger] = useRecoilState(queryTriggerAtom);
-
-  const multiQueryKey = ['multiQueryKey'];
-  const [subQueries] = useRecoilState(subQueriesAtom);
-  const queryClient = useQueryClient();
-
 
   return useCallback(
-    async (req: Set<SubQuery>) => {
-        const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
-            let setResult = Array.from(subQueries).map((subQuery) => ({
+    async (querySet: Set<SubQuery>) => {
+        const requests = Array.from(querySet).map((subQuery) => ({
               searchTerm: subQuery.searchTerm,
               searchById: false,
               searchByAttributes: subQuery.attribute,
@@ -31,12 +22,7 @@ const useFetchMultiQuery = () => {
               exactMatch: subQuery.exactMatch,
               offset: 0,
               limit: 10,
-            }));
-            return setResult;
-          };
-        
-        const requests =  multiKeywordTotal(subQueries)
-
+        }));
         const result = await explorer?.multiKeywordSearch(requests);
 
         if (!result || !result.vertices.length) {
@@ -49,7 +35,7 @@ const useFetchMultiQuery = () => {
 
     },
     [explorer, setEntities, enqueueNotification, clearNotification]
-  )
+  );
 };
 
 export default useFetchMultiQuery;

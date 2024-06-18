@@ -20,7 +20,7 @@ export interface SubQueryData {
     /**
      * Search term for the query
      */
-}
+};
 
 export type SubQuery<T = Record<string, unknown>> = T & {
     data: SubQueryData;

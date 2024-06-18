@@ -10,9 +10,8 @@ import {
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
-import PanelEmptyState from "../../components/PanelEmptyState/PanelEmptyState";
+//import { Panel,EmptyState} from "../../components/PanelEmptyState/PanelEmptyState";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
-import GraphIcon from "..multiKeywordTotal: (subQueries: Set<SubQuery>) => { searchTerm: unknown; searchById: boolean; searchByAttributes: unknown; vertexTypes: unknown; exactMatch: unknown; offset: number; limit: number; }[]multiKeywordTotal?: (subQueries: Set<SubQuery>) => { searchTerm: unknown; searchById: boolean; searchByAttributes: unknown; vertexTypes: unknown; exactMatch: unknown; offset: number; limit: number; }[]/../components/icons/GraphIcon";
 import useTranslations from "../../hooks/useTranslations";
 import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
@@ -21,14 +20,11 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters, { MultiSearchFilter } from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
-import { useExpandNode, useFetchNode } from "../../hooks";
+import { useExpandNode, useFetchNode,useFetchMultiQuery } from "../../hooks";
 import useKeywordSearch from "../KeywordSearch/useKeywordSearch"
 import { SubQuery } from "../../@types/subqueries";
-import useManageElementsLock from "../../components/Graph/hooks/useManageElementsLock";
-import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
-import { queryTriggerAtom } from "../../core/StateProvider/subquery";
-import { useSetRecoilState } from "recoil";
-import useFetchMultiQuery from "../../hooks/useFetchMultiQuery";
+//import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
+//import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -48,8 +44,6 @@ const MultiSearchContent = ({
   const fetchMultiQuery = useFetchMultiQuery;
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
-
-  const setTrigger = useSetRecoilState(queryTriggerAtom);
 
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     let setResult = Array.from(subQueries).map((subQuery) => ({
@@ -80,18 +74,9 @@ const MultiSearchContent = ({
       });
   });
 
-  const handleButtonClick = () => {
-    setTrigger(true);
-    await fetchMultiQuery(
-        multiKeywordTotal)
-  };
-
-  const onSubQueryRemove = useCallback(
-    async (searchTerm: string) => {
-        //collectQueries = updatedSubQueries;
-    },
-    [collectQueries]
-  );
+  const searchClick = useCallback(async () => {
+    await fetchMultiQuery();
+  }, [fetchMultiQuery]);
 
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -146,7 +131,7 @@ const MultiSearchContent = ({
                 <MagicExpandIcon/>
             }
             variant={"filled"}
-            onPress={handleButtonClick}
+            onPress={searchClick}
             >
                 Search SubQueries 
           </Button>
