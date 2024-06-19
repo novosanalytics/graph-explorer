@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { css, cx } from "@emotion/css";
 import type { Edge, Vertex } from "../../@types/entities";
 import { 
     AdvancedList,
@@ -8,9 +9,11 @@ import {
     DeleteIcon,
     VertexIcon,
     GraphIcon,
+    IconButton,
     Carousel,
  } from "../../components";
-import { useRecoilValue } from "recoil";
+ import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
+//import { useRecoilValue } from "recoil";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
@@ -24,7 +27,7 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
-import { useFetchNode, useFetchMultiQuery } from "../../hooks";
+import { useEntities, useFetchNode, useFetchMultiQuery } from "../../hooks";
 import NodeDetail from "../EntityDetails/NodeDetail";
 import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
@@ -47,6 +50,8 @@ const MultiSearchContent = ({
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix)
   const textTransform = useTextTransform();
+  const getDisplayNames = useDisplayNames();
+  const [entities, setEntities] = useEntities();
   //const fetchNode = useFetchNode();
   const fetchMultiQuery = useFetchMultiQuery();
   const [isExpanding, setIsExpanding] = useState(false);
@@ -58,7 +63,7 @@ const MultiSearchContent = ({
     vertices: [],
   }
 
-  const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
+/*  const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     let setResult = Array.from(subQueries).map((subQuery) => ({
       searchTerm: subQuery.searchTerm,
       searchById: false,
@@ -70,7 +75,7 @@ const MultiSearchContent = ({
     }));
     return setResult;
   };
-
+*/
   let collectQueries: AdvancedListItemType<any>[] = [];
   selectedQueries.forEach(sQItem => {
     return collectQueries.push({
@@ -108,7 +113,80 @@ const MultiSearchContent = ({
     setIsExpanding(false);
   }, [fetchMultiQuery, multiSearch]);
 
-  
+  const resultItems = useMemo(() => {
+    return toAdvancedList(multisearchresults.vertices, {
+      getGroupLabel: vertex => {
+        const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
+        return vtConfig?.displayLabel || textTransform(vertex.data.type);
+      },
+      getItem: vertex => {
+        const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
+        const { name, longName } = getDisplayNames(vertex);
+        return {
+          className: css`
+            .ft-start-adornment {
+              background-color: ${fade(vtConfig?.color, 0.2)} !important;
+              color: ${vtConfig?.color} !important;
+            }
+          `,
+          group: vertex.data.type,
+          id: vertex.data.id,
+          title: name,
+          subtitle: longName,
+          icon: (
+            <VertexIcon
+              iconUrl={vtConfig?.iconUrl}
+              iconImageType={vtConfig?.iconImageType}
+            />
+          ),
+          endAdornment: entities.nodes.find(
+            n => n.data.id === vertex.data.id
+          ) ? (
+            <IconButton 
+              tooltipText={"Remove from canvas"}
+              icon={
+                <RemoveFromCanvasIcon className={pfx("graph-remove-icon")} />
+              }
+              size={"small"}
+              variant={"text"}
+              onPress={() => {
+                setEntities(prev => {
+                  return {
+                    ...prev,
+                    nodes: prev.nodes.filter(n => n.data.id !== vertex.data.id),
+                    forceSet: true,
+                  };
+                });
+              }}
+            />
+          ) : (
+            <IconButton
+              tooltipText={"Add to canvas"}
+              icon={<AddCircleIcon />}
+              size={"small"}
+              variant={"text"}
+              onPress={() => {
+                const numNeighborsLimit = neighborsLimit ? 500 : 0;
+                fetchNode(vertex, numNeighborsLimit);
+                setInputFocused(false);
+              }}
+            />
+          ),
+          properties: vertex,
+        };
+      },
+    });
+  }, [
+    searchResults,
+    config,
+    getDisplayNames,
+    textTransform,
+    entities.nodes,
+    pfx,
+    setEntities,
+    fetchNode,
+    neighborsLimit,
+  ])  
 
   /*const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
@@ -144,7 +222,7 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-            {if() && (
+            {!(multisearchresults.vertices.length = 0) && (
               <div className={pfx("search-results-grid")}>
                 <AdvancedList
                   classNamePrefix={classNamePrefix}
