@@ -10,12 +10,12 @@ import { multiQueriesResultAtom } from "../core/StateProvider/subquery";
 
 const useFetchMultiQuery = () => {
     const explorer = useRecoilValue(explorerSelector);
-    //const setMultiQueryAtom = useSetRecoilState(multiQueriesResultAtom);
+    const setMultiQueryAtom = useSetRecoilState(multiQueriesResultAtom);
     const { enqueueNotification, clearNotification } = useNotification();
     
     return useCallback(
         async (req: any) => {
-            const result = await explorer?.multiKeywordSearch(req);
+            let result = await explorer?.multiKeywordSearch(req);
             if (!result || !result.vertices.length) {
                 enqueueNotification({
                   title: "No Results",
@@ -23,7 +23,8 @@ const useFetchMultiQuery = () => {
                 });
                 return;
             };
-            //setMultiQueryAtom(result);
+            setMultiQueryAtom(result);
+            return result
         }, [explorer, enqueueNotification, clearNotification]
       );
 };

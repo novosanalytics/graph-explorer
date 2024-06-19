@@ -29,6 +29,7 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
 import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
+import { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
@@ -51,7 +52,11 @@ const MultiSearchContent = ({
   const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
-  const multiResult = useRecoilValue(multiQueriesResultAtom);
+  //const multiResult = useRecoilValue(multiQueriesResultAtom);
+
+  let multisearchresults: KeywordSearchResponse = {
+    vertices: [],
+  }
 
   const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
     let setResult = Array.from(subQueries).map((subQuery) => ({
@@ -96,9 +101,14 @@ const MultiSearchContent = ({
     setIsExpanding(true);
     let finalResult = await fetchMultiQuery(multiSearch);
     // add something here to send the results in the carousel
-    console.log(finalResult)
+    if (finalResult != undefined){
+        multisearchresults = finalResult
+    }
+    console.log(multisearchresults)
     setIsExpanding(false);
   }, [fetchMultiQuery, multiSearch]);
+
+  
 
   /*const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
@@ -134,6 +144,53 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
+            {if() && (
+              <div className={pfx("search-results-grid")}>
+                <AdvancedList
+                  classNamePrefix={classNamePrefix}
+                  className={pfx("search-results-advanced-list")}
+                  items={resultItems}
+                  draggable={true}
+                  defaultItemType={"graph-viewer__node"}
+                  onItemClick={(event, item) => {
+                    selection.toggle(item.id);
+                  }}
+                  selectedItemsIds={Array.from(selection.state)}
+                  hideFooter
+                />
+                {selection.state.size > 0 && (
+                  <Carousel
+                    ref={carouselRef}
+                    slidesToShow={1}
+                    className={pfx("carousel")}
+                    pagination={{
+                      el: `.swiper-pagination`,
+                    }}
+                  >
+                    {Array.from(selection.state).map(nodeId => {
+                      const node = searchResults.find(
+                        n => n.data.id === nodeId
+                      );
+
+                      return node !== undefined ? (
+                        <NodeDetail
+                          key={nodeId}
+                          node={node}
+                          hideNeighbors={true}
+                        />
+                      ) : null;
+                    })}
+                  </Carousel>
+                )}
+                {selection.state.size === 0 && (
+                  <PanelEmptyState
+                    className={pfx("node-preview")}
+                    title="Select an item to preview"
+                    icon={<GraphIcon />}
+                  />
+                )}
+              </div>
+            )}          
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
@@ -170,7 +227,7 @@ const MultiSearchContent = ({
             }
             variant={"filled"}
             onPress={()=>{
-                console.log("Test")
+                console.log(multisearchresults)
             }}
             >
                 Display Results 
