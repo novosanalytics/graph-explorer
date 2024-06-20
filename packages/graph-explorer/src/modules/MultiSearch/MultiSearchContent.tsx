@@ -34,7 +34,7 @@ import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
 import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
 import { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
-import { useRecoilValueLoadable, useRecoilValue } from "recoil";
+import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState, useRecoilState  } from "recoil";
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
@@ -59,30 +59,16 @@ const MultiSearchContent = ({
   const fetchMultiQuery = useFetchMultiQuery();
   const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
-  const [clusive, setClusive] = useState<string | null>(null);
+  const [clusive, setClusive] = useState<boolean>(false);
   const [isFocused, setInputFocused] = useState(false);
   const selection = useSet<string>(new Set());
   const carouselRef = useRef<CarouselRef>(null);
-  //const multiSearchResults = useRecoilValueLoadable(multiQueriesResultAtom)
+  const [resultAtom, setResultAtom] = useRecoilState(multiQueriesResultAtom);
+  //const [multiSearchAtomResults, setMultiSearchAtomResults ] = useRecoilValue(multiQueriesResultAtom) 
+  //useRecoilValueLoadable(multiQueriesResultAtom)
   //const multiResult = useRecoilValue(multiQueriesResultAtom);
 
-  let multisearchresults: KeywordSearchResponse = {
-    vertices: [],
-  }
 
-/*  const multiKeywordTotal = (subQueries:Set<SubQuery>) => {
-    let setResult = Array.from(subQueries).map((subQuery) => ({
-      searchTerm: subQuery.searchTerm,
-      searchById: false,
-      searchByAttributes: subQuery.attribute,
-      vertexTypes: subQuery.selectedVertexType,
-      exactMatch: subQuery.exactMatch,
-      offset: 0,
-      limit: 10,
-    }));
-    return setResult;
-  };
-*/
   let collectQueries: AdvancedListItemType<any>[] = [];
   selectedQueries.forEach(sQItem => {
     return collectQueries.push({
@@ -99,7 +85,10 @@ const MultiSearchContent = ({
       });
   });
 
-  let altResultItems: AdvancedListItemType<any>[] = [{id:"test", title:"test"}];
+  let altResultItems: AdvancedListItemType<any>[] = Array.from(resultAtom.vertices).map((queryResult) => ({
+    id: queryResult.data.id,
+    title: queryResult.data.id,
+  }));
   /*multisearchresults.vertices.forEach(vert =>{
     return altResultItems.push({
         id:vert.data.id, //vert.data.id,
@@ -120,23 +109,12 @@ const MultiSearchContent = ({
   const onSearchClick = useCallback(async () => {
     setIsExpanding(true);
     let finalResult = await fetchMultiQuery(multiSearch);
-    // add something here to send the results in the carousel
-    if (finalResult != undefined){
-        multisearchresults = finalResult
-    }
-    altResultItems = [];
-    multisearchresults.vertices.forEach(vert =>{
-        return altResultItems.push({
-            id:vert.data.id, //vert.data.id,
-            title: vert.data.id
-        })
-    });
-    console.log(altResultItems);
+    setResultAtom(finalResult);
     setIsExpanding(false);
-  }, [fetchMultiQuery, multiSearch]);
+  }, [fetchMultiQuery, multiSearch, setResultAtom]);
 
 
-  const resultItems = useMemo(() => {
+ /*const resultItems = useMemo(() => {
     return toAdvancedList(multisearchresults.vertices, {
       getGroupLabel: vertex => {
         const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
@@ -208,9 +186,9 @@ const MultiSearchContent = ({
     pfx,
     setEntities,
     fetchNode,
-  ])  
+  ])*/
 
-  /*const transformQueries = useMemo(() => {
+  const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
               searchTerm: subQuery.searchTerm,
               searchById: false,
@@ -221,7 +199,7 @@ const MultiSearchContent = ({
               limit: 10,
     }));
     return multiSearch;
-  },[selectedQueries])*/
+  },[selectedQueries])
 
   
   return(
@@ -254,10 +232,10 @@ const MultiSearchContent = ({
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
-              limit={limit}
-              onLimitChange={setLimit}
               clusive={clusive}
               onClusiveChange={setClusive}
+              limit={limit}
+              onLimitChange={setLimit}
             />
           )}
           <ModuleContainerFooter>
@@ -287,7 +265,7 @@ const MultiSearchContent = ({
             }
             variant={"filled"}
             onPress={()=>{
-                console.log(multisearchresults)
+                console.log(resultAtom)
             }}
             >
                 Display Results 

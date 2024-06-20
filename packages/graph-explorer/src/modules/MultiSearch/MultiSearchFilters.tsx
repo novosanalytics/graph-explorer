@@ -5,33 +5,35 @@ import {
   DeleteIcon,
   IconButton,
   Input,
-  Select,
-  Carousel,
 } from "../../components";
 import { CarouselRef } from "../../components/Carousel/Carousel";
 import { useConfiguration, withClassNamePrefix } from "../../core";
 import useTextTransform from "../../hooks/useTextTransform";
 import useTranslations from "../../hooks/useTranslations";
+import Switch from "../../components/Switch";
 import { useSet } from "../../hooks";
 
 
 export type MultiSearchFilter = {
   name: string;
   value: string;
+  clusive: boolean;
 };
 
 export type MultiSearchFiltersContentProps = {
   classNamePrefix?: string;
   limit: number | null;
   onLimitChange(limit: number | null): void;
-  clusive?: string | null;
-  onClusiveChange?(clusive: string | null): void;
+  clusive: boolean;
+  onClusiveChange(clusive: boolean): void;
 }
 
 const MultiSearchFilter =({
   classNamePrefix = "ft",
   limit,
-  onLimitChange
+  onLimitChange,
+  clusive,
+  onClusiveChange,
 }: MultiSearchFiltersContentProps) => {
   const config = useConfiguration();
   const t = useTranslations();
@@ -47,6 +49,19 @@ const MultiSearchFilter =({
 
   return (
     <div className={pfx("filters-section")}>
+        <div className={pfx("title")}>
+            <div>AND/OR Clusive</div>
+        </div>
+        <div className={pfx("clusive")}>
+          <Switch
+            className={pfx("item-switch")}
+            labelPosition={"right"}
+            isSelected={clusive === true || false }
+            onChange={() => onClusiveChange(!clusive)}
+            >
+            {clusive ? "AND MultiSearch" : "OR MultiSearch"}
+            </Switch>
+        </div>
       <div className={pfx("title")}>
         <div>Limit returned neighbors to</div>
         <IconButton

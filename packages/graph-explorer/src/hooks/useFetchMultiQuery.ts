@@ -10,7 +10,7 @@ import { multiQueriesResultAtom } from "../core/StateProvider/subquery";
 
 const useFetchMultiQuery = () => {
     const explorer = useRecoilValue(explorerSelector);
-    const setMultiQueryAtom = useSetRecoilState(multiQueriesResultAtom);
+    //const setMultiQueryAtom = useSetRecoilState(multiQueriesResultAtom);
     const { enqueueNotification, clearNotification } = useNotification();
     
     return useCallback(
@@ -23,7 +23,7 @@ const useFetchMultiQuery = () => {
                 });
                 return;
             };
-            setMultiQueryAtom(result);
+            //setMultiQueryAtom(result);
             return result
         }, [explorer, enqueueNotification, clearNotification]
       );
