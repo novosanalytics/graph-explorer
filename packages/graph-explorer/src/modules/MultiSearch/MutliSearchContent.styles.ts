@@ -41,6 +41,45 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
       }
     }
 
+    .${pfx}-node-preview {
+        width: 50%;
+      }
+
+      .${pfx}-search-results {
+        align-items: center;
+        display: flex;
+        flex-grow: 1;
+        height: 0;
+        padding: ${theme.spacing["2x"]} 0;
+
+        .${pfx}-search-results-grid {
+          display: flex;
+          height: 100%;
+          width: 100%;
+          gap: ${theme.spacing.base};
+
+          .${pfx}-search-results-advanced-list {
+            width: 300px;
+            background: ${theme.palette.background.default};
+            .${pfx}-advanced-list-item {
+              background: ${theme.palette.background.secondary};
+              .${pfx}-content {
+                background: ${theme.palette.background.secondary};
+              }
+            }
+          }
+
+          .${pfx}-carousel {
+            flex-grow: 1;
+            overflow: hidden;
+          }
+
+          .${pfx}-graph-remove-icon {
+            color: ${theme.palette.secondary.main};
+          }
+        }
+      }
+
     .${pfx}-selected-items-advanced-list {
       width: 650px;
       height: 700px;

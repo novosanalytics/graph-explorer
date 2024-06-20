@@ -15,11 +15,9 @@ import {
     PanelEmptyState,
  } from "../../components";
  import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
-//import { useRecoilValue } from "recoil";
 import Button from "../../components/Button";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core";
-//import { Panel,EmptyState} from "../../components/PanelEmptyState/PanelEmptyState";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
 import useTranslations from "../../hooks/useTranslations";
 import { CarouselRef } from "../../components/Carousel/Carousel";
@@ -36,8 +34,10 @@ import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
 import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
 import { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
+import { useRecoilValueLoadable, useRecoilValue } from "recoil";
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
+
 
 export type MultiSearchContentProps = {
   classNamePrefix?: string;
@@ -63,6 +63,7 @@ const MultiSearchContent = ({
   const [isFocused, setInputFocused] = useState(false);
   const selection = useSet<string>(new Set());
   const carouselRef = useRef<CarouselRef>(null);
+  //const multiSearchResults = useRecoilValueLoadable(multiQueriesResultAtom)
   //const multiResult = useRecoilValue(multiQueriesResultAtom);
 
   let multisearchresults: KeywordSearchResponse = {
@@ -98,6 +99,14 @@ const MultiSearchContent = ({
       });
   });
 
+  let altResultItems: AdvancedListItemType<any>[] = [{id:"test", title:"test"}];
+  /*multisearchresults.vertices.forEach(vert =>{
+    return altResultItems.push({
+        id:vert.data.id, //vert.data.id,
+        title: vert.data.id
+    })
+  })*/
+
 
   let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
     searchTerm: subQuery.searchTerm,
@@ -115,9 +124,17 @@ const MultiSearchContent = ({
     if (finalResult != undefined){
         multisearchresults = finalResult
     }
-    console.log(multisearchresults)
+    altResultItems = [];
+    multisearchresults.vertices.forEach(vert =>{
+        return altResultItems.push({
+            id:vert.data.id, //vert.data.id,
+            title: vert.data.id
+        })
+    });
+    console.log(altResultItems);
     setIsExpanding(false);
   }, [fetchMultiQuery, multiSearch]);
+
 
   const resultItems = useMemo(() => {
     return toAdvancedList(multisearchresults.vertices, {
@@ -227,53 +244,13 @@ const MultiSearchContent = ({
             draggable={true}
             defaultItemType={"graph-viewer__node"}
           />
-            {!(multisearchresults.vertices.length = 0) && (
-              <div className={pfx("search-results-grid")}>
-                <AdvancedList
-                  classNamePrefix={classNamePrefix}
-                  className={pfx("search-results-advanced-list")}
-                  items={resultItems}
-                  draggable={true}
-                  defaultItemType={"graph-viewer__node"}
-                  onItemClick={(event, item) => {
-                    selection.toggle(item.id);
-                  }}
-                  selectedItemsIds={Array.from(selection.state)}
-                  hideFooter
-                />
-                {selection.state.size > 0 && (
-                  <Carousel
-                    ref={carouselRef}
-                    slidesToShow={1}
-                    className={pfx("carousel")}
-                    pagination={{
-                      el: `.swiper-pagination`,
-                    }}
-                  >
-                    {Array.from(selection.state).map(nodeId => {
-                      const node = multisearchresults.vertices.find(
-                        n => n.data.id === nodeId
-                      );
-
-                      return node !== undefined ? (
-                        <NodeDetail
-                          key={nodeId}
-                          node={node}
-                          hideNeighbors={true}
-                        />
-                      ) : null;
-                    })}
-                  </Carousel>
-                )}
-                {selection.state.size === 0 && (
-                  <PanelEmptyState
-                    className={pfx("node-preview")}
-                    title="Select an item to preview"
-                    icon={<GraphIcon />}
-                  />
-                )}
-              </div>
-            )}          
+          <AdvancedList
+            classNamePrefix={classNamePrefix}
+            className={pfx("selected-items-advanced-list")}
+            items={altResultItems}
+            draggable={true}
+            defaultItemType={"graph-viewer__node"}
+            />
         {!!(selectedQueries.size > 0) && (
             <MultiSearchFilters
               classNamePrefix={classNamePrefix}
