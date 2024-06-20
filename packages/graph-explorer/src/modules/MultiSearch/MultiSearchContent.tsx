@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useRef } from "react";
 import { css, cx } from "@emotion/css";
 import type { Edge, Vertex } from "../../@types/entities";
 import { 
+    AddCircleIcon,
     AdvancedList,
     AdvancedListItemType,
     ModuleContainerFooter, 
@@ -11,6 +12,7 @@ import {
     GraphIcon,
     IconButton,
     Carousel,
+    PanelEmptyState,
  } from "../../components";
  import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
 //import { useRecoilValue } from "recoil";
@@ -20,6 +22,7 @@ import { useConfiguration, useWithTheme, withClassNamePrefix } from "../../core"
 //import { Panel,EmptyState} from "../../components/PanelEmptyState/PanelEmptyState";
 import ExpandGraphIcon from "../../components/icons/ExpandGraphIcon";
 import useTranslations from "../../hooks/useTranslations";
+import { CarouselRef } from "../../components/Carousel/Carousel";
 import fade from "../../core/ThemeProvider/utils/fade";
 import useTextTransform from "../../hooks/useTextTransform";
 import useNeighborsOptions from "../../hooks/useNeighborsOptions";
@@ -27,7 +30,7 @@ import useDisplayNames from "../../hooks/useDisplayNames";
 import MultiNeighborsList from "../common/NeighborsList/MultiNeighborList";
 import MultiSearchFilters from "./MultiSearchFilters"
 import defaultStyles from "./MutliSearchContent.styles"
-import { useEntities, useFetchNode, useFetchMultiQuery } from "../../hooks";
+import { useEntities, useFetchNode, useFetchMultiQuery, useSet } from "../../hooks";
 import NodeDetail from "../EntityDetails/NodeDetail";
 import { SubQuery } from "../../@types/subqueries";
 import toAdvancedList from "../KeywordSearch/toAdvancedList";
@@ -52,11 +55,14 @@ const MultiSearchContent = ({
   const textTransform = useTextTransform();
   const getDisplayNames = useDisplayNames();
   const [entities, setEntities] = useEntities();
-  //const fetchNode = useFetchNode();
+  const fetchNode = useFetchNode();
   const fetchMultiQuery = useFetchMultiQuery();
   const [isExpanding, setIsExpanding] = useState(false);
   const [limit, setLimit] = useState<number | null>(null);
   const [clusive, setClusive] = useState<string | null>(null);
+  const [isFocused, setInputFocused] = useState(false);
+  const selection = useSet<string>(new Set());
+  const carouselRef = useRef<CarouselRef>(null);
   //const multiResult = useRecoilValue(multiQueriesResultAtom);
 
   let multisearchresults: KeywordSearchResponse = {
@@ -166,7 +172,7 @@ const MultiSearchContent = ({
               size={"small"}
               variant={"text"}
               onPress={() => {
-                const numNeighborsLimit = neighborsLimit ? 500 : 0;
+                const numNeighborsLimit = 500;
                 fetchNode(vertex, numNeighborsLimit);
                 setInputFocused(false);
               }}
@@ -177,7 +183,7 @@ const MultiSearchContent = ({
       },
     });
   }, [
-    searchResults,
+    multisearchresults,
     config,
     getDisplayNames,
     textTransform,
@@ -185,7 +191,6 @@ const MultiSearchContent = ({
     pfx,
     setEntities,
     fetchNode,
-    neighborsLimit,
   ])  
 
   /*const transformQueries = useMemo(() => {
@@ -246,7 +251,7 @@ const MultiSearchContent = ({
                     }}
                   >
                     {Array.from(selection.state).map(nodeId => {
-                      const node = searchResults.find(
+                      const node = multisearchresults.vertices.find(
                         n => n.data.id === nodeId
                       );
 
