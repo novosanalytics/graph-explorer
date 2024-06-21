@@ -35,6 +35,7 @@ import toAdvancedList from "../KeywordSearch/toAdvancedList";
 import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
 import { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState, useRecoilState  } from "recoil";
+import { subQueriesAtom } from "../../core/StateProvider/subquery"
 //import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
 //import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
@@ -64,6 +65,8 @@ const MultiSearchContent = ({
   const selection = useSet<string>(new Set());
   const carouselRef = useRef<CarouselRef>(null);
   const [resultAtom, setResultAtom] = useRecoilState(multiQueriesResultAtom);
+  const [subQuery, setSubQuery] = useRecoilValue(subQueriesAtom);
+
 
   let collectQueries: AdvancedListItemType<any>[] = [];
   selectedQueries.forEach(sQItem => {
@@ -102,6 +105,11 @@ const MultiSearchContent = ({
     setIsExpanding(false);
   }, [fetchMultiQuery, multiSearch, setResultAtom]);
 
+  const onDeleteSearch = useCallback(async () => {
+    let smallerSubQuery = new Set(Array.from(selectedQueries).slice(0, -1));
+    setSubQuery(smallerSubQuery);
+  }, [subQueriesAtom])
+
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -113,17 +121,14 @@ const isTheNodeAdded = (nodeId: string): boolean => {
     return possibleNode !== undefined;
   };
 
-  
+
   const getNodeIdsToAdd = () => {
-    const selectedNodeIds = Array.from(selection.state);
-    return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
-  };  const getNodeIdsToAdd = () => {
     const selectedNodeIds = Array.from(selection.state);
     return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
   };
 
 
-  const handleAddEntities = => {
+  const handleAddEntities = () => {
     const nodeIdsToAdd = getNodeIdsToAdd();
     const nodes = nodeIdsToAdd
       .map(getNodeSearchedById)
@@ -270,6 +275,7 @@ const isTheNodeAdded = (nodeId: string): boolean => {
             variant={"filled"}
             onPress={()=>{
                 console.log("Test")
+                //onDeleteSearch
             }}
             >
                 Delete Subquery 
@@ -290,6 +296,7 @@ const isTheNodeAdded = (nodeId: string): boolean => {
             variant={"filled"}
             onPress={()=>{
                 console.log(resultAtom)
+                //handleAddEntities
             }}
             >
                 Display Results 
