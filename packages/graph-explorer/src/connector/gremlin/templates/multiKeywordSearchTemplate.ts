@@ -26,7 +26,7 @@ import multiKeywordSearch from "../queries/multiKeywordSearch";
 const multiKeywordSearchTemplate = (
     multiKeywordSearch: MultiKeywordSearchRequest): string => {
     //console.log(`Input sub ${multiKeywordSearch[0];
-    console.log(`Input: ${multiKeywordSearch}`);
+    console.log(`Input: ${multiKeywordSearch.clusiver}`);
     let template = "g.V()";
     let firstSearch = multiKeywordSearch[0];
     console.log(firstSearch)

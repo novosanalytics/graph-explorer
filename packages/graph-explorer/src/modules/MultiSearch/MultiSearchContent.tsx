@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, useRef } from "react";
 import { css, cx } from "@emotion/css";
 import type { Edge, Vertex } from "../../@types/entities";
+import { useNotification } from "../../components/NotificationProvider";
 import { 
     AddCircleIcon,
     AdvancedList,
@@ -36,8 +37,6 @@ import { multiQueriesResultAtom } from "../../core/StateProvider/subquery";
 import { KeywordSearchResponse } from "../../connector/useGEFetchTypes";
 import { useRecoilValueLoadable, useRecoilValue, useSetRecoilState, useRecoilState  } from "recoil";
 import { subQueriesAtom } from "../../core/StateProvider/subquery"
-//import keywordSearch from "../../connector/gremlin/queries/keywordSearch";
-//import { queryTriggerAtom } from "../../core/StateProvider/subquery";
 
 
 export type MultiSearchContentProps = {
@@ -63,6 +62,7 @@ const MultiSearchContent = ({
   const [clusive, setClusive] = useState<boolean>(false);
   const [isFocused, setInputFocused] = useState(false);
   const selection = useSet<string>(new Set());
+  const { enqueueNotification, clearNotification } = useNotification();
   const carouselRef = useRef<CarouselRef>(null);
   const [resultAtom, setResultAtom] = useRecoilState(multiQueriesResultAtom);
   const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
@@ -91,19 +91,28 @@ const MultiSearchContent = ({
     vertexTypes: subQuery.selectedVertexType,
     exactMatch: subQuery.exactMatch,
     offset: 0,
-    limit: 10,}));
+    limit: limit ? limit: 10,
+    clusive: clusive,
+}));
 
   const onSearchClick = useCallback(async () => {
-    setIsExpanding(true);
     let finalResult = await fetchMultiQuery(multiSearch);
-    setResultAtom(finalResult);
-    setIsExpanding(false);
+    if(finalResult !== undefined){
+        setResultAtom(finalResult);
+    } else {
+        enqueueNotification({
+            title: "No Search Results",
+            message: "No results, please check your query and try again",
+            type: "error",
+            stackable: true,
+          });
+    }
+    
+
   }, [fetchMultiQuery, multiSearch, setResultAtom]);
 
   const onDeleteSearch = useCallback(async () => {
-    console.log(Array.from(selectedQueries).slice(0, selectedQueries.size - 1))
     let smallerSubQuery = new Set(Array.from(selectedQueries).slice(0, -1));
-    console.log(`${smallerSubQuery}`)
     setSubQuery(smallerSubQuery);
   }, [subQueriesAtom, setSubQuery])
 
@@ -213,21 +222,6 @@ const isTheNodeAdded = (nodeId: string): boolean => {
     fetchNode,
   ])
 
-/*
-  const transformQueries = useMemo(() => {
-    let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
-              searchTerm: subQuery.searchTerm,
-              searchById: false,
-              searchByAttributes: subQuery.attribute,
-              vertexTypes: subQuery.selectedVertexType,
-              exactMatch: subQuery.exactMatch,
-              offset: 0,
-              limit: 10,
-    }));
-    return multiSearch;
-  },[selectedQueries])
-*/
-  
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
       <div className={pfx("header")}>
@@ -286,19 +280,6 @@ const isTheNodeAdded = (nodeId: string): boolean => {
             >
                 Search SubQueries 
           </Button>
-          <Button
-            icon={
-                <GraphIcon/>
-            }
-            variant={"filled"}
-            onPress={
-            ()=>{console.log(resultAtom)}
-            //handleAddEntities
-            }
-            >
-                Display Results 
-          </Button>
-
           </ModuleContainerFooter>
         </>
       )}
