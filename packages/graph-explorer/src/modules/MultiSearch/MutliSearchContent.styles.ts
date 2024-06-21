@@ -59,7 +59,7 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
           gap: ${theme.spacing.base};
 
           .${pfx}-search-results-advanced-list {
-            width: 300px;
+            width: 200px;
             background: ${theme.palette.background.default};
             .${pfx}-advanced-list-item {
               background: ${theme.palette.background.secondary};

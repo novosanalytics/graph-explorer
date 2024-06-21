@@ -64,10 +64,6 @@ const MultiSearchContent = ({
   const selection = useSet<string>(new Set());
   const carouselRef = useRef<CarouselRef>(null);
   const [resultAtom, setResultAtom] = useRecoilState(multiQueriesResultAtom);
-  //const [multiSearchAtomResults, setMultiSearchAtomResults ] = useRecoilValue(multiQueriesResultAtom) 
-  //useRecoilValueLoadable(multiQueriesResultAtom)
-  //const multiResult = useRecoilValue(multiQueriesResultAtom);
-
 
   let collectQueries: AdvancedListItemType<any>[] = [];
   selectedQueries.forEach(sQItem => {
@@ -89,13 +85,6 @@ const MultiSearchContent = ({
     id: queryResult.data.id,
     title: queryResult.data.id,
   }));
-  /*multisearchresults.vertices.forEach(vert =>{
-    return altResultItems.push({
-        id:vert.data.id, //vert.data.id,
-        title: vert.data.id
-    })
-  })*/
-
 
   let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
     searchTerm: subQuery.searchTerm,
@@ -114,8 +103,42 @@ const MultiSearchContent = ({
   }, [fetchMultiQuery, multiSearch, setResultAtom]);
 
 
- /*const resultItems = useMemo(() => {
-    return toAdvancedList(multisearchresults.vertices, {
+
+/////////////////////////////////////////////////////////////////////////
+
+const isTheNodeAdded = (nodeId: string): boolean => {
+    const possibleNode = entities.nodes.find(
+      addedNode => addedNode.data.id === nodeId
+    );
+    return possibleNode !== undefined;
+  };
+
+  
+  const getNodeIdsToAdd = () => {
+    const selectedNodeIds = Array.from(selection.state);
+    return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
+  };  const getNodeIdsToAdd = () => {
+    const selectedNodeIds = Array.from(selection.state);
+    return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
+  };
+
+
+  const handleAddEntities = => {
+    const nodeIdsToAdd = getNodeIdsToAdd();
+    const nodes = nodeIdsToAdd
+      .map(getNodeSearchedById)
+      .filter(Boolean) as Vertex[];
+    const numNeighborsLimit = 500;
+    fetchNode(nodes, numNeighborsLimit);
+  };
+
+  const getNodeSearchedById = (nodeId: string): Vertex | undefined => {
+    return resultAtom.vertices.find(result => result.data.id === nodeId);
+  };
+//////////////////////////////////////////////////////////////////////////////////////////
+
+  const resultItems = useMemo(() => {
+    return toAdvancedList(resultAtom.vertices, {
       getGroupLabel: vertex => {
         const vtConfig = config?.getVertexTypeConfig(vertex.data.type);
         return vtConfig?.displayLabel || textTransform(vertex.data.type);
@@ -178,7 +201,7 @@ const MultiSearchContent = ({
       },
     });
   }, [
-    multisearchresults,
+    resultAtom,
     config,
     getDisplayNames,
     textTransform,
@@ -186,8 +209,9 @@ const MultiSearchContent = ({
     pfx,
     setEntities,
     fetchNode,
-  ])*/
+  ])
 
+/*
   const transformQueries = useMemo(() => {
     let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
               searchTerm: subQuery.searchTerm,
@@ -200,7 +224,7 @@ const MultiSearchContent = ({
     }));
     return multiSearch;
   },[selectedQueries])
-
+*/
   
   return(
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>
@@ -225,7 +249,7 @@ const MultiSearchContent = ({
           <AdvancedList
             classNamePrefix={classNamePrefix}
             className={pfx("selected-items-advanced-list")}
-            items={altResultItems}
+            items={resultItems}
             draggable={true}
             defaultItemType={"graph-viewer__node"}
             />

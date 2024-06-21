@@ -59,7 +59,7 @@ const MultiSearchFilter =({
             isSelected={clusive === true || false }
             onChange={() => onClusiveChange(!clusive)}
             >
-            {clusive ? "AND MultiSearch" : "OR MultiSearch"}
+            {clusive ? "OR MultiSearch" : "AND MultiSearch"}
             </Switch>
         </div>
       <div className={pfx("title")}>
