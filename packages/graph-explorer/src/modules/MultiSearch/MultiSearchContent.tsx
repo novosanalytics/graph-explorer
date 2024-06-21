@@ -65,7 +65,7 @@ const MultiSearchContent = ({
   const selection = useSet<string>(new Set());
   const carouselRef = useRef<CarouselRef>(null);
   const [resultAtom, setResultAtom] = useRecoilState(multiQueriesResultAtom);
-  const [subQuery, setSubQuery] = useRecoilValue(subQueriesAtom);
+  const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
 
 
   let collectQueries: AdvancedListItemType<any>[] = [];
@@ -84,11 +84,6 @@ const MultiSearchContent = ({
       });
   });
 
-  let altResultItems: AdvancedListItemType<any>[] = Array.from(resultAtom.vertices).map((queryResult) => ({
-    id: queryResult.data.id,
-    title: queryResult.data.id,
-  }));
-
   let multiSearch = Array.from(selectedQueries).map((subQuery) => ({
     searchTerm: subQuery.searchTerm,
     searchById: false,
@@ -106,9 +101,11 @@ const MultiSearchContent = ({
   }, [fetchMultiQuery, multiSearch, setResultAtom]);
 
   const onDeleteSearch = useCallback(async () => {
+    console.log(Array.from(selectedQueries).slice(0, selectedQueries.size - 1))
     let smallerSubQuery = new Set(Array.from(selectedQueries).slice(0, -1));
+    console.log(`${smallerSubQuery}`)
     setSubQuery(smallerSubQuery);
-  }, [subQueriesAtom])
+  }, [subQueriesAtom, setSubQuery])
 
 
 
@@ -273,12 +270,12 @@ const isTheNodeAdded = (nodeId: string): boolean => {
                 <DeleteIcon/>
             }
             variant={"filled"}
-            onPress={()=>{
-                console.log("Test")
-                //onDeleteSearch
-            }}
+            onPress={
+                //()=>{console.log("Test")}
+            onDeleteSearch
+            }
             >
-                Delete Subquery 
+                Reset Search 
           </Button>
           <Button
             icon={
@@ -294,10 +291,10 @@ const isTheNodeAdded = (nodeId: string): boolean => {
                 <GraphIcon/>
             }
             variant={"filled"}
-            onPress={()=>{
-                console.log(resultAtom)
-                //handleAddEntities
-            }}
+            onPress={
+            ()=>{console.log(resultAtom)}
+            //handleAddEntities
+            }
             >
                 Display Results 
           </Button>
