@@ -20,6 +20,7 @@ import { escapeString } from "../../../utils";
  *  )
  *  .range(0, 100)
  */
+
 const keywordSearchTemplate = ({
   searchTerm,
   vertexTypes = [],
@@ -66,6 +67,7 @@ const keywordSearchTemplate = ({
   }
 
   template += `.range(${offset},${offset + limit})`;
+  console.log(template)
   return template;
 };
 

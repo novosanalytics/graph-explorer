@@ -233,6 +233,15 @@ const ContextMenu = ({
             classNamePrefix={"ft"}
             className={pfx("list-item")}
             clickable={true}
+            onClick={openSidebarPanel("multi-search")}
+            startAdornment={<ExpandGraphIcon />}
+          >
+            Multi-Search
+          </ListItem>
+          <ListItem
+            classNamePrefix={"ft"}
+            className={pfx("list-item")}
+            clickable={true}
             onClick={openSidebarPanel("multi-details")}
             startAdornment={<DateLock />}
           >

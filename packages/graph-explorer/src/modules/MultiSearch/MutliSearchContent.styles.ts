@@ -41,32 +41,25 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
       }
     }
 
-    .${pfx}-selected-items-advanced-list {
-      width: 500px;
-      background: ${theme.palette.background.default};
-      .${pfx}-advanced-list-item {
-        background: ${theme.palette.background.secondary};
-        .${pfx}-content {
-          background: ${theme.palette.background.secondary};
-        }
+    .${pfx}-node-preview {
+        width: 50%;
       }
-    }
 
-    .${pfx}-search-results {
+      .${pfx}-search-results {
         align-items: center;
         display: flex;
         flex-grow: 1;
         height: 0;
         padding: ${theme.spacing["2x"]} 0;
 
-        .${pfx}-multi-search-grid {
+        .${pfx}-search-results-grid {
           display: flex;
           height: 100%;
           width: 100%;
           gap: ${theme.spacing.base};
 
-          .${pfx}-multi-search-advanced-list {
-            width: 300px;
+          .${pfx}-search-results-advanced-list {
+            width: 200px;
             background: ${theme.palette.background.default};
             .${pfx}-advanced-list-item {
               background: ${theme.palette.background.secondary};
@@ -86,6 +79,18 @@ const defaultStyles = (pfx?: string): ThemeStyleFn => ({ theme }) =>
           }
         }
       }
+
+    .${pfx}-selected-items-advanced-list {
+      
+      height: 700px;
+      background: ${theme.palette.background.default};
+      .${pfx}-advanced-list-item {
+        background: ${theme.palette.background.secondary};
+        .${pfx}-content {
+          background: ${theme.palette.background.secondary};
+        }
+      }
+    }
 
     .${pfx}-empty-panel-state {
       height: auto;

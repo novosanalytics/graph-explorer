@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 const pino = require("pino");
 const { fromNodeProviderChain } = require("@aws-sdk/credential-providers");
-const aws4 = require("aws4");
+const aws4 =  require("aws4");
 
 // Load environment variables from .env file.
 dotenv.config({ path: "../graph-explorer/.env" });
@@ -452,14 +452,14 @@ if (process.env.NEPTUNE_NOTEBOOK === "true") {
   };
   // CHECK THIS BEFORE DEPLOYING
   https.createServer(options, app)
-    .listen(443, () => {
+    .listen(4430, () => {
       proxyLogger.info(`Proxy server located at https://localhost`);
       proxyLogger.info(
         `Graph Explorer live at: ${process.env.GRAPH_CONNECTION_URL}/explorer`
       );
     });
 } else {
-  app.listen(80
+  app.listen(8000
     , () => {
     proxyLogger.info(`Proxy server located at http://localhost`);
   });

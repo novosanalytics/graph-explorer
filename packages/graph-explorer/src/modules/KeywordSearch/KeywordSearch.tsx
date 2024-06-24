@@ -23,6 +23,7 @@ import {
 } from "../../components";
 import { CarouselRef } from "../../components/Carousel/Carousel";
 import HumanReadableNumberFormatter from "../../components/HumanReadableNumberFormatter";
+import { useNotification } from "../../components/NotificationProvider";
 import RemoveFromCanvasIcon from "../../components/icons/RemoveFromCanvasIcon";
 import {
   fade,
@@ -39,6 +40,10 @@ import NodeDetail from "../EntityDetails/NodeDetail";
 import defaultStyles from "./KeywordSearch.styles";
 import toAdvancedList from "./toAdvancedList";
 import useKeywordSearch from "./useKeywordSearch";
+import { subQueriesAtom } from "../../core/StateProvider/subquery";
+import { useRecoilState } from "recoil";
+import { SubQuery } from "../../@types/subqueries";
+
 
 export type KeywordSearchProps = {
   classNamePrefix?: string;
@@ -55,7 +60,7 @@ const KeywordSearch = ({
   const [entities, setEntities] = useEntities();
   const styleWithTheme = useWithTheme();
   const pfx = withClassNamePrefix(classNamePrefix);
-
+  const { enqueueNotification } = useNotification();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isFocused, setInputFocused] = useState(false);
   const selection = useSet<string>(new Set());
@@ -88,6 +93,9 @@ const KeywordSearch = ({
     },
     []
   );
+
+  const [subQuery, setSubQuery] = useRecoilState(subQueriesAtom);
+
 
   const ref = useClickOutside(onInputFocusChange(false));
   useHotkeys([["Escape", onInputFocusChange(false)]]);
@@ -125,7 +133,7 @@ const KeywordSearch = ({
           endAdornment: entities.nodes.find(
             n => n.data.id === vertex.data.id
           ) ? (
-            <IconButton
+            <IconButton 
               tooltipText={"Remove from canvas"}
               icon={
                 <RemoveFromCanvasIcon className={pfx("graph-remove-icon")} />
@@ -183,6 +191,8 @@ const KeywordSearch = ({
     return selectedNodeIds.filter(nodeId => !isTheNodeAdded(nodeId));
   };
 
+
+
   const getNodeSearchedById = (nodeId: string): Vertex | undefined => {
     return searchResults.find(result => result.data.id === nodeId);
   };
@@ -193,6 +203,7 @@ const KeywordSearch = ({
       nodeIdsToAdd.length > 0 ? `(${nodeIdsToAdd.length})` : "";
     return `Add Selected ${numberOfNodesToAdd}`;
   };
+
 
   const handleOnClose = useCallback(() => {
     selection.clear();
@@ -206,8 +217,24 @@ const KeywordSearch = ({
       .filter(Boolean) as Vertex[];
     const numNeighborsLimit = neighborsLimit ? 500 : 0;
     fetchNode(nodes, numNeighborsLimit);
+
     handleOnClose();
   };
+
+  const addSubQuery = () => {
+    setSubQuery((prev) => {
+        const newSubQuery = {
+            selectedVertexType:selectedVertexType,
+            attribute:selectedAttribute,
+            searchTerm:searchTerm,
+            exactMatch: exactMatch,
+        }
+        console.log('New SubQuery:', newSubQuery);
+        const updatedSubQueries = new Set([...prev, newSubQuery]);
+        console.log('Updated SubQueries:', updatedSubQueries);
+        return updatedSubQueries;
+      });    
+  }
 
   const currentTotal = useMemo(() => {
     if (!config?.vertexTypes.length) {
@@ -444,6 +471,14 @@ const KeywordSearch = ({
               className={pfx("refuse-shrink")}
             >
               {addSelectedNodesMessage()}
+            </Button>
+            <Button
+              icon={<AddCircleIcon />}
+              onPress={addSubQuery} 
+              className={pfx("refuse-shrink")}
+            >
+            
+            Add Search Attribute
             </Button>
           </div>
         </Card>

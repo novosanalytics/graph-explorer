@@ -193,11 +193,11 @@ export type KeywordSearchRequest = {
   /**
    * Filter by attribute names.
    */
-  searchByAttributes?: Array<string>;
+  searchByAttributes: Array<string>;
   /**
    * Filter by vertex types.
    */
-  vertexTypes?: Array<string>;
+  vertexTypes: Array<string>;
   /**
    * Limit the number of results.
    * 0 = No limit.
@@ -212,6 +212,17 @@ export type KeywordSearchRequest = {
    */
   exactMatch?: boolean;
 };
+
+export type MultiKeywordSearchRequest = {
+    /**
+     * Multiple Keyword Search Request 
+     */
+    multiKeywordSearch: Array<KeywordSearchRequest>
+    /**
+     * CLusiver(OR/AND)
+     */
+    clusiver?:boolean;
+}
 
 export type SubGraphRequest = {
     /**
@@ -293,4 +304,9 @@ export type Explorer = {
     req: KeywordSearchRequest,
     options?: any
   ) => Promise<KeywordSearchResponse>;
+  multiKeywordSearch: (
+    req: any,
+    options?: any
+  ) => Promise<KeywordSearchResponse>;
 };
+

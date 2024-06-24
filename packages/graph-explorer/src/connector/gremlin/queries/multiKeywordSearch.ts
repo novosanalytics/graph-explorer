@@ -1,11 +1,11 @@
 import type {
   ErrorResponse,
-  KeywordSearchRequest,
+  MultiKeywordSearchRequest,
   KeywordSearchResponse,
 } from "../../useGEFetchTypes";
 import isErrorResponse from "../../utils/isErrorResponse";
 import mapApiVertex from "../mappers/mapApiVertex";
-import keywordSearchTemplate from "../templates/keywordSearchTemplate";
+import multiKeywordSearchTemplate from "../templates/multiKeywordSearchTemplate";
 import type { GVertexList } from "../types";
 import { GremlinFetch } from "../types";
 
@@ -20,11 +20,11 @@ type RawKeySearchResponse = {
   };
 };
 
-const keywordSearch = async (
+const multiKeywordSearch = async (
   gremlinFetch: GremlinFetch,
-  req: KeywordSearchRequest
+  req: MultiKeywordSearchRequest
 ): Promise<KeywordSearchResponse> => {
-  const gremlinTemplate = keywordSearchTemplate(req);
+  const gremlinTemplate = multiKeywordSearchTemplate(req);
   const data = await gremlinFetch<RawKeySearchResponse | ErrorResponse>(
     gremlinTemplate
   );
@@ -40,5 +40,4 @@ const keywordSearch = async (
   return { vertices };
 };
 
-export default keywordSearch;
-
+export default multiKeywordSearch;

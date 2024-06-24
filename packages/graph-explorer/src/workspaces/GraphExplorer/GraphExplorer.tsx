@@ -20,6 +20,7 @@ import {
   GraphIcon,
   MagicExpandIcon,
   MultiExpandIcon,
+  MultiSearchIcon
 } from "../../components/icons";
 import GridIcon from "../../components/icons/GridIcon";
 import Workspace from "../../components/Workspace";
@@ -47,6 +48,7 @@ import NodesStyling from "../../modules/NodesStyling/NodesStyling";
 import TopBarWithLogo from "../common/TopBarWithLogo";
 import defaultStyles from "./GraphExplorer.styles";
 import MultiDetails from "../../modules/MultiDetails";
+import MultiSearch from "../../modules/MultiSearch";
 
 
 export type GraphViewProps = {
@@ -309,6 +311,12 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           active={userLayout.activeSidebarItem === "filters"}
         />
         <Workspace.SideBar.Button
+          tooltipText={"Multi-Search"}
+          icon={<MultiSearchIcon />}
+          onPress={toggleSidebar("multi-search")}
+          active={userLayout.activeSidebarItem === "multi-search"}
+        />
+        <Workspace.SideBar.Button
           tooltipText={"Expand By Object"}
           icon={<ExpandGraphIcon />}
           onPress={toggleSidebar("expand")}
@@ -362,6 +370,9 @@ const GraphExplorer = ({ classNamePrefix = "ft" }: GraphViewProps) => {
           )}
           {userLayout.activeSidebarItem === "edge-expand" && (
             <EdgeExpand onClose={closeSidebar} />
+          )}
+          {userLayout.activeSidebarItem === "multi-search" && (
+            <MultiSearch onClose={closeSidebar} />
           )}
           {userLayout.activeSidebarItem === "multi-details" && (
             <MultiDetails onClose={closeSidebar} />

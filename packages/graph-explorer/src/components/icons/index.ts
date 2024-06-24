@@ -74,3 +74,4 @@ export { default as VisibleIcon } from "./VisibleIcon";
 export { default as ZoomInIcon } from "./ZoomInIcon";
 export { default as ZoomOutIcon } from "./ZoomOutIcon";
 export { default as MagicExpandIcon } from './MagicExpandIcon';
+export { default as MultiSearchIcon } from "./MultiSearch"

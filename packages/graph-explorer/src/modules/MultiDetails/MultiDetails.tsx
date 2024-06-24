@@ -25,7 +25,7 @@ export type MultiDetailsProp = Omit<
 };
 
 
-// #Multi-Details v0.1: All common nodes shall reflect the necessary neighbors or so.
+// Multi-Details v0.1: All common nodes shall reflect the necessary neighbors or so.
 //      NO MULTI-TYPE
 
 const MultiDetails = ({title = "Multi-Details", ...headerProps }: MultiDetailsProp) =>{

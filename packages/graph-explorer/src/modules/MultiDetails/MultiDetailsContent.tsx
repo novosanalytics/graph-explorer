@@ -167,9 +167,7 @@ const MultiDetailsContent = ({
         title: item.data.id
     })
   })
-
-
-
+  
   return(
 
     <div className={styleWithTheme(defaultStyles(classNamePrefix))}>

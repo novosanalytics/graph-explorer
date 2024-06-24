@@ -7,6 +7,7 @@ import createSubgraph from "./queries/createSubgraph";
 import fetchSchema from "./queries/fetchSchema";
 import fetchVertexTypeCounts from "./queries/fetchVertexTypeCounts";
 import keywordSearch from "./queries/keywordSearch";
+import multiKeywordSearch from "./queries/multiKeywordSearch";
 import { fetchDatabaseRequest } from "../fetchDatabaseRequest";
 import { GraphSummary } from "./types";
 import { v4 } from "uuid";
@@ -79,5 +80,11 @@ export function createGremlinExplorer(connection: ConnectionConfig): Explorer {
 
       return keywordSearch(_gremlinFetch(connection, options), req);
     },
+    async multiKeywordSearch(req, options) {
+        options ??= {};
+        options.queryId = v4();
+  
+        return multiKeywordSearch(_gremlinFetch(connection, options), req);
+      },
   };
 }
