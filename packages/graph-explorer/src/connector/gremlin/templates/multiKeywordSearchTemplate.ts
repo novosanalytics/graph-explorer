@@ -39,7 +39,8 @@ const multiKeywordSearchTemplate = (
         const  hasLabelContent = firstSearch.vertexTypes;
         template += `.hasLabel("${hasLabelContent}")`;
     }
-    template += `.and(`
+    multiKeywordSearch.clusiver ? template += `.or(` : template += `.and(`;
+    //template += `.and(`
     multiKeywordSearch.forEach((subKey) => {
         const escapedSearchTerm = escapeString(subKey.searchTerm)
 
