@@ -62,34 +62,7 @@ const MultiDetailsContent = ({
     collectTypes[0]
   );
 /////////////////////////////////////////////////////////////////
-/*const nodeNames = useMemo(() => {
-    const collectNames: AdvancedListItemType<any>[] = [];
-    selectedItems.forEach(item => {
-        collectNames.push({
-            id: item.data.id,
-            title: item.data.id
-        })
-    })
-    return collectNames
-  }, [selectedItems, config, pfx, textTransform])
-*/
 
-
-  /*const [gNames, setGNames] = useState("");
-  
-  const nodeTypes = useMemo(() => {
-    const collectTypes: Array<string> = [];
-    selectedItems.forEach(sItem => {
-  selectedItems.forEach(gDetail => {
-    setGNames(gNames.concat(gDetail?.data.id))
-    }
-  );
-    //collectGNames = collectGNames.concat(`"${gName.data.id}",`)
-  //});
-  //collectGNames = collectGNames.substring(0, collectGNames.length - 1));
- 
-  //console.log(gNames);
-  */
   const gListNames = useMemo(() => {
     let collectGNames: string = "";
     selectedItems.forEach(gName => {
