@@ -1,7 +1,6 @@
 import uniq from "lodash/uniq";
 import type {KeywordSearchRequest, MultiKeywordSearchRequest } from "../../useGEFetchTypes";
 import { escapeString } from "../../../utils";
-import multiKeywordSearch from "../queries/multiKeywordSearch";
 
 
 /**
@@ -25,11 +24,9 @@ import multiKeywordSearch from "../queries/multiKeywordSearch";
 
 const multiKeywordSearchTemplate = (
     multiKeywordSearch: MultiKeywordSearchRequest | any): string => {
-    //console.log(`Input sub ${multiKeywordSearch[0];
-    console.log(`Input: ${multiKeywordSearch.clusiver}`);
+    const mksqs = multiKeywordSearch.multiKeywordSearch;
     let template = "g.V()";
-    let firstSearch = multiKeywordSearch[0];
-    console.log(firstSearch)
+    let firstSearch = mksqs[0];
     if (firstSearch.vertexTypes) { 
         //Adjust this later for _all option
         /*const hasLabelContent = firstSearch.vertexTypes
@@ -40,9 +37,7 @@ const multiKeywordSearchTemplate = (
         template += `.hasLabel("${hasLabelContent}")`;
     }
     multiKeywordSearch.clusiver ? template += `.or(` : template += `.and(`;
-    console.log(multiKeywordSearch)
-    //template += `.and(`
-    multiKeywordSearch.forEach((subKey) => {
+    mksqs.forEach((subKey: KeywordSearchRequest) => {
         const escapedSearchTerm = escapeString(subKey.searchTerm)
 
         let multiContent = ``;
@@ -93,7 +88,6 @@ const multiKeywordSearchTemplate = (
   template += `.range(${firstSearch.offset},${firstSearch.offset + firstSearch.limit})`;
   console.log(`Template: ${template}`)
   return template;
-  //return `g.V().hasLabel("drug").range(0,10)`
 };
 
 export default multiKeywordSearchTemplate;
