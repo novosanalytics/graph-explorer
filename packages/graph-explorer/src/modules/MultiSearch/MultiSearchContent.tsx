@@ -92,11 +92,14 @@ const MultiSearchContent = ({
     exactMatch: subQuery.exactMatch,
     offset: 0,
     limit: limit ? limit: 10,
-    clusive: clusive,
 }));
 
   const onSearchClick = useCallback(async () => {
-    let finalResult = await fetchMultiQuery(multiSearch);
+    console.log(clusive)
+    let finalResult = await fetchMultiQuery({
+        multiKeywordSearch: multiSearch,
+        clusiver: clusive,
+    });
     if(finalResult !== undefined){
         setResultAtom(finalResult);
     } else {
@@ -265,7 +268,6 @@ const isTheNodeAdded = (nodeId: string): boolean => {
             }
             variant={"filled"}
             onPress={
-                //()=>{console.log("Test")}
             onDeleteSearch
             }
             >

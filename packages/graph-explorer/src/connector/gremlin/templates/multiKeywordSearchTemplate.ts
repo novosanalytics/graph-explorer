@@ -24,7 +24,7 @@ import multiKeywordSearch from "../queries/multiKeywordSearch";
  */
 
 const multiKeywordSearchTemplate = (
-    multiKeywordSearch: MultiKeywordSearchRequest): string => {
+    multiKeywordSearch: MultiKeywordSearchRequest | any): string => {
     //console.log(`Input sub ${multiKeywordSearch[0];
     console.log(`Input: ${multiKeywordSearch.clusiver}`);
     let template = "g.V()";
@@ -40,6 +40,7 @@ const multiKeywordSearchTemplate = (
         template += `.hasLabel("${hasLabelContent}")`;
     }
     multiKeywordSearch.clusiver ? template += `.or(` : template += `.and(`;
+    console.log(multiKeywordSearch)
     //template += `.and(`
     multiKeywordSearch.forEach((subKey) => {
         const escapedSearchTerm = escapeString(subKey.searchTerm)

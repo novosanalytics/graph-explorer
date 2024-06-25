@@ -7,6 +7,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useCallback } from "react";
 import { SubQuery } from "../@types/subqueries";
 import { multiQueriesResultAtom } from "../core/StateProvider/subquery";
+import { MultiKeywordSearchRequest } from "../connector/useGEFetchTypes";
 
 const useFetchMultiQuery = () => {
     const explorer = useRecoilValue(explorerSelector);
@@ -14,7 +15,7 @@ const useFetchMultiQuery = () => {
     const { enqueueNotification, clearNotification } = useNotification();
     
     return useCallback(
-        async (req: any) => {
+        async (req: MultiKeywordSearchRequest) => {
             let result = await explorer?.multiKeywordSearch(req);
             if (!result || !result.vertices.length) {
                 enqueueNotification({
@@ -23,7 +24,6 @@ const useFetchMultiQuery = () => {
                 });
                 return;
             };
-            //setMultiQueryAtom(result);
             return result
         }, [explorer, enqueueNotification, clearNotification]
       );
